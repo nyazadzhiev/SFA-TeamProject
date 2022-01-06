@@ -1,12 +1,9 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+TODO: The Workforce Management?API?is a platform for?tracking who is in and out of the office and general? management of sick leaves,?requests?for?vacations (paid?and non-paid)?and the respective approvals.? The system orchestrates the?workforce?availability,tracking time offs, approvals and sick leaves.?
+
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+* the git ignore file used is the one which is given by Azure for Visual Studio.
 
 # Build and Test
 TODO: Describe and show how to build your code and run the tests. 
