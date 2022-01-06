@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagementAPI.WEB", "WorkforceManagementAPI.WEB\WorkforceManagementAPI.WEB.csproj", "{051C6A9C-09EC-4DFC-981F-B0B56FE28312}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagementAPI.WEB", "WorkforceManagementAPI.WEB\WorkforceManagementAPI.WEB.csproj", "{051C6A9C-09EC-4DFC-981F-B0B56FE28312}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagementAPI.BLL", "WorkforceManagementAPI.BLL\WorkforceManagementAPI.BLL.csproj", "{A871EE52-C5F6-4819-985F-9FC72F26DFCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagementAPI.BLL", "WorkforceManagementAPI.BLL\WorkforceManagementAPI.BLL.csproj", "{A871EE52-C5F6-4819-985F-9FC72F26DFCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagementAPI.DAL", "WorkforceManagementAPI.DAL\WorkforceManagementAPI.DAL.csproj", "{086CBE4B-E00B-457D-A750-586F8B1D3ED8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagementAPI.DAL", "WorkforceManagementAPI.DAL\WorkforceManagementAPI.DAL.csproj", "{086CBE4B-E00B-457D-A750-586F8B1D3ED8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagementAPI.DTO", "WorkforceManagementAPI.DTO\WorkforceManagementAPI.DTO.csproj", "{ED6F99CD-4748-46A6-B549-A1F2932B3EB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagementAPI.DTO", "WorkforceManagementAPI.DTO\WorkforceManagementAPI.DTO.csproj", "{ED6F99CD-4748-46A6-B549-A1F2932B3EB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagementAPI.Common", "WorkforceManagementAPI.Common\WorkforceManagementAPI.Common.csproj", "{5EF676C0-4F7C-4C87-BA7B-A8A8E5D516CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{ED6F99CD-4748-46A6-B549-A1F2932B3EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED6F99CD-4748-46A6-B549-A1F2932B3EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED6F99CD-4748-46A6-B549-A1F2932B3EB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EF676C0-4F7C-4C87-BA7B-A8A8E5D516CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EF676C0-4F7C-4C87-BA7B-A8A8E5D516CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EF676C0-4F7C-4C87-BA7B-A8A8E5D516CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EF676C0-4F7C-4C87-BA7B-A8A8E5D516CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
