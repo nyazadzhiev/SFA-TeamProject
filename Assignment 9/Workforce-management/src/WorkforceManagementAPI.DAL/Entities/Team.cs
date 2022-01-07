@@ -18,19 +18,19 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public DateTime ModifiedAt { get; set; }
 
-        public string TeamLeaderId { get; set; }
+        public int TeamLeaderId { get; set; }
 
         public virtual User TeamLeader { get; set; }
 
-        public string CreatorId { get; set; }
+        public int CreatorId { get; set; }
 
         public virtual User Creator { get; set; }
 
-        public string ModifierId { get; set; }
+        public int ModifierId { get; set; }
 
         public virtual User Modifier { get; set; }
 
-        public List<User> Users { get; set; }
+        public virtual List<User> Users { get; set; }
 
         public Team()
         {

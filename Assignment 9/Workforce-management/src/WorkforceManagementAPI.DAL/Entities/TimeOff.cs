@@ -32,7 +32,7 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public virtual User Modifier { get; set; }
 
-        public List<User> Reviewers { get; set; }
+        public virtual List<User> Reviewers { get; set; }
 
         public TimeOff()
         {
