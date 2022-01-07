@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.DAL.Entities
 {
@@ -12,9 +13,9 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public string Reason { get; set; }
 
-        public int Type { get; set; }
+        public RequestType Type { get; set; }
 
-        public int Status { get; set; }
+        public Status Status { get; set; }
 
         public DateTime StartDate { get; set; }
 
