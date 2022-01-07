@@ -48,7 +48,7 @@ namespace WorkforceManagementAPI.DAL
             modelBuilder.Entity<TimeOff>().Property(t => t.Type).IsRequired();
             modelBuilder.Entity<TimeOff>().Property(t => t.StartDate).IsRequired();
             modelBuilder.Entity<TimeOff>().Property(t => t.EndDate).IsRequired();
-            modelBuilder.Entity<TimeOff>().HasOne(t => t.Creator).WithMany(u => u.ReviewableRequests ).HasForeignKey(t => t.CreatorId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TimeOff>().HasOne(t => t.Creator).WithMany(u => u.Requests ).HasForeignKey(t => t.CreatorId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<TimeOff>().HasOne(t => t.Modifier).WithMany().HasForeignKey(t => t.ModifierId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<TimeOff>().HasMany(t => t.Reviewers).WithMany(u => u.UnderReviewRequests);
         }
