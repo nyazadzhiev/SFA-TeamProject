@@ -23,7 +23,7 @@ namespace WorkforceManagementAPI.DAL
 
         public DbSet<Team> Teams { get; set; }
 
-        public DbSet<Request> Requests { get; set; }
+        public DbSet<TimeOff> Requests { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,15 +42,15 @@ namespace WorkforceManagementAPI.DAL
 
         private static void SetupRequestsConfiguration(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Request>().HasKey(t => t.Id);
-            modelBuilder.Entity<Request>().Property(t => t.Reason).IsRequired().HasMaxLength(200);
-            modelBuilder.Entity<Request>().Property(t => t.Status).IsRequired();
-            modelBuilder.Entity<Request>().Property(t => t.Type).IsRequired();
-            modelBuilder.Entity<Request>().Property(t => t.StartDate).IsRequired();
-            modelBuilder.Entity<Request>().Property(t => t.EndDate).IsRequired();
-            modelBuilder.Entity<Request>().HasOne(t => t.Creator).WithMany(u => u.MyRequests).HasForeignKey(t => t.CreatorId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Request>().HasOne(t => t.Modifier).WithMany().HasForeignKey(t => t.ModifierId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Request>().HasMany(t => t.Reviewers).WithMany(u => u.PendingRequests);
+            modelBuilder.Entity<TimeOff>().HasKey(t => t.Id);
+            modelBuilder.Entity<TimeOff>().Property(t => t.Reason).IsRequired().HasMaxLength(200);
+            modelBuilder.Entity<TimeOff>().Property(t => t.Status).IsRequired();
+            modelBuilder.Entity<TimeOff>().Property(t => t.Type).IsRequired();
+            modelBuilder.Entity<TimeOff>().Property(t => t.StartDate).IsRequired();
+            modelBuilder.Entity<TimeOff>().Property(t => t.EndDate).IsRequired();
+            modelBuilder.Entity<TimeOff>().HasOne(t => t.Creator).WithMany(u => u.ReviewableRequests ).HasForeignKey(t => t.CreatorId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TimeOff>().HasOne(t => t.Modifier).WithMany().HasForeignKey(t => t.ModifierId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TimeOff>().HasMany(t => t.Reviewers).WithMany(u => u.UnderReviewRequests);
         }
 
         private static void SetupTeamConfiguration(ModelBuilder modelBuilder)
@@ -69,7 +69,7 @@ namespace WorkforceManagementAPI.DAL
             modelBuilder.Entity<User>().Property(u => u.FirstName).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<User>().Property(u => u.LastName).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<User>().HasMany<Team>(u => u.Teams).WithMany(t => t.Users);
-            modelBuilder.Entity<User>().HasMany<Request>(u => u.PendingRequests).WithMany(r => r.Reviewers);
+            modelBuilder.Entity<User>().HasMany<TimeOff>(u => u.UnderReviewRequests).WithMany(r => r.Reviewers);
         }
     }
 }

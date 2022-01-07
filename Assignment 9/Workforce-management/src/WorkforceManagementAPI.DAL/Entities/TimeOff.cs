@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WorkforceManagementAPI.DAL.Entities
 {
-    public class Request
+    public class TimeOff
     {
         public Guid Id { get; set; }
 
@@ -34,7 +34,7 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public virtual List<User> Reviewers { get; set; }
 
-        public Request()
+        public TimeOff()
         {
             this.Reviewers = new List<User>();
         }

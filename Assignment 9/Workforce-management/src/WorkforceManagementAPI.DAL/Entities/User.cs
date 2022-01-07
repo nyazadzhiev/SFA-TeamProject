@@ -23,15 +23,15 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public virtual List<Team> Teams { get; set; }
 
-        public virtual List<Request> MyRequests { get; set; }
+        public virtual List<TimeOff> ReviewableRequests  { get; set; }
 
-        public virtual List<Request> PendingRequests { get; set; }
+        public virtual List<TimeOff> UnderReviewRequests { get; set; }
 
         public User()
         {
             this.Teams = new List<Team>();
-            this.MyRequests = new List<Request>();
-            this.PendingRequests = new List<Request>();
+            this.ReviewableRequests  = new List<TimeOff>();
+            this.UnderReviewRequests = new List<TimeOff>();
         }
     }
 }
