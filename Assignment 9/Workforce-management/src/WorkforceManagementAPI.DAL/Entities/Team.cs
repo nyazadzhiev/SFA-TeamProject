@@ -8,7 +8,7 @@ namespace WorkforceManagementAPI.DAL.Entities
 {
     public class Team
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Title { get; set; }
 
@@ -18,19 +18,19 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public DateTime ModifiedAt { get; set; }
 
-        public string TeamLeaderId { get; set; }
+        public Guid TeamLeaderId { get; set; }
 
         public virtual User TeamLeader { get; set; }
 
-        public string CreatorId { get; set; }
+        public Guid CreatorId { get; set; }
 
         public virtual User Creator { get; set; }
 
-        public string ModifierId { get; set; }
+        public Guid ModifierId { get; set; }
 
         public virtual User Modifier { get; set; }
 
-        public List<User> Users { get; set; }
+        public virtual List<User> Users { get; set; }
 
         public Team()
         {

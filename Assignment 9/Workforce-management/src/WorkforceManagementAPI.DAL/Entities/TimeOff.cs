@@ -9,7 +9,7 @@ namespace WorkforceManagementAPI.DAL.Entities
 {
     public class TimeOff
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Reason { get; set; }
 
@@ -25,15 +25,15 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public DateTime ModifiedAt { get; set; }
 
-        public int CreatorId { get; set; }
+        public Guid CreatorId { get; set; }
 
         public virtual User Creator { get; set; }
 
-        public int ModifierId { get; set; }
+        public Guid ModifierId { get; set; }
 
         public virtual User Modifier { get; set; }
 
-        public List<User> Reviewers { get; set; }
+        public virtual List<User> Reviewers { get; set; }
 
         public TimeOff()
         {
