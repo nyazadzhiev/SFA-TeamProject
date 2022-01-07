@@ -9,7 +9,7 @@ namespace WorkforceManagementAPI.DAL.Entities
 {
     public class User 
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Username { get; set; }
 
@@ -23,12 +23,15 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public virtual List<Team> Teams { get; set; }
 
-        public virtual List<TimeOff> Requests { get; set; }
+        public virtual List<Request> MyRequests { get; set; }
+
+        public virtual List<Request> PendingRequests { get; set; }
 
         public User()
         {
             this.Teams = new List<Team>();
-            this.Requests = new List<TimeOff>();
+            this.MyRequests = new List<Request>();
+            this.PendingRequests = new List<Request>();
         }
     }
 }
