@@ -45,7 +45,15 @@ namespace WorkforceManagementAPI.WEB
             //Injecting the services and DB in the DI containter
                    .AddRoles<IdentityRole>()
                    .AddEntityFrameworkStores<DatabaseContext>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy =>
+                policy.RequireRole("Admin"));
 
+                options.AddPolicy("User", policy =>
+                policy.RequireRole("User"));
+            }
+            );
 
         }
 
