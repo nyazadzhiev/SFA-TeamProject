@@ -30,6 +30,8 @@ namespace WorkforceManagementAPI.DAL
 
                     };
 
+                    admin.PasswordHash = hasher.HashPassword(admin, "adminpass");
+
                     IdentityRole adminRole = new IdentityRole()
                     {
                         Id = Guid.NewGuid().ToString("D"),
