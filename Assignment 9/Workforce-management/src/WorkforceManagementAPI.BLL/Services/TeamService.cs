@@ -42,9 +42,28 @@ namespace WorkforceManagementAPI.BLL.Service
             return true;
         }
 
-        public async Task<bool> EditTeamAsync()
+        public async Task<bool> EditTeamAsync(Guid teamId, Guid modifierId, string title, string description)
         {
-            throw new NotImplementedException();
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            if (team == null)
+            {
+                throw new Exception("Invalid input. Team Id doesn't exist.");
+            }
+
+            if (await _context.Teams.AnyAsync(p => p.Title == title) && team.Title != title)
+            {
+                throw new Exception("Name is already in use.");
+            }
+
+            team.Title = title;
+            team.Description = description;
+            team.ModifierId = modifierId;
+            team.ModifiedAt = DateTime.Now;
+
+            _context.Teams.Update(team);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<bool> DeleteTeamAsync()
