@@ -31,10 +31,9 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public async Task<List<Team>> GetMyTeams(Guid userId)
         {
-            List<Team> teams = await _context.Teams
+            var teams = await _context.Teams
                 .Where(t => t.Users
-                    .Any(u => u.Id
-                        .Equals(userId)))
+                    .Any(u => u.Id == userId))
                 .ToListAsync();
 
             return teams;
