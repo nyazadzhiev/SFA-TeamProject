@@ -47,6 +47,15 @@ namespace WorkforceManagementAPI.WEB
             //Injecting the services and DB in the DI containter
                    .AddRoles<IdentityRole>()
                    .AddEntityFrameworkStores<DatabaseContext>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy =>
+                policy.RequireRole("Admin"));
+
+                options.AddPolicy("User", policy =>
+                policy.RequireRole("User"));
+            }
+            );
                 
             services.AddTransient<IIdentityUserManager, IdentityUserManager>();
 
@@ -56,6 +65,8 @@ namespace WorkforceManagementAPI.WEB
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            //app.UseIdentityServer();
           /*  DatabaseSeeder.Seed(app.ApplicationServices);
             app.UseIdentityServer();*/
 
