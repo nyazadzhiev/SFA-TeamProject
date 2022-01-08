@@ -53,7 +53,7 @@ namespace WorkforceManagementAPI.WEB
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            app.UseIdentityServer();
+            //app.UseIdentityServer();
 
             if (env.IsDevelopment())
             {
