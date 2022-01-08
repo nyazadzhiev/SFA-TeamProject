@@ -18,6 +18,22 @@ namespace WorkforceManagementAPI.BLL.Service
             _context = context;
         }
 
+        public async Task<List<Team>> GetAllTeamsAsync()
+        {
+            return await _context.Teams.ToListAsync();
+        }
+
+        public async Task<Team> GetTeamByIdAsync(Guid teamId)
+        {
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            if (team != null)
+            {
+                return team;
+            }
+
+            throw new Exception($"Invalid input. Team Id doesn't exist.");
+        }
+
         public async Task<bool> CreateTeamAsync(string title, string description, Guid creatorId)
         {
             if (await _context.Teams.AnyAsync(t => t.Title == title))
