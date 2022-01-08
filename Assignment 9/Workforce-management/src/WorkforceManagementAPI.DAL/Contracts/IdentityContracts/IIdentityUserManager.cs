@@ -8,7 +8,7 @@ namespace WorkforceManagementAPI.DAL.Contracts.IdentityContracts
 {
     public interface IIdentityUserManager
     {
-        Task<bool> AddUserToRoleAsync(User user, string password);
+        Task<IdentityResult> AddUserToRoleAsync(User user, string password);
         Task<bool> VerifyEmail(string email);
         Task<IdentityResult> CreateUserAsync(User user, string password);
         Task<IdentityResult> DeleteUserAsync(User user);
