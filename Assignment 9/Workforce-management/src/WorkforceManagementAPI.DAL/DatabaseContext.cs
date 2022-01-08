@@ -1,34 +1,23 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.DAL
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : IdentityDbContext<User>
     {
-        private readonly IConfiguration _config;
-
-        public DatabaseContext(IConfiguration config) : base()
-        {
-            _config = config;
-        }
-
-        public DbSet<User> Users { get; set; }
 
         public DbSet<Team> Teams { get; set; }
 
-        public DbSet<TimeOff> Requests { get; set; }
+        public DbSet<TimeOff> Requests { get; set; }    
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base (options)
+        {
 
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies();
-            optionsBuilder.UseSqlServer(_config.GetConnectionString("Default"));
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -65,7 +54,6 @@ namespace WorkforceManagementAPI.DAL
 
         private static void SetupUserConfiguration(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasKey(u => u.Id);
             modelBuilder.Entity<User>().Property(u => u.FirstName).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<User>().Property(u => u.LastName).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<User>().HasMany<Team>(u => u.Teams).WithMany(t => t.Users);
