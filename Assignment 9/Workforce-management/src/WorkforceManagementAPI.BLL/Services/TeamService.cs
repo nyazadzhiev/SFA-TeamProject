@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
@@ -33,7 +32,7 @@ namespace WorkforceManagementAPI.BLL.Service
         {
             var teams = await _context.Teams
                 .Where(t => t.Users
-                    .Any(u => u.Id == userId))
+                    .Any(u => u.Id.Equals(userId)))
                 .ToListAsync();
 
             return teams;
