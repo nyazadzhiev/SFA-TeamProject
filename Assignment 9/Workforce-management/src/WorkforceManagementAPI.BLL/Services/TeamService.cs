@@ -66,9 +66,18 @@ namespace WorkforceManagementAPI.BLL.Service
             return true;
         }
 
-        public async Task<bool> DeleteTeamAsync()
+        public async Task<bool> DeleteTeamAsync(Guid teamId)
         {
-            throw new NotImplementedException();
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            if (team == null)
+            {
+                throw new Exception("Invalid input. Team Id doesn't exist.");
+            }
+
+            _context.Teams.Remove(team);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
