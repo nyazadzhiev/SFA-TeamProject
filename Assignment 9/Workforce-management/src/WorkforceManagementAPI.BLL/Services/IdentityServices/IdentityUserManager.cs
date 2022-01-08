@@ -12,7 +12,7 @@ using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 
 namespace WorkforceManagementAPI.BLL.Services.IdentityServices
 {
-    internal class IdentityUserManager : UserManager<User>, IIdentityUserManager
+    public class IdentityUserManager : UserManager<User>, IIdentityUserManager
     {
         public IdentityUserManager(IUserStore<User> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<User> passwordHasher,
             IEnumerable<IUserValidator<User>> userValidators, IEnumerable<IPasswordValidator<User>> passwordValidators,
@@ -38,19 +38,19 @@ namespace WorkforceManagementAPI.BLL.Services.IdentityServices
             return (await GetRolesAsync(user)).ToList();
         }
 
-        public async Task CreateUserAsync(User user, string password)
+        public async Task<IdentityResult> CreateUserAsync(User user, string password)
         {
-            var result = await CreateAsync(user, password);
+            return await CreateAsync(user, password);
         }
 
-        public async Task DeleteUserAsync(User user)
+        public async Task<IdentityResult> DeleteUserAsync(User user)
         {
-            await DeleteAsync(user);
+            return await DeleteAsync(user);
         }
 
-        Task<IdentityResult> UpdateUserDataAsync(User user)
+        public async Task<IdentityResult> UpdateUserDataAsync(User user)
         {
-            return UpdateAsync(user);
+            return await UpdateAsync(user);
         }
 
         public async Task<bool> VerifyEmail(string email)
@@ -82,10 +82,9 @@ namespace WorkforceManagementAPI.BLL.Services.IdentityServices
             return false;
         }
 
-        public async Task<bool> AddUserToRoleAsync(User user, string password)
+        public async Task<IdentityResult> AddUserToRoleAsync(User user, string password)
         {
-            var result = await AddToRoleAsync(user, password);
-            return true;
+            return await AddToRoleAsync(user, password);
         }
     }
 }

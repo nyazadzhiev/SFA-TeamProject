@@ -43,7 +43,7 @@ namespace WorkforceManagementAPI.BLL.Service
             return await _context.Teams.ToListAsync();
         }
 
-        public async Task<bool> CreateTeamAsync(string title, string description, Guid creatorId)
+        public async Task<bool> CreateTeamAsync(string title, string description, string creatorId)
         {
             if (await _context.Teams.AnyAsync(t => t.Title == title))
             {
@@ -67,7 +67,7 @@ namespace WorkforceManagementAPI.BLL.Service
             return true;
         }
 
-        public async Task<bool> EditTeamAsync(Guid teamId, Guid modifierId, string title, string description)
+        public async Task<bool> EditTeamAsync(Guid teamId, string modifierId, string title, string description)
         {
             var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
             if (team == null)

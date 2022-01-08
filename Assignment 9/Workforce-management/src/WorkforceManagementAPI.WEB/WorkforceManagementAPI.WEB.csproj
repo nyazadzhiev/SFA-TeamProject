@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WorkforceManagementAPI.BLL\WorkforceManagementAPI.BLL.csproj" />
     <ProjectReference Include="..\WorkforceManagementAPI.DAL\WorkforceManagementAPI.DAL.csproj" />
   </ItemGroup>
 
