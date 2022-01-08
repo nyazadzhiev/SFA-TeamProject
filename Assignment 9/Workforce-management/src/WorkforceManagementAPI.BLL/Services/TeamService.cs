@@ -18,11 +18,6 @@ namespace WorkforceManagementAPI.BLL.Service
             _context = context;
         }
 
-        public async Task<List<Team>> GetAllTeamsAsync()
-        {
-            return await _context.Teams.ToListAsync();
-        }
-
         public async Task<Team> GetTeamByIdAsync(Guid teamId)
         {
             var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
@@ -32,6 +27,22 @@ namespace WorkforceManagementAPI.BLL.Service
             }
 
             return team;
+        }
+
+        public async Task<List<Team>> GetMyTeams(Guid userId)
+        {
+            List<Team> teams = await _context.Teams
+                .Where(t => t.Users
+                    .Any(u => u.Id
+                        .Equals(userId)))
+                .ToListAsync();
+
+            return teams;
+        }
+
+        public async Task<List<Team>> GetAllTeamsAsync()
+        {
+            return await _context.Teams.ToListAsync();
         }
 
         public async Task<bool> CreateTeamAsync(string title, string description, Guid creatorId)
