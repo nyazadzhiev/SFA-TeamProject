@@ -26,12 +26,12 @@ namespace WorkforceManagementAPI.BLL.Service
         public async Task<Team> GetTeamByIdAsync(Guid teamId)
         {
             var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
-            if (team != null)
+            if (team == null)
             {
-                return team;
+                throw new Exception($"Invalid input. Team Id doesn't exist.");
             }
 
-            throw new Exception($"Invalid input. Team Id doesn't exist.");
+            return team;
         }
 
         public async Task<bool> CreateTeamAsync(string title, string description, Guid creatorId)
