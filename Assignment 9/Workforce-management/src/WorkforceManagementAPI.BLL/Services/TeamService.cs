@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL;
+using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.BLL.Service
 {
@@ -16,9 +18,28 @@ namespace WorkforceManagementAPI.BLL.Service
             _context = context;
         }
 
-        public async Task<bool> CreateTeamAsync()
+        public async Task<bool> CreateTeamAsync(string title, string description, Guid creatorId)
         {
-            throw new NotImplementedException();
+            if (await _context.Teams.AnyAsync(t => t.Title == title))
+            {
+                throw new Exception("Name is already in use.");
+            }
+
+            var now = DateTime.Now;
+            var team = new Team()
+            {
+                Title = title,
+                Description = description,
+                CreatorId = creatorId,
+                ModifierId = creatorId,
+                CreatedAt = now,
+                ModifiedAt = now
+            };
+
+            await _context.Teams.AddAsync(team);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<bool> EditTeamAsync()
