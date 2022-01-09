@@ -9,6 +9,8 @@ using WebApi.Middleware;
 using Microsoft.EntityFrameworkCore;
 using WorkforceManagementAPI.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Services.IdentityServices;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -46,6 +48,17 @@ namespace WorkforceManagementAPI.WEB
             //Injecting the services and DB in the DI containter
                    .AddRoles<IdentityRole>()
                    .AddEntityFrameworkStores<DatabaseContext>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy =>
+                policy.RequireRole("Admin"));
+
+                options.AddPolicy("User", policy =>
+                policy.RequireRole("User"));
+            }
+            );
+                
+            services.AddTransient<IIdentityUserManager, IdentityUserManager>();
 
 
         }
@@ -55,6 +68,8 @@ namespace WorkforceManagementAPI.WEB
         {
 
             //app.UseIdentityServer();
+          /*  DatabaseSeeder.Seed(app.ApplicationServices);
+            app.UseIdentityServer();*/
 
             if (env.IsDevelopment())
             {
