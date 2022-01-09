@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
+using WebApi.Middleware;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -52,6 +53,8 @@ namespace WorkforceManagementAPI.WEB
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthorization();
 
