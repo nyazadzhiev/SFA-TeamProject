@@ -56,5 +56,17 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             return await _context.Requests.FirstOrDefaultAsync(r => r.Id == id);
         }
+
+        public async Task<bool> DeleteTimeOffAsync(Guid id)
+        {
+            TimeOff timeOff = await GetTimeOffAsync(id);
+
+            _validationService.EnsureTimeOffExist(timeOff);
+
+            _context.Requests.Remove(timeOff);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
