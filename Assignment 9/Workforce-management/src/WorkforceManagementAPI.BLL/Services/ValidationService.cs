@@ -24,6 +24,14 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
+        public void EnsureTimeOffExist(TimeOff timeOff)
+        {
+            if (timeOff == null)
+            {
+                throw new EntityNotFoundException(String.Format(Constants.NotFound, "Request"));
+            }
+        }
+
         public void CheckTeamName(string title)
         {
             if (_context.Teams.Any(p => p.Title == title))
