@@ -17,7 +17,7 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
         }*/
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-           // User user = await userManager.FindByNameAsync(context.UserName);
+           // User user = await userManager.FindByNameAsync(context.UserName); Add this method in the Contracts for the User Manager
 
             User user = new User(); // This is a temporary code line. Use the above code line in future versions of the api with user manager implemented.
 
