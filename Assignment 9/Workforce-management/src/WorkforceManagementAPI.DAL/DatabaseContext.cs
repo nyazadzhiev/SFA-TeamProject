@@ -21,7 +21,7 @@ namespace WorkforceManagementAPI.DAL
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<Team> Teams { get; set; }
+        public virtual DbSet<Team> Teams { get; set; }
 
         public DbSet<TimeOff> Requests { get; set; }
 
