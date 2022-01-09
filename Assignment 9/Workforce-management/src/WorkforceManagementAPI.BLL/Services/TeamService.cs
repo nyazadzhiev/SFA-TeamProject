@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
 
@@ -12,19 +13,18 @@ namespace WorkforceManagementAPI.BLL.Service
     public class TeamService
     {
         private readonly DatabaseContext _context;
+        private readonly ValidationService _validationService;
 
-        public TeamService(DatabaseContext context)
+        public TeamService(DatabaseContext context, ValidationService validationService)
         {
             _context = context;
+            _validationService = validationService;
         }
 
         public async Task<Team> GetTeamByIdAsync(Guid teamId)
         {
             var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
-            if (team == null)
-            {
-                throw new Exception($"Invalid input. Team Id doesn't exist.");
-            }
+            _validationService.EnsureTeamExist(team);
 
             return team;
         }
@@ -46,10 +46,7 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public async Task<bool> CreateTeamAsync(string title, string description, Guid creatorId)
         {
-            if (await _context.Teams.AnyAsync(t => t.Title == title))
-            {
-                throw new Exception("Name is already in use.");
-            }
+            _validationService.CheckTeamName(title);
 
             var now = DateTime.Now;
             var team = new Team()
@@ -70,16 +67,10 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public async Task<bool> EditTeamAsync(Guid teamId, Guid modifierId, string title, string description)
         {
-            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
-            if (team == null)
-            {
-                throw new Exception("Invalid input. Team Id doesn't exist.");
-            }
+            _validationService.CheckTeamName(title);
 
-            if (await _context.Teams.AnyAsync(p => p.Title == title) && team.Title != title)
-            {
-                throw new Exception("Name is already in use.");
-            }
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            _validationService.EnsureTeamExist(team);
 
             team.Title = title;
             team.Description = description;
@@ -95,10 +86,7 @@ namespace WorkforceManagementAPI.BLL.Service
         public async Task<bool> DeleteTeamAsync(Guid teamId)
         {
             var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
-            if (team == null)
-            {
-                throw new Exception("Invalid input. Team Id doesn't exist.");
-            }
+            _validationService.EnsureTeamExist(team);
 
             _context.Teams.Remove(team);
             await _context.SaveChangesAsync();
