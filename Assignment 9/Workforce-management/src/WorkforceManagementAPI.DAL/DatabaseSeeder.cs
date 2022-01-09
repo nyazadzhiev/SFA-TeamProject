@@ -11,8 +11,6 @@ namespace WorkforceManagementAPI.DAL
                 database.Users.Add(new User()
                 {
                     Email = "admin@admin.test",
-                    Username = "admin@admin.test",
-                    Password = "adminpass",
                     FirstName = "Admin",
                     LastName = "Admin",
                 }); 
