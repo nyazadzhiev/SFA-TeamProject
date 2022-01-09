@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using WorkforceManagementAPI.DAL;
+using WebApi.Middleware;
+using Microsoft.EntityFrameworkCore;
 using WorkforceManagementAPI.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -65,6 +66,8 @@ namespace WorkforceManagementAPI.WEB
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthorization();
 
