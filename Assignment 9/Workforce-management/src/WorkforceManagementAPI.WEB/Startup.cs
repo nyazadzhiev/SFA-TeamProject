@@ -28,6 +28,7 @@ namespace WorkforceManagementAPI.WEB
         {
 
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WorkforceManagementAPI.WEB", Version = "v1" });
@@ -59,6 +60,7 @@ namespace WorkforceManagementAPI.WEB
                 });
             });
 
+            //EF
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
 
             //EF Identity
