@@ -7,8 +7,8 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
     public class IdentityConfig
     {
         public static IEnumerable<Client> Clients =>
-       new List<Client>
-       {
+        new List<Client>
+        {
            new Client
                  {
             ClientId = "ProjectManagementApp",
@@ -25,9 +25,9 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
 
             // scopes that client has access to
             AllowedScopes = { "users", "offline_access", "ProjectManagementApp", "roles" }
-        }
+                }
 
-   };
+        };
 
         public static IEnumerable<IdentityResource> IdentityResources =>
             new List<IdentityResource>
