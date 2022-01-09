@@ -1,13 +1,6 @@
-using Moq;
-using System;
-using System.Data.Entity;
 using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.DAL;
-using WorkforceManagementAPI.DAL.Entities;
-using WorkforceManagementAPI.Common;
 using Xunit;
-using System.Threading.Tasks;
 
 namespace WorkforceManagementAPI.Test
 {

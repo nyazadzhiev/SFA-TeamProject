@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagementAPI.DTO"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagementAPI.Common", "WorkforceManagementAPI.Common\WorkforceManagementAPI.Common.csproj", "{5EF676C0-4F7C-4C87-BA7B-A8A8E5D516CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkforceManagementAPI.Test", "WorkforceManagementAPI.Test\WorkforceManagementAPI.Test.csproj", "{29B58151-5562-4D8E-B513-5BBAA8B7FD45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkforceManagementAPI.Test", "WorkforceManagementAPI.Test\WorkforceManagementAPI.Test.csproj", "{533AAD68-001F-4A6E-9CEC-131327F6DFEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{5EF676C0-4F7C-4C87-BA7B-A8A8E5D516CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EF676C0-4F7C-4C87-BA7B-A8A8E5D516CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EF676C0-4F7C-4C87-BA7B-A8A8E5D516CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{29B58151-5562-4D8E-B513-5BBAA8B7FD45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{29B58151-5562-4D8E-B513-5BBAA8B7FD45}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{29B58151-5562-4D8E-B513-5BBAA8B7FD45}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{29B58151-5562-4D8E-B513-5BBAA8B7FD45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{533AAD68-001F-4A6E-9CEC-131327F6DFEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{533AAD68-001F-4A6E-9CEC-131327F6DFEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{533AAD68-001F-4A6E-9CEC-131327F6DFEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{533AAD68-001F-4A6E-9CEC-131327F6DFEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
@@ -30,7 +29,7 @@ namespace WorkforceManagementAPI.BLL.Service
             return team;
         }
 
-        public async Task<List<Team>> GetMyTeams(Guid userId)
+        public async Task<List<Team>> GetMyTeams(string userId)
         {
             var teams = await _context.Teams
                 .Where(t => t.Users
