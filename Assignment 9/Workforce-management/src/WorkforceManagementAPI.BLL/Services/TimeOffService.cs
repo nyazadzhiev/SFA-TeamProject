@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,21 @@ namespace WorkforceManagementAPI.BLL.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<List<TimeOff>> GetAllAsync()
+        {
+            return await _context.Requests.ToListAsync();
+        }
+
+        public async Task<List<TimeOff>> GetMyTimeOffs(string userId)
+        {
+            return await _context.Requests.Where(r => r.CreatorId.Equals(userId)).ToListAsync();
+        }
+
+        public async Task<TimeOff> GetTimeOffAsync(Guid id)
+        {
+            return await _context.Requests.FirstOrDefaultAsync(r => r.Id == id);
         }
     }
 }
