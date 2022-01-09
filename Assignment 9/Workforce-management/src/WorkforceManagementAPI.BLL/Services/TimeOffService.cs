@@ -2,15 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
-    public class TimeOffService
+    public class TimeOffService : ITimeOffService
     {
         private readonly DatabaseContext _context;
         private readonly ValidationService _validationService;
