@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WorkforceManagementAPI.Common\WorkforceManagementAPI.Common.csproj" />
     <ProjectReference Include="..\WorkforceManagementAPI.DAL\WorkforceManagementAPI.DAL.csproj" />
   </ItemGroup>
 
