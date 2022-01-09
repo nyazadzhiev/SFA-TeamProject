@@ -11,7 +11,7 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
         {
            new Client
                  {
-            ClientId = "ProjectManagementApp",
+            ClientId = "WorkforceManagementAPI",
             AllowOfflineAccess = true,
 
             // no interactive user, use the clientid/secret for authentication
@@ -24,7 +24,7 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
             },
 
             // scopes that client has access to
-            AllowedScopes = { "users", "offline_access", "ProjectManagementApp", "roles" }
+            AllowedScopes = { "users", "offline_access", "WorkforceManagementAPI", "roles" }
                 }
 
         };
@@ -41,7 +41,7 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
           {
                     new ApiScope("users", "My API", new string[]{ ClaimTypes.Name, ClaimTypes.Role }),
                     new ApiScope("offline_access", "RefereshToken"),
-                    new ApiScope("ProjectManagementApp", "app")
+                    new ApiScope("WorkforceManagementAPI", "app")
           };
     }
 }
