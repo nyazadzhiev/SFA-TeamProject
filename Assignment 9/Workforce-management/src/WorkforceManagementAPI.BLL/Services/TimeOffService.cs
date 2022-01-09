@@ -68,5 +68,23 @@ namespace WorkforceManagementAPI.BLL.Services
 
             return true;
         }
+
+        public async Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType, Status newStatus)
+        {
+            var timeOff = await GetTimeOffAsync(id);
+
+            _validationService.EnsureTimeOffExist(timeOff);
+
+            timeOff.Reason = newReason;
+            timeOff.Status = newStatus;
+            timeOff.Type = newType;
+            timeOff.StartDate = newStart;
+            timeOff.EndDate = newEnd;
+            timeOff.ModifiedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
