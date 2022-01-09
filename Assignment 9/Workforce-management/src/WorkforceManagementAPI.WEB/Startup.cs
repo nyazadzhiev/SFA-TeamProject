@@ -10,6 +10,8 @@ using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using WebApi.Middleware;
+using WorkforceManagementAPI.BLL.Contracts;
+using WorkforceManagementAPI.BLL.Services;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -33,6 +35,8 @@ namespace WorkforceManagementAPI.WEB
             });
 
             services.AddDbContext<DatabaseContext>();
+
+            services.AddTransient<IValidationService, ValidationService>();
 
             var database = new DatabaseContext(Configuration);
             DatabaseSeeder.Seed(database);

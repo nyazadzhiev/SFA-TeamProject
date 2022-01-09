@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL;
@@ -10,7 +11,7 @@ using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
-    public class ValidationService
+    public class ValidationService : IValidationService
     {
         private readonly DatabaseContext _context;
 
