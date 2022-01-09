@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -28,6 +29,8 @@ namespace WorkforceManagementAPI.WEB
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WorkforceManagementAPI.WEB", Version = "v1" });
+
+                
             });
 
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
