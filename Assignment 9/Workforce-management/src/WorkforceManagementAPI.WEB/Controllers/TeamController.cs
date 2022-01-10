@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.DTO.Models.Responses;
 
 namespace WorkforceManagementAPI.WEB.Controllers
@@ -58,6 +59,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
             }
 
             return teamResponseDTO;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateTeamAsync(TeamRequestDTO team)
+        {
+            currentUser = await _userService.GetUserAsync(User);
+
+            bool isCreated = await _teamService.CreateTeamAsync(team.Title, team.Description, currentUser.Id);
+            if (isCreated && ModelState.IsValid)
+            {
+                return Ok("Team created successfully.");
+            }
+
+            return BadRequest();
         }
 
         private TeamResponseDTO MapTeam(Team teamEntity)
