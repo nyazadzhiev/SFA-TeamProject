@@ -16,11 +16,48 @@ namespace WorkforceManagementAPI.WEB.Controllers
     {
         private static IdentityUserManager _userService;
         private static TeamService _teamService;
+        private User currentUser;
 
         public TeamController(IdentityUserManager userService, TeamService teamService) : base()
         {
             _userService = userService;
             _teamService = teamService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TeamResponseDTO>>> GetAllTeamsAsync()
+        {
+            var teams = await _teamService.GetAllTeamsAsync();
+            var teamResponseDTO = new List<TeamResponseDTO>();
+            foreach (var team in teams)
+            {
+                teamResponseDTO.Add(MapTeam(team));
+            }
+
+            return teamResponseDTO;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TeamResponseDTO>> GetTeamByIdAsync(Guid id)
+        {
+            var team = await _teamService.GetTeamByIdAsync(id);
+
+            return MapTeam(team);
+        }
+
+        [HttpGet("My/")]
+        public async Task<ActionResult<IEnumerable<TeamResponseDTO>>> GetMyTeamsAsync()
+        {
+            currentUser = await _userService.GetUserAsync(User);
+
+            var teams = await _teamService.GetMyTeamsAsync(currentUser.Id);
+            var teamResponseDTO = new List<TeamResponseDTO>();
+            foreach (var team in teams)
+            {
+                teamResponseDTO.Add(MapTeam(team));
+            }
+
+            return teamResponseDTO;
         }
 
         private TeamResponseDTO MapTeam(Team teamEntity)
