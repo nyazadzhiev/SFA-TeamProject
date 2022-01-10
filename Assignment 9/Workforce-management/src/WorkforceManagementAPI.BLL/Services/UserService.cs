@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
@@ -112,6 +113,12 @@ namespace WorkforceManagementAPI.BLL.Services
             }
             return checkUser;
         }
+
+        public async Task<User> GetCurrentUser(ClaimsPrincipal principal)
+        {
+            return await _userManager.GetUserAsync(principal);
+        }
+
 
     }
 }
