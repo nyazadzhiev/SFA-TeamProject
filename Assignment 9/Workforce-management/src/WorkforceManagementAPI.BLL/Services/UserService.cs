@@ -9,7 +9,7 @@ using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IIdentityUserManager _userManager;
 
