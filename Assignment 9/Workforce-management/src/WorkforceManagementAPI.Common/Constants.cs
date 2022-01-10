@@ -17,5 +17,11 @@ namespace WorkforceManagementAPI.Common
         public const string InvalidEmail = "The email must be valid";
 
         public const string EmailAreadyInUse = "The email already exists";
+
+        public const string Created = "{0} was created";
+
+        public const string Deleted = "{0} was deleted";
+
+        public const string OperationFailed = "Error!! Operation Failed";
     }
 }
