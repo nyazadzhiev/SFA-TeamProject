@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
+using WorkforceManagementAPI.DTO.Models.Responses;
 
 namespace WorkforceManagementAPI.WEB.Controllers
 {
@@ -32,6 +34,43 @@ namespace WorkforceManagementAPI.WEB.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet]
+        [Route("All")]
+        public async Task<List<UserResponseDTO>> GetAll()
+        {
+            List<UserResponseDTO> users = new List<UserResponseDTO>();
+            foreach (var user in await _userService.GetAll())
+            {
+                users.Add(new UserResponseDTO()
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                });
+            }
+            return users;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<UserResponseDTO> GetUserById(string id)
+        {
+            User user = await _userService.GetUserById(id);
+            if (user != null)
+            {
+                return new UserResponseDTO()
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                };
+            }
+            return new UserResponseDTO();
         }
 
 
