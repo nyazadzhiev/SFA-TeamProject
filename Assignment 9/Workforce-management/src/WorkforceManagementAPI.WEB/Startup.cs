@@ -62,6 +62,8 @@ namespace WorkforceManagementAPI.WEB
                 
             services.AddTransient<IIdentityUserManager, IdentityUserManager>();
             services.AddTransient<ITimeOffService, TimeOffService>();
+            services.AddTransient<IUserService, UserService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

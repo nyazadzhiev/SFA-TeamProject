@@ -18,5 +18,6 @@ namespace WorkforceManagementAPI.DAL.Contracts.IdentityContracts
         Task<bool> IsUserInRole(string userId, string roleName);
         Task<bool> ValidateUserCredentials(string userName, string password);
         Task<IdentityResult> UpdateUserDataAsync(User user);
+        Task<User> FindByIdAsync(string id);
     }
 }
