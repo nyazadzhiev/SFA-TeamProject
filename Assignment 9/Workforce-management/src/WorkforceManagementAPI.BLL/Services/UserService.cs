@@ -48,6 +48,17 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
+        public async Task<bool> DeleteUser(string id)
+        {
+            var checkUser = await _userManager.FindByIdAsync(id);
+            if (checkUser == null)
+            {
+                throw new Exception("User does not exist");
+            }
+            await _userManager.DeleteUserAsync(checkUser);
+            return true;
+        }
+
 
     }
 }
