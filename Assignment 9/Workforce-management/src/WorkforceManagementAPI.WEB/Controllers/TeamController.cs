@@ -83,7 +83,21 @@ namespace WorkforceManagementAPI.WEB.Controllers
             bool isEdited = await _teamService.EditTeamAsync(id, currentUser.Id, teamEdit.Title, teamEdit.Description);
             if (isEdited)
             {
-                return Ok($"Team edited successfully.");
+                return Ok("Team edited successfully.");
+            }
+
+            return BadRequest();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTeamAsync(Guid id)
+        {
+            currentUser = await _userService.GetUserAsync(User);
+
+            bool isDeleted = await _teamService.DeleteTeamAsync(id);
+            if (isDeleted)
+            {
+                return Ok("Team deleted successfully.");
             }
 
             return BadRequest();
