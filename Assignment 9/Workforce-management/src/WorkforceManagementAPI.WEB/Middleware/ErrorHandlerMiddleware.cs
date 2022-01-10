@@ -33,7 +33,14 @@ namespace WebApi.Middleware
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
                     case NameExistException nameExistException:
+                    case EmailAlreadyInUseException emailAlreadyInUse:
                         response.StatusCode = (int)HttpStatusCode.Conflict;
+                        break;
+                    case InvalidLengthException invalidLength:
+                        response.StatusCode = (int)HttpStatusCode.LengthRequired;
+                        break;
+                    case InvalidEmailException invalidEmail:
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
