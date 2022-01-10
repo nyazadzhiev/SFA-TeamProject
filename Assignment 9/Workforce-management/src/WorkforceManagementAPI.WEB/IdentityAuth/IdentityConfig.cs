@@ -20,7 +20,7 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
             // secret for authentication
             ClientSecrets =
             {
-                new Secret("seesharp".Sha256())
+                new Secret("seasharp_BareM1n1mum".Sha256())
             },
 
             // scopes that client has access to
