@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
@@ -95,6 +96,11 @@ namespace WorkforceManagementAPI.BLL.Services
             user.Email = newEmail;
             await _userManager.UpdateUserDataAsync(user);
             return true;
+        }
+
+        public async Task<List<User>> GetAll()
+        {
+            return await _userManager.GetAllAsync();
         }
 
 
