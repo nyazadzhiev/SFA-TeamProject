@@ -103,6 +103,15 @@ namespace WorkforceManagementAPI.BLL.Services
             return await _userManager.GetAllAsync();
         }
 
+        public async Task<User> GetUserById(string id)
+        {
+            var checkUser = await _userManager.FindByIdAsync(id);
+            if (checkUser == null)
+            {
+                throw new Exception($"User with id: {id} does not exist");
+            }
+            return checkUser;
+        }
 
     }
 }
