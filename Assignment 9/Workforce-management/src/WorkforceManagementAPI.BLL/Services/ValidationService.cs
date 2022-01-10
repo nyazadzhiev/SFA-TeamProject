@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL;
@@ -7,7 +8,7 @@ using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
-    public class ValidationService
+    public class ValidationService : IValidationService
     {
         private readonly DatabaseContext _context;
 
@@ -28,7 +29,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (timeOff == null)
             {
-                throw new EntityNotFoundException(String.Format(Constants.NotFound, "Request"));
+                throw new EntityNotFoundException(String.Format(Constants.NotFound, "TimeOff"));
             }
         }
 

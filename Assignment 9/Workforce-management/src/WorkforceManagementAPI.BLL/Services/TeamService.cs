@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
@@ -12,9 +13,9 @@ namespace WorkforceManagementAPI.BLL.Service
     public class TeamService
     {
         private readonly DatabaseContext _context;
-        private readonly ValidationService _validationService;
+        private readonly IValidationService _validationService;
 
-        public TeamService(DatabaseContext context, ValidationService validationService)
+        public TeamService(DatabaseContext context, IValidationService validationService)
         {
             _context = context;
             _validationService = validationService;

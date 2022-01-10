@@ -28,7 +28,6 @@ namespace WorkforceManagementAPI.WEB
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -61,18 +60,16 @@ namespace WorkforceManagementAPI.WEB
             );
                 
             services.AddTransient<IIdentityUserManager, IdentityUserManager>();
+            services.AddTransient<IValidationService, ValidationService>();
             services.AddTransient<ITimeOffService, TimeOffService>();
-            services.AddTransient<IUserService, UserService>();
-
+            services.AddTransient<IUserService, UserService>(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             //app.UseIdentityServer();
-          /*  DatabaseSeeder.Seed(app.ApplicationServices);
-            app.UseIdentityServer();*/
+            DatabaseSeeder.Seed(app.ApplicationServices);
 
             if (env.IsDevelopment())
             {
