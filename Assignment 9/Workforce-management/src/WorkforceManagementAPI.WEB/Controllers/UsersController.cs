@@ -10,7 +10,7 @@ using WorkforceManagementAPI.DTO.Models.Responses;
 namespace WorkforceManagementAPI.WEB.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "Admin")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -24,7 +24,6 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserRequestDTO user)
         {
-            User currentUser = await _userService.GetCurrentUser(User);
             bool result = await _userService.CreateUser(user.Email, user.Password, user.FirstName, user.LastName);
             if (result)
             {
