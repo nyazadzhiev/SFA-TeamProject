@@ -9,6 +9,14 @@ namespace WorkforceManagementAPI.BLL.Contracts
 {
     public interface IValidationService
     {
+        void EnsureUserExist(User user);
+
+        void EnsureLenghtIsValid(string forCheck, int length, string message);
+
+        void EnsureEmailIsValid(string email);
+
+        Task EnsureEmailIsUniqueAsync(string email);
+
         void EnsureTeamExist(Team team);
 
         void CheckTeamName(string title);
