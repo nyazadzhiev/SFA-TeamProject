@@ -11,6 +11,7 @@ using WorkforceManagementAPI.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 
 namespace WorkforceManagementAPI.WEB
@@ -60,6 +61,7 @@ namespace WorkforceManagementAPI.WEB
             );
                 
             services.AddTransient<IIdentityUserManager, IdentityUserManager>();
+            services.AddTransient<ITimeOffService, TimeOffService>();
             services.AddTransient<IUserService, UserService>();
 
         }
