@@ -8,14 +8,14 @@ namespace WorkforceManagementAPI.DTO.Models.Responses
 {
     public class BaseResponseDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int CreatorId { get; set; }
+        public string CreatorId { get; set; }
 
-        public int ModifierId { get; set; }
+        public string ModifierId { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
-        public DateTime ModifierAt { get; set; }
+        public DateTime ModifiedAt { get; set; }
     }
 }
