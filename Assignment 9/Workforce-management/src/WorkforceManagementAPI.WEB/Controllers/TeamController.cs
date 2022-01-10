@@ -75,6 +75,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditTeamAsync(Guid id, TeamRequestDTO teamEdit)
+        {
+            currentUser = await _userService.GetUserAsync(User);
+
+            bool isEdited = await _teamService.EditTeamAsync(id, currentUser.Id, teamEdit.Title, teamEdit.Description);
+            if (isEdited)
+            {
+                return Ok($"Team edited successfully.");
+            }
+
+            return BadRequest();
+        }
+
         private TeamResponseDTO MapTeam(Team teamEntity)
         {
             var team = new TeamResponseDTO()
