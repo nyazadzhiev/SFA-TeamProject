@@ -61,6 +61,7 @@ namespace WorkforceManagementAPI.WEB
             );
                 
             services.AddTransient<IIdentityUserManager, IdentityUserManager>();
+            services.AddTransient<ValidationService, ValidationService>(); // replace first part with interface when validation service is done
             services.AddTransient<ITimeOffService, TimeOffService>();
             services.AddTransient<IUserService, UserService>();
 
