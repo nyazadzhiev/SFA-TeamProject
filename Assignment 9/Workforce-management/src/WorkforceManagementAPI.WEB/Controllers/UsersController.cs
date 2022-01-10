@@ -73,6 +73,17 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return new UserResponseDTO();
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(string id, EditUserReauestDTO user)
+        {
+            bool isEdited = await _userService.UpdateUser(id, user.NewPassword, user.NewEmail, user.NewFirstName, user.NewLastName);
+            if (isEdited && ModelState.IsValid)
+            {
+                return Ok("User edited successfully");
+            }
+            return BadRequest();
+        }
+
 
     }
 }
