@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
@@ -56,6 +57,43 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new Exception("User does not exist");
             }
             await _userManager.DeleteUserAsync(checkUser);
+            return true;
+        }
+
+        public async Task<bool> UpdateUser(string userId, string newPassword, string newEmail, string newFirstName, string newLastName)
+        {
+            if (newPassword.Length <= 7)
+            {
+                throw new ArgumentException("The field Password must have a minimum length of '8");
+            }
+            if (newFirstName.Length < 2)
+            {
+                throw new ArgumentException("The field FirstName must have a minimum length of '2");
+            }
+            if (newLastName.Length < 2)
+            {
+                throw new ArgumentException("The field LastName must have a minimum length of '2");
+            }
+            User user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception($"User with id:{userId} does not exist");
+            }
+            if (!new EmailAddressAttribute().IsValid(newEmail) || newEmail.Length <= 4)
+            {
+                throw new ArgumentException("The email must be valid");
+            }
+            if (await _userManager.VerifyEmail(newEmail) == false && user.Email != newEmail)
+            {
+                throw new Exception("The email already exists");
+            }
+            PasswordHasher<User> hasher = new PasswordHasher<User>();
+            user.UserName = newEmail;
+            user.FirstName = newFirstName;
+            user.LastName = newLastName;
+            user.PasswordHash = hasher.HashPassword(user, newPassword);
+            user.Email = newEmail;
+            await _userManager.UpdateUserDataAsync(user);
             return true;
         }
 
