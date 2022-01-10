@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 
@@ -12,34 +13,23 @@ namespace WorkforceManagementAPI.BLL.Services
     public class UserService : IUserService
     {
         private readonly IIdentityUserManager _userManager;
+        private readonly IValidationService _validationService;
 
-        public UserService(IIdentityUserManager userManager)
+        public UserService(IIdentityUserManager userManager, IValidationService validationService)
         {
             _userManager = userManager;
+            _validationService = validationService;
         }
 
         public async Task<bool> CreateUser(string email, string password, string firstName, string lastName)
         {
-            if (password.Length <= 7)
-            {
-                throw new ArgumentException("The field Password must have a minimum length of '8");
-            }
-            if (firstName.Length < 2)
-            {
-                throw new ArgumentException("The field FirstName must have a minimum length of '2");
-            }
-            if (lastName.Length < 2)
-            {
-                throw new ArgumentException("The field LastName must have a minimum length of '2");
-            }
-            if (!new EmailAddressAttribute().IsValid(email) || email.Length <= 4)
-            {
-                throw new ArgumentException("The email must be valid");
-            }
-            if (await _userManager.VerifyEmail(email) == false)
-            {
-                throw new Exception("The email already exists");
-            }
+            _validationService.EnsureLenghtIsValid(password, 7, nameof(password));
+            _validationService.EnsureLenghtIsValid(firstName, 2, nameof(firstName));
+            _validationService.EnsureLenghtIsValid(lastName, 2, nameof(lastName));
+
+            _validationService.EnsureEmailIsValid(email);
+            await _validationService.EnsureEmailIsUniqueAsync(email);
+
             User user = new User()
             {
                 UserName = email,
@@ -54,41 +44,24 @@ namespace WorkforceManagementAPI.BLL.Services
         public async Task<bool> DeleteUser(string id)
         {
             var checkUser = await _userManager.FindByIdAsync(id);
-            if (checkUser == null)
-            {
-                throw new Exception("User does not exist");
-            }
+            _validationService.EnsureUserExist(checkUser);
+
             await _userManager.DeleteUserAsync(checkUser);
             return true;
         }
 
         public async Task<bool> UpdateUser(string userId, string newPassword, string newEmail, string newFirstName, string newLastName)
         {
-            if (newPassword.Length <= 7)
-            {
-                throw new ArgumentException("The field Password must have a minimum length of '8");
-            }
-            if (newFirstName.Length < 2)
-            {
-                throw new ArgumentException("The field FirstName must have a minimum length of '2");
-            }
-            if (newLastName.Length < 2)
-            {
-                throw new ArgumentException("The field LastName must have a minimum length of '2");
-            }
+            _validationService.EnsureLenghtIsValid(newPassword, 7, nameof(newPassword));
+            _validationService.EnsureLenghtIsValid(newFirstName, 2, nameof(newFirstName));
+            _validationService.EnsureLenghtIsValid(newLastName, 2, nameof(newLastName));
+
             User user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                throw new Exception($"User with id:{userId} does not exist");
-            }
-            if (!new EmailAddressAttribute().IsValid(newEmail) || newEmail.Length <= 4)
-            {
-                throw new ArgumentException("The email must be valid");
-            }
-            if (await _userManager.VerifyEmail(newEmail) == false && user.Email != newEmail)
-            {
-                throw new Exception("The email already exists");
-            }
+            _validationService.EnsureUserExist(user);
+
+            _validationService.EnsureEmailIsValid(newEmail);
+            await _validationService.EnsureEmailIsUniqueAsync(newEmail);
+
             PasswordHasher<User> hasher = new PasswordHasher<User>();
             user.UserName = newEmail;
             user.FirstName = newFirstName;
@@ -96,6 +69,7 @@ namespace WorkforceManagementAPI.BLL.Services
             user.PasswordHash = hasher.HashPassword(user, newPassword);
             user.Email = newEmail;
             await _userManager.UpdateUserDataAsync(user);
+
             return true;
         }
 
@@ -107,10 +81,8 @@ namespace WorkforceManagementAPI.BLL.Services
         public async Task<User> GetUserById(string id)
         {
             var checkUser = await _userManager.FindByIdAsync(id);
-            if (checkUser == null)
-            {
-                throw new Exception($"User with id: {id} does not exist");
-            }
+            _validationService.EnsureUserExist(checkUser);
+
             return checkUser;
         }
 
