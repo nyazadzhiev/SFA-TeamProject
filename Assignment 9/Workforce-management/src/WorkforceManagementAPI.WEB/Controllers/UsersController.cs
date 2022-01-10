@@ -84,6 +84,17 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            bool isDeleted = await _userService.DeleteUser(id);
+            if (isDeleted)
+            {
+                return Ok("User deleted successfully");
+            }
+            return BadRequest();
+        }
+
 
     }
 }
