@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Services;
@@ -29,23 +30,19 @@ namespace ProjectManagementApp.WEB.Controllers
         [HttpGet()]
         public async Task<ActionResult> GetAll()
         {
-            List<TimeOffResponseDTO> requests = new List<TimeOffResponseDTO>();
+            var requests = await _timeOffService.GetAllAsync();
 
-            foreach(TimeOff timeOff in await _timeOffService.GetAllAsync())
-            {
-                requests.Add(new TimeOffResponseDTO()
-                {
-                    Reason = timeOff.Reason,
-                    Type = timeOff.Type,
-                    Status = timeOff.Status,
-                    startDate = timeOff.StartDate,
-                    endDate = timeOff.EndDate,
-                    CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
-                    ModifierName = timeOff.Modifier.FirstName + " " + timeOff.Modifier.LastName
-                });
-            }
-
-            return Ok(requests);
+            return Ok(requests
+                        .Select(request => new TimeOffResponseDTO()
+                        {
+                            Reason = request.Reason,
+                            Type = request.Type,
+                            Status = request.Status,
+                            startDate = request.StartDate,
+                            endDate = request.EndDate,
+                            CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
+                            ModifierName = request.Modifier.FirstName + " " + request.Modifier.LastName
+                        }).ToList());
         }
 
         [HttpGet("MyRequests")]
@@ -54,23 +51,19 @@ namespace ProjectManagementApp.WEB.Controllers
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            List<TimeOffResponseDTO> requests = new List<TimeOffResponseDTO>();
+            var requests = await _timeOffService.GetMyTimeOffs(currentUser.Id);
 
-            foreach (TimeOff timeOff in await _timeOffService.GetMyTimeOffs(currentUser.Id))
+            return Ok(requests
+            .Select(request => new TimeOffResponseDTO()
             {
-                requests.Add(new TimeOffResponseDTO()
-                {
-                    Reason = timeOff.Reason,
-                    Type = timeOff.Type,
-                    Status = timeOff.Status,
-                    startDate = timeOff.StartDate,
-                    endDate = timeOff.EndDate,
-                    CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
-                    ModifierName = timeOff.Modifier.FirstName + " " + timeOff.Modifier.LastName
-                });
-            }
-
-            return Ok(requests);
+                Reason = request.Reason,
+                Type = request.Type,
+                Status = request.Status,
+                startDate = request.StartDate,
+                endDate = request.EndDate,
+                CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
+                ModifierName = request.Modifier.FirstName + " " + request.Modifier.LastName
+            }).ToList());
         }
 
         [HttpGet("{timeOffId}")]
