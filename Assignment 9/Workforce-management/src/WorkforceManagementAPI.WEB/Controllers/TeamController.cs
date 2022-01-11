@@ -123,6 +123,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+        [HttpPut("{teamId}/AssignLeader/{userId}")]
+        public async Task<IActionResult> AssignTeamLeaderAsync(Guid teamId, string userId)
+        {
+            currentUser = await _userService.GetUserAsync(User);
+
+            bool isAssigned = await _teamService.AssignTeamLeaderAsync(teamId, userId);
+            if (isAssigned)
+            {
+                return Ok("Team leader assigned to team successfully.");
+            }
+
+            return BadRequest();
+        }
+
         private TeamResponseDTO MapTeam(Team teamEntity)
         {
             var team = new TeamResponseDTO()

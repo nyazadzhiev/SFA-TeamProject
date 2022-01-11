@@ -124,7 +124,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             _validationService.EnsureUserExist(user);
 
-            if (team.TeamLeaderId == user.Id)
+            if (team.TeamLeaderId == userId)
             {
                 throw new Exception("Can't unassign team leader from the team.");
             }
@@ -132,6 +132,26 @@ namespace WorkforceManagementAPI.BLL.Service
             team.Users.Remove(user);
             user.Teams.Remove(team);
 
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> AssignTeamLeaderAsync(Guid teamId, string userId)
+        {
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            _validationService.EnsureTeamExist(team);
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            _validationService.EnsureUserExist(user);
+
+            if(!team.Users.Any(u => u.Id == userId))
+            {
+                throw new Exception("Can't assign user as team leader who is not part of the team.");
+            }
+
+            team.TeamLeaderId = userId;
+            _context.Teams.Update(team);
             await _context.SaveChangesAsync();
 
             return true;
