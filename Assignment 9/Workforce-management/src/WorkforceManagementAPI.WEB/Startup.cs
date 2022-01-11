@@ -127,7 +127,7 @@ namespace WorkforceManagementAPI.WEB
 
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "http://localhost:5000";
+                    options.Authority = "https://localhost:5001";
                     options.Audience = "https://localhost:5001/resources";
                 });
 
@@ -137,11 +137,9 @@ namespace WorkforceManagementAPI.WEB
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            /*DatabaseSeeder.Seed(app.ApplicationServices);
+            DatabaseSeeder.Seed(app.ApplicationServices);
 
-            app.UseIdentityServer();*/
-
-            // The above code is applicable in future versions of the API where we have asp.net Identity user
+            app.UseIdentityServer();
 
             if (env.IsDevelopment())
             {
