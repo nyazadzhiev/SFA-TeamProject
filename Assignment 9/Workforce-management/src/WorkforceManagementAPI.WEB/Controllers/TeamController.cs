@@ -29,13 +29,19 @@ namespace WorkforceManagementAPI.WEB.Controllers
         public async Task<ActionResult<IEnumerable<TeamResponseDTO>>> GetAllTeamsAsync()
         {
             var teams = await _teamService.GetAllTeamsAsync();
-            var teamResponseDTO = new List<TeamResponseDTO>();
-            foreach (var team in teams)
             {
-                teamResponseDTO.Add(MapTeam(team));
+                return (from team in teams
+                        select new TeamResponseDTO()
+                        {
+                            Id = team.Id,
+                            Title = team.Title,
+                            Description = team.Description,
+                            CreatorId = team.CreatorId,
+                            ModifierId = team.ModifierId,
+                            CreatedAt = team.CreatedAt,
+                            ModifiedAt = team.ModifiedAt
+                        }).ToList();
             }
-
-            return teamResponseDTO;
         }
 
         [HttpGet("{id}")]
@@ -51,14 +57,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             currentUser = await _userService.GetUserAsync(User);
 
-            var teams = await _teamService.GetMyTeamsAsync(currentUser.Id);
-            var teamResponseDTO = new List<TeamResponseDTO>();
-            foreach (var team in teams)
+            var teams = await _teamService.GetAllTeamsAsync();
             {
-                teamResponseDTO.Add(MapTeam(team));
+                return (from team in teams
+                        select new TeamResponseDTO()
+                        {
+                            Id = team.Id,
+                            Title = team.Title,
+                            Description = team.Description,
+                            CreatorId = team.CreatorId,
+                            ModifierId = team.ModifierId,
+                            CreatedAt = team.CreatedAt,
+                            ModifiedAt = team.ModifiedAt
+                        }).ToList();
             }
-
-            return teamResponseDTO;
         }
 
         [HttpPost]
