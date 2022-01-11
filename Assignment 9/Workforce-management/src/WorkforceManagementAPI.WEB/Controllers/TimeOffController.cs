@@ -54,16 +54,16 @@ namespace ProjectManagementApp.WEB.Controllers
             var requests = await _timeOffService.GetMyTimeOffs(currentUser.Id);
 
             return Ok(requests
-            .Select(request => new TimeOffResponseDTO()
-            {
-                Reason = request.Reason,
-                Type = request.Type,
-                Status = request.Status,
-                startDate = request.StartDate,
-                endDate = request.EndDate,
-                CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
-                ModifierName = request.Modifier.FirstName + " " + request.Modifier.LastName
-            }).ToList());
+                        .Select(request => new TimeOffResponseDTO()
+                        {
+                            Reason = request.Reason,
+                            Type = request.Type,
+                            Status = request.Status,
+                            startDate = request.StartDate,
+                            endDate = request.EndDate,
+                            CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
+                            ModifierName = request.Modifier.FirstName + " " + request.Modifier.LastName
+                        }).ToList());
         }
 
         [HttpGet("{timeOffId}")]
