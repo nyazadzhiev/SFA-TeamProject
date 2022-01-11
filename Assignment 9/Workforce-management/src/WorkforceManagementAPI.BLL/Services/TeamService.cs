@@ -93,5 +93,27 @@ namespace WorkforceManagementAPI.BLL.Service
 
             return true;
         }
+
+        public async Task<bool> AssignUserToTeamAsync(Guid teamId, string userId)
+        {
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            _validationService.EnsureTeamExist(team);
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            _validationService.EnsureUserExist(user);
+
+            if (team.Users.Count == 0)
+            {
+                team.TeamLeaderId = userId;
+                _context.Teams.Update(team);
+            }
+
+            team.Users.Add(user);
+            user.Teams.Add(team);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

@@ -95,6 +95,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+        [HttpPost("{teamId}/Assign/{userId}")]
+        public async Task<IActionResult> AssignUserToTeamAsync(Guid teamId, string userId)
+        {
+            currentUser = await _userService.GetUserAsync(User);
+
+            bool isAssigned = await _teamService.AssignUserToTeamAsync(teamId, userId);
+            if (isAssigned)
+            {
+                return Ok("User assigned to team successfully.");
+            }
+
+            return BadRequest();
+        }
+
         private TeamResponseDTO MapTeam(Team teamEntity)
         {
             var team = new TeamResponseDTO()
