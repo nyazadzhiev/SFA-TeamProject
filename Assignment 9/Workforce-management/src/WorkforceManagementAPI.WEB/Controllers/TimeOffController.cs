@@ -105,7 +105,7 @@ namespace ProjectManagementApp.WEB.Controllers
             }
         }
 
-        [HttpPut("{timeoffId}")]
+        [HttpPut("{timeOffId}")]
         public async Task<ActionResult<TimeOffResponseDTO>> Edit(Guid timeOffId, TimeOffRequestDTO model)
         {
             User currentUser = await _userService.GetCurrentUser(User);
