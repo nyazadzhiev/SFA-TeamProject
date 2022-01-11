@@ -3,29 +3,28 @@ using IdentityServer4.Validation;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.WEB.IdentityAuth
 {
     public class PasswordValidator : IResourceOwnerPasswordValidator
     {
-        /*private readonly IUserManager userManager;
+        private readonly IIdentityUserManager userManager;
 
-        public PasswordValidator(IUserManager userManager)
+        public PasswordValidator(IIdentityUserManager userManager)
         {
             this.userManager = userManager;
-        }*/
+        }
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-           // User user = await userManager.FindByNameAsync(context.UserName); Add this method in the Contracts for the User Manager
+           User user = await userManager.FindByNameAsync(context.UserName);
 
-            User user = new User(); // This is a temporary code line. Use the above code line in future versions of the api with user manager implemented.
+       
 
             if (user != null)
             {
-                // bool authResult = await userManager.ValidateUserCredentials(context.UserName, context.Password);
-
-                bool authResult = true; // This is a temporary code line. Use the above code line in future versions of the api with user manager implemented.
+                bool authResult = await userManager.ValidateUserCredentials(context.UserName, context.Password);
 
                 if (authResult)
                 {
