@@ -10,12 +10,12 @@ namespace WorkforceManagementAPI.DTO.Models.Requests
         [MaxLength(50)]
         public string NewEmail { get; set; }
 
-        [RequiredPasswordValidation]
+        [RequiredPassword]
         [MinLength(8)]
         [MaxLength(50)]
         public string NewPassword { get; set; }
 
-        [RequiredPasswordValidation]
+        [RequiredPassword]
         [MinLength(8)]
         [MaxLength(50)]
         public string RepeatPassword { get; set; }
@@ -40,7 +40,7 @@ namespace WorkforceManagementAPI.DTO.Models.Requests
             return result;
         }
 
-        public class RequiredPasswordValidationAttribute : RequiredAttribute
+        public class RequiredPasswordAttribute : RequiredAttribute
         {
             public override bool IsValid(object value)
             {
