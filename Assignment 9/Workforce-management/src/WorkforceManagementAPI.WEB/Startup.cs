@@ -44,7 +44,7 @@ namespace WorkforceManagementAPI.WEB
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-            });
+            })
 
             //Injecting the services and DB in the DI containter
                    .AddRoles<IdentityRole>()
