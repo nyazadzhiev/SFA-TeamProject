@@ -109,6 +109,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+        [HttpDelete("{teamId}/Unassign/{userId}")]
+        public async Task<IActionResult> UnassignUserFromTeamAsync(Guid teamId, string userId)
+        {
+            currentUser = await _userService.GetUserAsync(User);
+
+            bool isUnassigned = await _teamService.UnassignUserFromTeamAsync(teamId, userId);
+            if (isUnassigned)
+            {
+                return Ok("User unassigned from team successfully.");
+            }
+
+            return BadRequest();
+        }
+
         private TeamResponseDTO MapTeam(Team teamEntity)
         {
             var team = new TeamResponseDTO()

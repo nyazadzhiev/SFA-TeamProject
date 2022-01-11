@@ -115,5 +115,26 @@ namespace WorkforceManagementAPI.BLL.Service
 
             return true;
         }
+
+        public async Task<bool> UnassignUserFromTeamAsync(Guid teamId, string userId)
+        {
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            _validationService.EnsureTeamExist(team);
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            _validationService.EnsureUserExist(user);
+
+            if (team.TeamLeaderId == user.Id)
+            {
+                throw new Exception("Can't unassign team leader from the team.");
+            }
+
+            team.Users.Remove(user);
+            user.Teams.Remove(team);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
