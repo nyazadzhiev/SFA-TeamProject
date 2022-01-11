@@ -13,9 +13,9 @@ namespace WorkforceManagementAPI.BLL.Services
     public class TimeOffService : ITimeOffService
     {
         private readonly DatabaseContext _context;
-        private readonly ValidationService _validationService;
+        private readonly IValidationService _validationService;
 
-        public TimeOffService(DatabaseContext context, ValidationService validationService)
+        public TimeOffService(DatabaseContext context, IValidationService validationService)
         {
             _context = context;
             _validationService = validationService;
