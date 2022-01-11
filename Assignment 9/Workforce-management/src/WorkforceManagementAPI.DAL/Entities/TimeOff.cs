@@ -25,11 +25,11 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public DateTime ModifiedAt { get; set; }
 
-        public Guid CreatorId { get; set; }
+        public string CreatorId { get; set; }
 
         public virtual User Creator { get; set; }
 
-        public Guid ModifierId { get; set; }
+        public string ModifierId { get; set; }
 
         public virtual User Modifier { get; set; }
 

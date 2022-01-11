@@ -33,7 +33,7 @@ namespace WorkforceManagementAPI.BLL.Service
         {
             var teams = await _context.Teams
                 .Where(t => t.Users
-                    .Any(u => u.Id == userId))
+                    .Any(u => u.Id.Equals(userId)))
                 .ToListAsync();
 
             return teams;
@@ -44,7 +44,7 @@ namespace WorkforceManagementAPI.BLL.Service
             return await _context.Teams.ToListAsync();
         }
 
-        public async Task<bool> CreateTeamAsync(string title, string description, Guid creatorId)
+        public async Task<bool> CreateTeamAsync(string title, string description, string creatorId)
         {
             _validationService.CheckTeamName(title);
 
@@ -65,7 +65,7 @@ namespace WorkforceManagementAPI.BLL.Service
             return true;
         }
 
-        public async Task<bool> EditTeamAsync(Guid teamId, Guid modifierId, string title, string description)
+        public async Task<bool> EditTeamAsync(Guid teamId, string modifierId, string title, string description)
         {
             _validationService.CheckTeamName(title);
 
