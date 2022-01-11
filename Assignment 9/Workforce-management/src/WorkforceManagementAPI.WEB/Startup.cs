@@ -1,16 +1,22 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using WorkforceManagementAPI.DAL;
-using WorkforceManagementAPI.DAL.Entities;
-using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using WebApi.Middleware;
+using WorkforceManagementAPI.BLL.Contracts;
+using WorkforceManagementAPI.BLL.Service;
+using WorkforceManagementAPI.BLL.Services;
+using WorkforceManagementAPI.BLL.Services.IdentityServices;
+using WorkforceManagementAPI.DAL;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.WEB.IdentityAuth;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -26,7 +32,6 @@ namespace WorkforceManagementAPI.WEB
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -66,6 +71,12 @@ namespace WorkforceManagementAPI.WEB
 
             //EF
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
+            services.AddTransient<IdentityUserManager>();
+            services.AddTransient<TeamService>();
+            services.AddTransient<IIdentityUserManager, IdentityUserManager>();
+            services.AddTransient<IValidationService, ValidationService>();
+            services.AddTransient<ITimeOffService, TimeOffService>();
+            services.AddTransient<IUserService, UserService>();
 
             //EF Identity
             services.AddIdentityCore<User>(options =>
@@ -142,6 +153,8 @@ namespace WorkforceManagementAPI.WEB
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -12,12 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\WorkforceManagementAPI.BLL\WorkforceManagementAPI.BLL.csproj" />
     <ProjectReference Include="..\WorkforceManagementAPI.DAL\WorkforceManagementAPI.DAL.csproj" />
+    <ProjectReference Include="..\WorkforceManagementAPI.DTO\WorkforceManagementAPI.DTO.csproj" />
   </ItemGroup>
 
 </Project>
