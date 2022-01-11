@@ -29,7 +29,7 @@ namespace WorkforceManagementAPI.BLL.Service
             return team;
         }
 
-        public async Task<List<Team>> GetMyTeams(string userId)
+        public async Task<List<Team>> GetMyTeamsAsync(string userId)
         {
             var teams = await _context.Teams
                 .Where(t => t.Users

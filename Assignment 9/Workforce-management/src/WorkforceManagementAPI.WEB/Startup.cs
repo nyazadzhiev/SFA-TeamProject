@@ -13,6 +13,7 @@ using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
+using WorkforceManagementAPI.BLL.Service;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -35,6 +36,9 @@ namespace WorkforceManagementAPI.WEB
             });
 
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
+
+            services.AddTransient<IdentityUserManager>();
+            services.AddTransient<TeamService>();
 
 
             //EF Identity
