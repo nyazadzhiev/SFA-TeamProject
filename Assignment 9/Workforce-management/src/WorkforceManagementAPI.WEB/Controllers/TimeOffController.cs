@@ -118,26 +118,26 @@ namespace ProjectManagementApp.WEB.Controllers
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            if(await _timeOffService.EditTimeOffAsync(timeOffId, model.Reason, model.StartDate, model.EndDate, model.Type, model.Status))
-            {
-                TimeOff timeOff = await _timeOffService.GetTimeOffAsync(timeOffId);
-                _validationService.EnsureTimeOffExist(timeOff);
+            bool isEdited = await _timeOffService.EditTimeOffAsync(timeOffId, model.Reason, model.StartDate, model.EndDate, model.Type, model.Status);
 
-                return new TimeOffResponseDTO()
-                {
-                    Reason = timeOff.Reason,
-                    Type = timeOff.Type,
-                    Status = timeOff.Status,
-                    startDate = timeOff.StartDate,
-                    endDate = timeOff.EndDate,
-                    CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
-                    ModifierName = timeOff.Modifier.FirstName + " " + timeOff.Modifier.LastName
-                };
-            }
-            else
+            if (!isEdited)
             {
                 return BadRequest(Constants.OperationFailed);
             }
+
+            TimeOff timeOff = await _timeOffService.GetTimeOffAsync(timeOffId);
+            _validationService.EnsureTimeOffExist(timeOff);
+
+            return new TimeOffResponseDTO()
+            {
+                Reason = timeOff.Reason,
+                Type = timeOff.Type,
+                Status = timeOff.Status,
+                startDate = timeOff.StartDate,
+                endDate = timeOff.EndDate,
+                CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
+                ModifierName = timeOff.Modifier.FirstName + " " + timeOff.Modifier.LastName
+            };
         }
 
         [HttpDelete("{timeOffId}")]
@@ -146,14 +146,13 @@ namespace ProjectManagementApp.WEB.Controllers
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            if (await _timeOffService.DeleteTimeOffAsync(timeOffId))
-            {
-                return Ok(String.Format(Constants.Deleted, "TimeOff request"));
-            }
-            else
+            bool isDeleted = await _timeOffService.DeleteTimeOffAsync(timeOffId);
+            if (!isDeleted)
             {
                 return BadRequest(Constants.OperationFailed);
             }
+
+            return Ok(String.Format(Constants.Deleted, "TimeOff request"));
         }
     }
 }
