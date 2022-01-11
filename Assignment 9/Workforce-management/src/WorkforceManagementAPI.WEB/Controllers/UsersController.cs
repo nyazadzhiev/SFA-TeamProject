@@ -41,17 +41,16 @@ namespace WorkforceManagementAPI.WEB.Controllers
         public async Task<List<UserResponseDTO>> GetAll()
         {
             var users = await _userService.GetAll();
-            {
-                return (from user in users
-                        select new UserResponseDTO()
-                        {
-                            Id = user.Id,
-                            UserName = user.UserName,
-                            Email = user.Email,
-                            FirstName = user.FirstName,
-                            LastName = user.LastName,
-                        }).ToList();
-            }
+            return users
+                    .Select(user => new UserResponseDTO()
+                    {
+                        Id = user.Id,
+                        UserName = user.UserName,
+                        Email = user.Email,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                    })
+                    .ToList();
         }
 
         [HttpGet("{id}")]
