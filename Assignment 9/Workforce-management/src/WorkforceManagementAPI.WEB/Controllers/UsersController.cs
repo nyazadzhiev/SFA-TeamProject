@@ -93,6 +93,13 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+        [HttpPost("SetAdministrator/{id}")]
+        public async Task<IActionResult> SetAdministrator(string id)
+        {
+            await _userService.SetAdministrator(id);
+            return Ok($"User: {id} is set as Admin");
+        }
+
 
     }
 }

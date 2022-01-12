@@ -95,6 +95,48 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+        [HttpPost("{teamId}/Assign/{userId}")]
+        public async Task<IActionResult> AssignUserToTeamAsync(Guid teamId, string userId)
+        {
+            currentUser = await _userService.GetUserAsync(User);
+
+            bool isAssigned = await _teamService.AssignUserToTeamAsync(teamId, userId);
+            if (isAssigned)
+            {
+                return Ok("User assigned to team successfully.");
+            }
+
+            return BadRequest();
+        }
+
+        [HttpDelete("{teamId}/Unassign/{userId}")]
+        public async Task<IActionResult> UnassignUserFromTeamAsync(Guid teamId, string userId)
+        {
+            currentUser = await _userService.GetUserAsync(User);
+
+            bool isUnassigned = await _teamService.UnassignUserFromTeamAsync(teamId, userId);
+            if (isUnassigned)
+            {
+                return Ok("User unassigned from team successfully.");
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPut("{teamId}/AssignLeader/{userId}")]
+        public async Task<IActionResult> AssignTeamLeaderAsync(Guid teamId, string userId)
+        {
+            currentUser = await _userService.GetUserAsync(User);
+
+            bool isAssigned = await _teamService.AssignTeamLeaderAsync(teamId, userId);
+            if (isAssigned)
+            {
+                return Ok("Team leader assigned to team successfully.");
+            }
+
+            return BadRequest();
+        }
+
         private TeamResponseDTO MapTeam(Team teamEntity)
         {
             var team = new TeamResponseDTO()

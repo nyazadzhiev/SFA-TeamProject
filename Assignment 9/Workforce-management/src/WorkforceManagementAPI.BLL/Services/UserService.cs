@@ -91,6 +91,25 @@ namespace WorkforceManagementAPI.BLL.Services
             return await _userManager.GetUserAsync(principal);
         }
 
+        public async Task SetAdministrator(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception($"User with id: {userId} not found");
+            }
+            if (await IsUserInRole(user.Id, "Admin"))
+            {
+                throw new Exception("User is already an admin");
+            }
+            await _userManager.AddUserToRoleAsync(user, "Admin");
+        }
+
+        public async Task<bool> IsUserInRole(string userId, string roleName)
+        {
+            return await _userManager.IsUserInRole(userId, roleName);
+        }
+
 
     }
 }
