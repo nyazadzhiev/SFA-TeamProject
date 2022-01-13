@@ -77,5 +77,13 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new NameExistException(String.Format(Constants.NameAlreadyInUse, "Team name"));
             }
         }
+
+        public async Task EnsureUpdateEmailIsUniqueAsync(string email,User user)
+        {
+            if (await _userManager.VerifyEmail(email) == false && user.Email != email)
+            {
+                throw new EmailAlreadyInUseException(Constants.EmailAreadyInUse);
+            }
+        }
     }
 }
