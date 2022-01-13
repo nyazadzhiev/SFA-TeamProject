@@ -35,6 +35,7 @@ namespace ProjectManagementApp.WEB.Controllers
             return Ok(requests
                         .Select(request => new TimeOffResponseDTO()
                         {
+                            Id = request.Id,
                             Reason = request.Reason,
                             Type = request.Type.ToString(),
                             Status = request.Status.ToString(),
@@ -56,6 +57,7 @@ namespace ProjectManagementApp.WEB.Controllers
             return Ok(requests
                         .Select(request => new TimeOffResponseDTO()
                         {
+                            Id = request.Id,
                             Reason = request.Reason,
                             Type = request.Type.ToString(),
                             Status = request.Status.ToString(),
@@ -77,6 +79,7 @@ namespace ProjectManagementApp.WEB.Controllers
 
             return new TimeOffResponseDTO()
             {
+                Id = timeOff.Id,
                 Reason = timeOff.Reason,
                 Type = timeOff.Type.ToString(),
                 Status = timeOff.Status.ToString(),
@@ -123,6 +126,7 @@ namespace ProjectManagementApp.WEB.Controllers
 
             return new TimeOffResponseDTO()
             {
+                Id = timeOff.Id,
                 Reason = timeOff.Reason,
                 Type = timeOff.Type.ToString(),
                 Status = timeOff.Status.ToString(),
