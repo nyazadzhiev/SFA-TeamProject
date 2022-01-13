@@ -24,5 +24,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void EnsureTimeOffExist(TimeOff timeOff);
 
         void EnsureInput(int bound, int input);
+
+        void ValidateDate(DateTime date);
     }
 }

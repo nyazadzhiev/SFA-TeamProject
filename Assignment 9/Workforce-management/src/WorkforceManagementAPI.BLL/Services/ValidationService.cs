@@ -85,5 +85,13 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new InvalidInputException(Constants.InvalidInput);
             }
         }
+
+        public void ValidateDate(DateTime date)
+        {
+            if(DateTime.Compare(DateTime.Now, date) > 0)
+            {
+                throw new InvalidInputException(Constants.InvalidInput);
+            }
+        }
     }
 }
