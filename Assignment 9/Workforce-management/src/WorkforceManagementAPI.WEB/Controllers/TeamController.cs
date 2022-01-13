@@ -145,6 +145,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
                 Id = teamEntity.Id,
                 Title = teamEntity.Title,
                 Description = teamEntity.Description,
+                TeamLeaderId = teamEntity.TeamLeaderId,
                 CreatorId = teamEntity.CreatorId,
                 ModifierId = teamEntity.ModifierId,
                 CreatedAt = teamEntity.CreatedAt,
