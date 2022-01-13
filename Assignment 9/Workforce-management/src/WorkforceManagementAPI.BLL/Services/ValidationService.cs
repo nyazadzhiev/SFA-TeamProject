@@ -77,5 +77,13 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new NameExistException(String.Format(Constants.NameAlreadyInUse, "Team name"));
             }
         }
+
+        public void EnsureInput(int bound, int input)
+        {
+            if(input < 0 || input > bound)
+            {
+                throw new InvalidInputException(Constants.InvalidInput);
+            }
+        }
     }
 }

@@ -22,5 +22,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void CheckTeamName(string title);
 
         void EnsureTimeOffExist(TimeOff timeOff);
+
+        void EnsureInput(int bound, int input);
     }
 }
