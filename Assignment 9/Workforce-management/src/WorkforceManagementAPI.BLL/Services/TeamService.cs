@@ -102,6 +102,11 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             _validationService.EnsureUserExist(user);
 
+            if (team.Users.Any(u => u.Id == userId))
+            {
+                throw new Exception("User is already a member.");
+            }
+
             if (team.Users.Count == 0)
             {
                 team.TeamLeaderId = userId;
@@ -145,9 +150,14 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             _validationService.EnsureUserExist(user);
 
+            if (team.TeamLeaderId == userId)
+            {
+                throw new Exception("User is already assigned team leader.");
+            }
+
             if(!team.Users.Any(u => u.Id == userId))
             {
-                throw new Exception("Can't assign user as team leader who is not part of the team.");
+                throw new Exception("Can't assign a user as team leader where they are not a member.");
             }
 
             team.TeamLeaderId = userId;

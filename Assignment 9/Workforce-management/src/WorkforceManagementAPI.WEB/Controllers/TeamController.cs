@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using WorkforceManagementAPI.DTO.Models.Responses;
 namespace WorkforceManagementAPI.WEB.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class TeamController : ControllerBase
     {
