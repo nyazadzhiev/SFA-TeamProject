@@ -36,8 +36,8 @@ namespace ProjectManagementApp.WEB.Controllers
                         .Select(request => new TimeOffResponseDTO()
                         {
                             Reason = request.Reason,
-                            Type = request.Type,
-                            Status = request.Status,
+                            Type = request.Type.ToString(),
+                            Status = request.Status.ToString(),
                             startDate = request.StartDate,
                             endDate = request.EndDate,
                             CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
@@ -57,8 +57,8 @@ namespace ProjectManagementApp.WEB.Controllers
                         .Select(request => new TimeOffResponseDTO()
                         {
                             Reason = request.Reason,
-                            Type = request.Type,
-                            Status = request.Status,
+                            Type = request.Type.ToString(),
+                            Status = request.Status.ToString(),
                             startDate = request.StartDate,
                             endDate = request.EndDate,
                             CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
@@ -78,8 +78,8 @@ namespace ProjectManagementApp.WEB.Controllers
             return new TimeOffResponseDTO()
             {
                 Reason = timeOff.Reason,
-                Type = timeOff.Type,
-                Status = timeOff.Status,
+                Type = timeOff.Type.ToString(),
+                Status = timeOff.Status.ToString(),
                 startDate = timeOff.StartDate,
                 endDate = timeOff.EndDate,
                 CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
@@ -124,8 +124,8 @@ namespace ProjectManagementApp.WEB.Controllers
             return new TimeOffResponseDTO()
             {
                 Reason = timeOff.Reason,
-                Type = timeOff.Type,
-                Status = timeOff.Status,
+                Type = timeOff.Type.ToString(),
+                Status = timeOff.Status.ToString(),
                 startDate = timeOff.StartDate,
                 endDate = timeOff.EndDate,
                 CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
