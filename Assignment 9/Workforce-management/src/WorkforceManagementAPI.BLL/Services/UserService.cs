@@ -52,15 +52,15 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public async Task<bool> UpdateUser(string userId, string newPassword, string newEmail, string newFirstName, string newLastName)
         {
-            User user = await _userManager.FindByIdAsync(userId);
-            _validationService.EnsureUserExist(user);
-
             _validationService.EnsureLenghtIsValid(newPassword, 7, nameof(newPassword));
             _validationService.EnsureLenghtIsValid(newFirstName, 2, nameof(newFirstName));
             _validationService.EnsureLenghtIsValid(newLastName, 2, nameof(newLastName));
-            
+
+            User user = await _userManager.FindByIdAsync(userId);
+            _validationService.EnsureUserExist(user);
+
             _validationService.EnsureEmailIsValid(newEmail);
-            await _validationService.EnsureUpdateEmailIsUniqueAsync(newEmail,user);
+            await _validationService.EnsureEmailIsUniqueAsync(newEmail);
 
             PasswordHasher<User> hasher = new PasswordHasher<User>();
             user.UserName = newEmail;

@@ -22,7 +22,5 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void CheckTeamName(string title);
 
         void EnsureTimeOffExist(TimeOff timeOff);
-
-        Task EnsureUpdateEmailIsUniqueAsync(string email, User user);
     }
 }
