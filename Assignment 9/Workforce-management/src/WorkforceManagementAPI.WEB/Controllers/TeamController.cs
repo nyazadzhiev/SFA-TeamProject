@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
@@ -19,10 +20,10 @@ namespace WorkforceManagementAPI.WEB.Controllers
     public class TeamController : ControllerBase
     {
         private static IUserService _userService;
-        private static TeamService _teamService;
+        private static ITeamService _teamService;
         private User currentUser;
 
-        public TeamController(IUserService userService, TeamService teamService) : base()
+        public TeamController(IUserService userService, ITeamService teamService) : base()
         {
             _userService = userService;
             _teamService = teamService;

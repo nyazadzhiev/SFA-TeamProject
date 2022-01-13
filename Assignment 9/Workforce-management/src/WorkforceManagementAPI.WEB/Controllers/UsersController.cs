@@ -11,7 +11,7 @@ using WorkforceManagementAPI.DTO.Models.Responses;
 namespace WorkforceManagementAPI.WEB.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Policy = "Admin")]
     [ApiController]
     public class UsersController : ControllerBase
     {

@@ -10,7 +10,7 @@ using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.BLL.Service
 {
-    public class TeamService
+    public class TeamService : ITeamService
     {
         private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
@@ -155,7 +155,7 @@ namespace WorkforceManagementAPI.BLL.Service
                 throw new Exception("User is already assigned team leader.");
             }
 
-            if(!team.Users.Any(u => u.Id == userId))
+            if (!team.Users.Any(u => u.Id == userId))
             {
                 throw new Exception("Can't assign a user as team leader where they are not a member.");
             }
