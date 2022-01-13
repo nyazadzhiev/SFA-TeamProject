@@ -97,7 +97,7 @@ namespace ProjectManagementApp.WEB.Controllers
 
             if(isCreated && ModelState.IsValid)
             {
-                return CreatedAtAction("Post", String.Format(Constants.Created, "TimeOff request"));
+                return Created(nameof(HttpPostAttribute), String.Format(Constants.Created, "TimeOff request"));
             }
             else
             {
