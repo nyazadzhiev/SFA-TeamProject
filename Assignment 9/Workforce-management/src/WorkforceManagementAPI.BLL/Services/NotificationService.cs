@@ -19,11 +19,11 @@ namespace WorkforceManagementAPI.BLL.Services
 {
     public class NotificationService : INotificationService
     {
-        private readonly AppSettings _appSettings;
+        private readonly MailSettings _mailSettings;
 
-        public NotificationService(IOptions<AppSettings> appSettings)
+        public NotificationService(IOptions<MailSettings> mailSettings)
         {
-            _appSettings = appSettings.Value;
+            _mailSettings = mailSettings.Value;
         }
 
         public async Task Send(List<User> receivers, string subject, string message)
@@ -36,7 +36,7 @@ namespace WorkforceManagementAPI.BLL.Services
                 receiversMail.Add(MailboxAddress.Parse(mail));
             }
 
-            email.From.Add(MailboxAddress.Parse(_appSettings.SenderEmail));
+            email.From.Add(MailboxAddress.Parse(_mailSettings.SenderEmail));
             email.To.AddRange(receiversMail);
             email.Subject = subject;
             email.Body = new TextPart(TextFormat.Plain) { Text = message };
@@ -48,8 +48,8 @@ namespace WorkforceManagementAPI.BLL.Services
                 X509Chain chain,
                 SslPolicyErrors sslPolicyErrors) => true;
 
-            await client.ConnectAsync(_appSettings.Server, _appSettings.Port, SecureSocketOptions.StartTls);
-            await client.AuthenticateAsync(new NetworkCredential(_appSettings.SenderEmail, _appSettings.Password));
+            await client.ConnectAsync(_mailSettings.Server, _mailSettings.Port, SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(new NetworkCredential(_mailSettings.SenderEmail, _mailSettings.Password));
             await client.SendAsync(email);
             await client.DisconnectAsync(true);
 

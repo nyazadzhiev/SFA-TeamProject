@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WorkforceManagementAPI.DTO.Models
 {
-    public class AppSettings
+    public class MailSettings
     {
         public string Server { get; set; }
         public int Port { get; set; }
