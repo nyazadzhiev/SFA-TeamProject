@@ -52,7 +52,7 @@ namespace WorkforceManagementAPI.BLL.Services
                 Modifier = user
             };
 
-            string subject = timeOff.Type.ToString() + "'Vacantion";
+            string subject = timeOff.Type.ToString() + " Time Off";
             string message = String.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
 
             user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
