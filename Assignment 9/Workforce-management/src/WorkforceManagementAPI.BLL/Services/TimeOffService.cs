@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
+using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
@@ -51,10 +52,15 @@ namespace WorkforceManagementAPI.BLL.Services
                 Modifier = user
             };
 
+            string subject = timeOff.Type.ToString() + "'Vacantion";
+            string message = String.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+
+            user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
+            timeOff.Reviewers = user.Teams.Select(t => t.TeamLeader).ToList();
             await _context.Requests.AddAsync(timeOff);
             await _context.SaveChangesAsync();
 
-            await _notificationService.Send("nyazadzhiev@gmail.com", "test", "test");
+            await _notificationService.Send("nyazadzhiev@gmail.com", subject, message);
 
             return true;
         }
