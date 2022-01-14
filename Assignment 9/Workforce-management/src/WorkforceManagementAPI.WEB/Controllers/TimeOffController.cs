@@ -37,8 +37,8 @@ namespace ProjectManagementApp.WEB.Controllers
                         {
                             Id = request.Id,
                             Reason = request.Reason,
-                            Type = request.Type.ToString(),
-                            Status = request.Status.ToString(),
+                            Type = request.Type,
+                            Status = request.Status,
                             startDate = request.StartDate,
                             endDate = request.EndDate,
                             CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
@@ -59,8 +59,8 @@ namespace ProjectManagementApp.WEB.Controllers
                         {
                             Id = request.Id,
                             Reason = request.Reason,
-                            Type = request.Type.ToString(),
-                            Status = request.Status.ToString(),
+                            Type = request.Type,
+                            Status = request.Status,
                             startDate = request.StartDate,
                             endDate = request.EndDate,
                             CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
@@ -81,8 +81,8 @@ namespace ProjectManagementApp.WEB.Controllers
             {
                 Id = timeOff.Id,
                 Reason = timeOff.Reason,
-                Type = timeOff.Type.ToString(),
-                Status = timeOff.Status.ToString(),
+                Type = timeOff.Type,
+                Status = timeOff.Status,
                 startDate = timeOff.StartDate,
                 endDate = timeOff.EndDate,
                 CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
@@ -128,8 +128,8 @@ namespace ProjectManagementApp.WEB.Controllers
             {
                 Id = timeOff.Id,
                 Reason = timeOff.Reason,
-                Type = timeOff.Type.ToString(),
-                Status = timeOff.Status.ToString(),
+                Type = timeOff.Type,
+                Status = timeOff.Status,
                 startDate = timeOff.StartDate,
                 endDate = timeOff.EndDate,
                 CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,

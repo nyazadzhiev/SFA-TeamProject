@@ -9,9 +9,9 @@ namespace WorkforceManagementAPI.DTO.Models.Responses
 
         public string Reason { get; set; }
 
-        public string Type { get; set; }
+        public RequestType Type { get; set; }
 
-        public string Status { get; set; }
+        public Status Status { get; set; }
 
         public string CreatorName { get; set; }
 
