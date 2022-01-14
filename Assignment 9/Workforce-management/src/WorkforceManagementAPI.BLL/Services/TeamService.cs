@@ -7,6 +7,7 @@ using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Repositories;
 
 namespace WorkforceManagementAPI.BLL.Service
 {
@@ -14,11 +15,13 @@ namespace WorkforceManagementAPI.BLL.Service
     {
         private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
+        private readonly TeamRepository _teamRepository;
 
-        public TeamService(DatabaseContext context, IValidationService validationService)
+        public TeamService(DatabaseContext context, IValidationService validationService, TeamRepository teamRepository)
         {
             _context = context;
             _validationService = validationService;
+            _teamRepository = teamRepository;
         }
 
         public async Task<Team> GetTeamByIdAsync(Guid teamId)
@@ -60,7 +63,7 @@ namespace WorkforceManagementAPI.BLL.Service
             };
 
             await _context.Teams.AddAsync(team);
-            await _context.SaveChangesAsync();
+            await _teamRepository.SaveChangesAsync();
 
             return true;
         }
@@ -78,7 +81,7 @@ namespace WorkforceManagementAPI.BLL.Service
             team.ModifiedAt = DateTime.Now;
 
             _context.Teams.Update(team);
-            await _context.SaveChangesAsync();
+            await _teamRepository.SaveChangesAsync();
 
             return true;
         }
@@ -89,7 +92,7 @@ namespace WorkforceManagementAPI.BLL.Service
             _validationService.EnsureTeamExist(team);
 
             _context.Teams.Remove(team);
-            await _context.SaveChangesAsync();
+            await _teamRepository.SaveChangesAsync();
 
             return true;
         }
@@ -116,7 +119,7 @@ namespace WorkforceManagementAPI.BLL.Service
             team.Users.Add(user);
             user.Teams.Add(team);
 
-            await _context.SaveChangesAsync();
+            await _teamRepository.SaveChangesAsync();
 
             return true;
         }
@@ -137,7 +140,7 @@ namespace WorkforceManagementAPI.BLL.Service
             team.Users.Remove(user);
             user.Teams.Remove(team);
 
-            await _context.SaveChangesAsync();
+            await _teamRepository.SaveChangesAsync();
 
             return true;
         }
@@ -162,7 +165,7 @@ namespace WorkforceManagementAPI.BLL.Service
 
             team.TeamLeaderId = userId;
             _context.Teams.Update(team);
-            await _context.SaveChangesAsync();
+            await _teamRepository.SaveChangesAsync();
 
             return true;
         }
