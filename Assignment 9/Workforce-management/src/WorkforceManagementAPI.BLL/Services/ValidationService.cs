@@ -86,17 +86,17 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void EnsureInputFitsBoundaries(int input, int bound)
+        public void EnsureInputFitsBoundaries(int input, int maxValue)
         {
-            if(input < 0 || input > bound)
+            if(input < 0 || input > maxValue)
             {
                 throw new InputOutOfBoundsException(Constants.InvalidInput);
             }
         }
 
-        public void EnsureInputFitsBoundaries(DateTime start, DateTime end)
+        public void EnsureInputFitsBoundaries(DateTime minValue, DateTime maxValue)
         {
-            if(DateTime.Compare(DateTime.Now, start) > 0 || DateTime.Compare(DateTime.Now, end) > 0 || start > end)
+            if(DateTime.Compare(DateTime.Now, minValue) > 0 || DateTime.Compare(DateTime.Now, maxValue) > 0 || minValue > maxValue)
             {
                 throw new InputOutOfBoundsException(Constants.InvalidInput);
             }

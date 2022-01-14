@@ -25,8 +25,8 @@ namespace WorkforceManagementAPI.BLL.Contracts
 
         Task EnsureUpdateEmailIsUniqueAsync(string email, User user);
 
-        void EnsureInputFitsBoundaries(int input, int bound);
+        void EnsureInputFitsBoundaries(int input, int maxValue);
 
-        void EnsureInputFitsBoundaries(DateTime date, DateTime end);
+        void EnsureInputFitsBoundaries(DateTime minValue, DateTime maxValue);
     }
 }
