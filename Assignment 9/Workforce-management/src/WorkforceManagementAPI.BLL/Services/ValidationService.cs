@@ -88,7 +88,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public void ValidateDate(DateTime start, DateTime end)
         {
-            if(DateTime.Compare(DateTime.Now, start) > 0 || DateTime.Compare(DateTime.Now, end) > 0)
+            if(DateTime.Compare(DateTime.Now, start) > 0 || DateTime.Compare(DateTime.Now, end) > 0 || start > end)
             {
                 throw new InvalidInputException(Constants.InvalidInput);
             }
