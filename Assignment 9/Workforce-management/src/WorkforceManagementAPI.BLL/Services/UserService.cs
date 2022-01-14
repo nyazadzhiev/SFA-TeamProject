@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
@@ -14,30 +16,28 @@ namespace WorkforceManagementAPI.BLL.Services
     {
         private readonly IIdentityUserManager _userManager;
         private readonly IValidationService _validationService;
+        private readonly IMapper _mapper;
 
-        public UserService(IIdentityUserManager userManager, IValidationService validationService)
+        public UserService(IIdentityUserManager userManager, IValidationService validationService, IMapper mapper)
         {
             _userManager = userManager;
             _validationService = validationService;
+            _mapper = mapper;
         }
 
-        public async Task<bool> CreateUser(string email, string password, string firstName, string lastName)
+        public async Task<bool> CreateUser(CreateUserRequestDTO userRequest)
         {
-            _validationService.EnsureLenghtIsValid(password, 7, nameof(password));
-            _validationService.EnsureLenghtIsValid(firstName, 2, nameof(firstName));
-            _validationService.EnsureLenghtIsValid(lastName, 2, nameof(lastName));
+            _validationService.EnsureLenghtIsValid(userRequest.Password, 7, nameof(userRequest.Password));
+            _validationService.EnsureLenghtIsValid(userRequest.FirstName, 2, nameof(userRequest.FirstName));
+            _validationService.EnsureLenghtIsValid(userRequest.LastName, 2, nameof(userRequest.LastName));
 
-            _validationService.EnsureEmailIsValid(email);
-            await _validationService.EnsureEmailIsUniqueAsync(email);
+            _validationService.EnsureEmailIsValid(userRequest.Email);
+            await _validationService.EnsureEmailIsUniqueAsync(userRequest.Email);
 
-            User user = new User()
-            {
-                UserName = email,
-                Email = email,
-                FirstName = firstName,
-                LastName = lastName,
-            };
-            await _userManager.CreateUserAsync(user, password);
+            var user = _mapper.Map<User>(userRequest);
+            user.UserName = userRequest.Email;
+            await _userManager.CreateUserAsync(user, userRequest.Password);
+           
             return true;
         }
 

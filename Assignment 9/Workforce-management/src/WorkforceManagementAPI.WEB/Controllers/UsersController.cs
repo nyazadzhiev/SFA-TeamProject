@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,16 +18,18 @@ namespace WorkforceManagementAPI.WEB.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService) : base()
+        public UsersController(IUserService userService,IMapper mapper) : base()
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserRequestDTO user)
         {
-            bool result = await _userService.CreateUser(user.Email, user.Password, user.FirstName, user.LastName);
+            bool result = await _userService.CreateUser(user);
             if (result)
             {
                 return Ok("User created successfully");
