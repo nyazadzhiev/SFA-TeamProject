@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.DAL;
@@ -15,12 +17,14 @@ namespace WorkforceManagementAPI.BLL.Services
         private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
         private readonly IUserService _userService;
+        private readonly INotificationService _notificationService;
 
-        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService)
+        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService, INotificationService notificationService)
         {
             _context = context;
             _validationService = validationService;
             _userService = userService;
+            _notificationService = notificationService;
         }
 
         public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, Status status, DateTime startDate, DateTime endDate, string creatorId)
@@ -49,6 +53,8 @@ namespace WorkforceManagementAPI.BLL.Services
 
             await _context.Requests.AddAsync(timeOff);
             await _context.SaveChangesAsync();
+
+            await _notificationService.Send("nyazadzhiev@gmail.com", "test", "test");
 
             return true;
         }
