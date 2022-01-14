@@ -60,7 +60,7 @@ namespace WorkforceManagementAPI.BLL.Services
             await _context.Requests.AddAsync(timeOff);
             await _context.SaveChangesAsync();
 
-            await _notificationService.Send("nyazadzhiev@gmail.com", subject, message);
+            await _notificationService.Send(timeOff.Reviewers, subject, message);
 
             return true;
         }

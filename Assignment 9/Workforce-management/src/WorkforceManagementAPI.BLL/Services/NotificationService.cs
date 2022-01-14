@@ -13,6 +13,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using MailKit.Net.Smtp;
+using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
@@ -25,11 +26,18 @@ namespace WorkforceManagementAPI.BLL.Services
             _appSettings = appSettings.Value;
         }
 
-        public async Task Send(string to, string subject, string message)
+        public async Task Send(List<User> receivers, string subject, string message)
         {
             var email = new MimeMessage();
+            var receiversMail = new InternetAddressList();
+
+            foreach(string mail in receivers.Select(r => r.Email))
+            {
+                receiversMail.Add(MailboxAddress.Parse(mail));
+            }
+
             email.From.Add(MailboxAddress.Parse(_appSettings.SenderEmail));
-            email.To.Add(MailboxAddress.Parse(to));
+            email.To.AddRange(receiversMail);
             email.Subject = subject;
             email.Body = new TextPart(TextFormat.Plain) { Text = message };
 
