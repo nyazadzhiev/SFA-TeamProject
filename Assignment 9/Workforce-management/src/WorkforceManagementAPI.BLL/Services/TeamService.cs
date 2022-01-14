@@ -152,12 +152,12 @@ namespace WorkforceManagementAPI.BLL.Service
 
             if (team.TeamLeaderId == userId)
             {
-                throw new Exception("User is already assigned team leader.");
+                throw new Exception("User is already the assigned team leader.");
             }
 
             if (!team.Users.Any(u => u.Id == userId))
             {
-                throw new Exception("Can't assign a user as team leader where they are not a member.");
+                throw new Exception("Can't assign user as a leader in a team where they are not a member of.");
             }
 
             team.TeamLeaderId = userId;
