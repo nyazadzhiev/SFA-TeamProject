@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Service;
+using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
@@ -12,14 +15,15 @@ using WorkforceManagementAPI.DTO.Models.Responses;
 namespace WorkforceManagementAPI.WEB.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class TeamController : ControllerBase
     {
-        private static IdentityUserManager _userService;
-        private static TeamService _teamService;
+        private static IUserService _userService;
+        private static ITeamService _teamService;
         private User currentUser;
 
-        public TeamController(IdentityUserManager userService, TeamService teamService) : base()
+        public TeamController(IUserService userService, ITeamService teamService) : base()
         {
             _userService = userService;
             _teamService = teamService;
@@ -45,9 +49,9 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpGet("My/")]
         public async Task<ActionResult<IEnumerable<TeamResponseDTO>>> GetMyTeamsAsync()
         {
-            currentUser = await _userService.GetUserAsync(User);
+            currentUser = await _userService.GetCurrentUser(User);
 
-            var teams = await _teamService.GetAllTeamsAsync();
+            var teams = await _teamService.GetMyTeamsAsync(currentUser.Id);
             return teams
                 .Select(team => MapTeam(team))
                 .ToList();
@@ -56,7 +60,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateTeamAsync(TeamRequestDTO team)
         {
-            currentUser = await _userService.GetUserAsync(User);
+            currentUser = await _userService.GetCurrentUser(User);
 
             bool isCreated = await _teamService.CreateTeamAsync(team.Title, team.Description, currentUser.Id);
             if (isCreated && ModelState.IsValid)
@@ -70,7 +74,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> EditTeamAsync(Guid id, TeamRequestDTO teamEdit)
         {
-            currentUser = await _userService.GetUserAsync(User);
+            currentUser = await _userService.GetCurrentUser(User);
 
             bool isEdited = await _teamService.EditTeamAsync(id, currentUser.Id, teamEdit.Title, teamEdit.Description);
             if (isEdited)
@@ -84,7 +88,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeamAsync(Guid id)
         {
-            currentUser = await _userService.GetUserAsync(User);
+            currentUser = await _userService.GetCurrentUser(User);
 
             bool isDeleted = await _teamService.DeleteTeamAsync(id);
             if (isDeleted)
@@ -98,7 +102,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpPost("{teamId}/Assign/{userId}")]
         public async Task<IActionResult> AssignUserToTeamAsync(Guid teamId, string userId)
         {
-            currentUser = await _userService.GetUserAsync(User);
+            currentUser = await _userService.GetCurrentUser(User);
 
             bool isAssigned = await _teamService.AssignUserToTeamAsync(teamId, userId);
             if (isAssigned)
@@ -112,7 +116,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpDelete("{teamId}/Unassign/{userId}")]
         public async Task<IActionResult> UnassignUserFromTeamAsync(Guid teamId, string userId)
         {
-            currentUser = await _userService.GetUserAsync(User);
+            currentUser = await _userService.GetCurrentUser(User);
 
             bool isUnassigned = await _teamService.UnassignUserFromTeamAsync(teamId, userId);
             if (isUnassigned)
@@ -126,7 +130,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpPut("{teamId}/AssignLeader/{userId}")]
         public async Task<IActionResult> AssignTeamLeaderAsync(Guid teamId, string userId)
         {
-            currentUser = await _userService.GetUserAsync(User);
+            currentUser = await _userService.GetCurrentUser(User);
 
             bool isAssigned = await _teamService.AssignTeamLeaderAsync(teamId, userId);
             if (isAssigned)
@@ -144,6 +148,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
                 Id = teamEntity.Id,
                 Title = teamEntity.Title,
                 Description = teamEntity.Description,
+                TeamLeaderId = teamEntity.TeamLeaderId,
                 CreatorId = teamEntity.CreatorId,
                 ModifierId = teamEntity.ModifierId,
                 CreatedAt = teamEntity.CreatedAt,

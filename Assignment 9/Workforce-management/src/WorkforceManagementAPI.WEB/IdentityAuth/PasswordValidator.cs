@@ -18,9 +18,8 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
         }
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-           User user = await userManager.FindByNameAsync(context.UserName);
 
-       
+           User user = await userManager.FindByNameAsync(context.UserName);
 
             if (user != null)
             {
@@ -28,9 +27,9 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
 
                 if (authResult)
                 {
-                    List<string> roles = new List<string>();
-
+                    List<string> roles = await userManager.GetUserRolesAsync(user);
                     List<Claim> claims = new List<Claim>();
+
                     claims.Add(new Claim(ClaimTypes.Name, user.UserName));
 
                     foreach (var role in roles)
