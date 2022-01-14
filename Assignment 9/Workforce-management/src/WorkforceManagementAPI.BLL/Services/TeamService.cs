@@ -24,27 +24,22 @@ namespace WorkforceManagementAPI.BLL.Service
             _teamRepository = teamRepository;
         }
 
-        public async Task<Team> GetTeamByIdAsync(Guid teamId)
+        public async Task<List<Team>> GetAllTeamsAsync()
         {
-            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
-            _validationService.EnsureTeamExist(team);
-
-            return team;
+            return await _teamRepository.GetAllTeamsAsync();
         }
 
         public async Task<List<Team>> GetMyTeamsAsync(string userId)
         {
-            var teams = await _context.Teams
-                .Where(t => t.Users
-                    .Any(u => u.Id.Equals(userId)))
-                .ToListAsync();
-
-            return teams;
+            return await _teamRepository.GetMyTeamsAsync(userId);
         }
 
-        public async Task<List<Team>> GetAllTeamsAsync()
+        public async Task<Team> GetTeamByIdAsync(Guid teamId)
         {
-            return await _context.Teams.ToListAsync();
+            var team = await _teamRepository.GetTeamByIdAsync(teamId);
+            _validationService.EnsureTeamExist(team);
+
+            return team;
         }
 
         public async Task<bool> CreateTeamAsync(string title, string description, string creatorId)
