@@ -45,34 +45,14 @@ namespace WorkforceManagementAPI.WEB.Controllers
         public async Task<List<UserResponseDTO>> GetAll()
         {
             var users = await _userService.GetAll();
-            return users
-                    .Select(user => new UserResponseDTO()
-                    {
-                        Id = user.Id,
-                        UserName = user.UserName,
-                        Email = user.Email,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                    })
-                    .ToList();
+            return _mapper.Map<List<UserResponseDTO>>(users);
         }
 
         [HttpGet("{id}")]
         public async Task<UserResponseDTO> GetUserById(Guid id)
         {
             User user = await _userService.GetUserById(id.ToString());
-            if (user != null)
-            {
-                return new UserResponseDTO()
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                };
-            }
-            return new UserResponseDTO();
+            return _mapper.Map<UserResponseDTO>(user);
         }
 
         [HttpPut("{id}")]
