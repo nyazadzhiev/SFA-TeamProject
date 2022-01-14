@@ -36,6 +36,33 @@ namespace WorkforceManagementAPI.DAL.Repositories
             return await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
         }
 
+        public async Task AddTeamAsync(Team team)
+        {
+            await _context.Teams.AddAsync(team);
+        }
+
+        public void UpdateTeam(Team team)
+        {
+            _context.Teams.Update(team);
+        }
+
+        public void RemoveTeam(Team team)
+        {
+            _context.Teams.Remove(team);
+        }
+
+        public void AddTeamUser(Team team, User user)
+        {
+            team.Users.Add(user);
+            user.Teams.Add(team);
+        }
+
+        public void RemoveTeamUser(Team team, User user)
+        {
+            team.Users.Remove(user);
+            user.Teams.Remove(team);
+        }
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

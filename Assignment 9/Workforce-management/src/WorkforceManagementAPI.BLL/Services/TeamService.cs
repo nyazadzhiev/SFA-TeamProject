@@ -57,7 +57,7 @@ namespace WorkforceManagementAPI.BLL.Service
                 ModifiedAt = now
             };
 
-            await _context.Teams.AddAsync(team);
+            await _teamRepository.AddTeamAsync(team);
             await _teamRepository.SaveChangesAsync();
 
             return true;
@@ -75,7 +75,7 @@ namespace WorkforceManagementAPI.BLL.Service
             team.ModifierId = modifierId;
             team.ModifiedAt = DateTime.Now;
 
-            _context.Teams.Update(team);
+            _teamRepository.UpdateTeam(team);
             await _teamRepository.SaveChangesAsync();
 
             return true;
@@ -86,7 +86,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
             _validationService.EnsureTeamExist(team);
 
-            _context.Teams.Remove(team);
+            _teamRepository.RemoveTeam(team);
             await _teamRepository.SaveChangesAsync();
 
             return true;
@@ -111,8 +111,7 @@ namespace WorkforceManagementAPI.BLL.Service
                 _context.Teams.Update(team);
             }
 
-            team.Users.Add(user);
-            user.Teams.Add(team);
+            _teamRepository.AddTeamUser(team, user);
 
             await _teamRepository.SaveChangesAsync();
 
@@ -132,8 +131,7 @@ namespace WorkforceManagementAPI.BLL.Service
                 throw new Exception("Can't unassign team leader from the team.");
             }
 
-            team.Users.Remove(user);
-            user.Teams.Remove(team);
+            _teamRepository.RemoveTeamUser(team, user);
 
             await _teamRepository.SaveChangesAsync();
 
@@ -159,7 +157,7 @@ namespace WorkforceManagementAPI.BLL.Service
             }
 
             team.TeamLeaderId = userId;
-            _context.Teams.Update(team);
+            _teamRepository.UpdateTeam(team);
             await _teamRepository.SaveChangesAsync();
 
             return true;
