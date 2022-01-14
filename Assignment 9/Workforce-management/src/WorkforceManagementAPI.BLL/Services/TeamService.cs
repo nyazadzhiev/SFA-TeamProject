@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
+using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
 
@@ -15,9 +16,9 @@ namespace WorkforceManagementAPI.BLL.Service
     {
         private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
-        private readonly TeamRepository _teamRepository;
+        private readonly ITeamRepository _teamRepository;
 
-        public TeamService(DatabaseContext context, IValidationService validationService, TeamRepository teamRepository)
+        public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository)
         {
             _context = context;
             _validationService = validationService;

@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.DAL.Repositories
 {
-    public class TeamRepository
+    public class TeamRepository : ITeamRepository
     {
         private readonly DatabaseContext _context;
 

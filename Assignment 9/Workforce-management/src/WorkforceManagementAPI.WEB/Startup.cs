@@ -14,6 +14,7 @@ using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.DAL;
+using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
@@ -78,7 +79,7 @@ namespace WorkforceManagementAPI.WEB
             services.AddTransient<ITimeOffService, TimeOffService>();
             services.AddTransient<IUserService, UserService>();
 
-            services.AddTransient<TeamRepository>();
+            services.AddTransient<ITeamRepository, TeamRepository>();
 
             //EF Identity
             services.AddIdentityCore<User>(options =>
