@@ -78,19 +78,19 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void EnsureInput(int bound, int input)
+        public void EnsureInputFitsBoundaries(int input, int bound)
         {
             if(input < 0 || input > bound)
             {
-                throw new InvalidInputException(Constants.InvalidInput);
+                throw new InputOutOfBoundsException(Constants.InvalidInput);
             }
         }
 
-        public void ValidateDate(DateTime start, DateTime end)
+        public void EnsureInputFitsBoundaries(DateTime start, DateTime end)
         {
             if(DateTime.Compare(DateTime.Now, start) > 0 || DateTime.Compare(DateTime.Now, end) > 0 || start > end)
             {
-                throw new InvalidInputException(Constants.InvalidInput);
+                throw new InputOutOfBoundsException(Constants.InvalidInput);
             }
         }
     }

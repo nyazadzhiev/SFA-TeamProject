@@ -25,9 +25,9 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, Status status, DateTime startDate, DateTime endDate, string creatorId)
         {
-            _validationService.EnsureInput(2, ((int)type));
-            _validationService.EnsureInput(3, ((int)status));
-            _validationService.ValidateDate(startDate, endDate);
+            _validationService.EnsureInputFitsBoundaries(((int)type), 2);
+            _validationService.EnsureInputFitsBoundaries(((int)status), 3);
+            _validationService.EnsureInputFitsBoundaries(startDate, endDate);
 
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
@@ -85,9 +85,9 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public async Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType, Status newStatus)
         {
-            _validationService.EnsureInput(2, ((int)newType));
-            _validationService.EnsureInput(3, ((int)newStatus));
-            _validationService.ValidateDate(newStart, newEnd);
+            _validationService.EnsureInputFitsBoundaries(((int)newType), 2);
+            _validationService.EnsureInputFitsBoundaries(((int)newStatus), 3);
+            _validationService.EnsureInputFitsBoundaries(newStart, newEnd);
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);

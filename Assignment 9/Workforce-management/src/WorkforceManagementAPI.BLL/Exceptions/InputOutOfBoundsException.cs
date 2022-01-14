@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WorkforceManagementAPI.BLL.Exceptions
 {
-    public class InvalidInputException : Exception
+    public class InputOutOfBoundsException : Exception
     {
-        public InvalidInputException(string message) : base(message)
+        public InputOutOfBoundsException(string message) : base(message)
         {
 
         }

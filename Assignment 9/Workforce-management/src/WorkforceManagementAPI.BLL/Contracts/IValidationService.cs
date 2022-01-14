@@ -23,8 +23,8 @@ namespace WorkforceManagementAPI.BLL.Contracts
 
         void EnsureTimeOffExist(TimeOff timeOff);
 
-        void EnsureInput(int bound, int input);
+        void EnsureInputFitsBoundaries(int input, int bound);
 
-        void ValidateDate(DateTime date, DateTime end);
+        void EnsureInputFitsBoundaries(DateTime date, DateTime end);
     }
 }

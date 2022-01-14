@@ -36,7 +36,7 @@ namespace WebApi.Middleware
                     case EmailAlreadyInUseException emailAlreadyInUse:
                         response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
-                    case InvalidInputException inputException:
+                    case InputOutOfBoundsException inputException:
                     case InvalidEmailException invalidEmail:
                     case InvalidLengthException invalidLength:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
