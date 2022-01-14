@@ -85,5 +85,37 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new EmailAlreadyInUseException(Constants.EmailAreadyInUse);
             }
         }
+
+        public void CheckIfUserIsMember(Team team, string userId)
+        {
+            if (team.Users.Any(u => u.Id == userId))
+            {
+                throw new Exception("User is already a member.");
+            }
+        }
+
+        public void CheckIfUserToUnassignIsTeamLeader(Team team, string userId)
+        {
+            if (team.TeamLeaderId == userId)
+            {
+                throw new Exception("Can't unassign team leader from the team.");
+            }
+        }
+
+        public void CheckIfUserToAssignIsTeamLeader(Team team, string userId)
+        {
+            if (team.TeamLeaderId == userId)
+            {
+                throw new Exception("User is already the assigned team leader.");
+            }
+        }
+
+        public void CheckIfUserToAssignIsMember(Team team, string userId)
+        {
+            if (!team.Users.Any(u => u.Id == userId))
+            {
+                throw new Exception("Can't assign user as a leader in a team where they are not a member of.");
+            }
+        }
     }
 }
