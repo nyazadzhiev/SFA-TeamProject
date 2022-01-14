@@ -23,6 +23,8 @@ namespace WorkforceManagementAPI.BLL.Contracts
 
         void EnsureTimeOffExist(TimeOff timeOff);
 
+        Task EnsureUpdateEmailIsUniqueAsync(string email, User user);
+
         void EnsureInputFitsBoundaries(int input, int bound);
 
         void EnsureInputFitsBoundaries(DateTime date, DateTime end);

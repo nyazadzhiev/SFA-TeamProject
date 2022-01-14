@@ -78,6 +78,14 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
+        public async Task EnsureUpdateEmailIsUniqueAsync(string email,User user)
+        {
+            if (await _userManager.VerifyEmail(email) == false && user.Email != email)
+            {
+                throw new EmailAlreadyInUseException(Constants.EmailAreadyInUse);
+            }
+        }
+
         public void EnsureInputFitsBoundaries(int input, int bound)
         {
             if(input < 0 || input > bound)

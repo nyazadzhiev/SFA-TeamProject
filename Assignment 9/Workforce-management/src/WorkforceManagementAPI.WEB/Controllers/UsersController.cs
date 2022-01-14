@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using WorkforceManagementAPI.DTO.Models.Responses;
 namespace WorkforceManagementAPI.WEB.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = "Admin")]
+    [Authorize]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -54,9 +55,9 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<UserResponseDTO> GetUserById(string id)
+        public async Task<UserResponseDTO> GetUserById(Guid id)
         {
-            User user = await _userService.GetUserById(id);
+            User user = await _userService.GetUserById(id.ToString());
             if (user != null)
             {
                 return new UserResponseDTO()
@@ -72,9 +73,9 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(string id, EditUserReauestDTO user)
+        public async Task<IActionResult> UpdateUser(Guid id, EditUserReauestDTO user)
         {
-            bool isEdited = await _userService.UpdateUser(id, user.NewPassword, user.NewEmail, user.NewFirstName, user.NewLastName);
+            bool isEdited = await _userService.UpdateUser(id.ToString(), user.NewPassword, user.NewEmail, user.NewFirstName, user.NewLastName);
             if (isEdited && ModelState.IsValid)
             {
                 return Ok("User edited successfully");
@@ -83,9 +84,9 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(string id)
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
-            bool isDeleted = await _userService.DeleteUser(id);
+            bool isDeleted = await _userService.DeleteUser(id.ToString());
             if (isDeleted)
             {
                 return Ok("User deleted successfully");
@@ -94,9 +95,9 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         [HttpPost("SetAdministrator/{id}")]
-        public async Task<IActionResult> SetAdministrator(string id)
+        public async Task<IActionResult> SetAdministrator(Guid id)
         {
-            await _userService.SetAdministrator(id);
+            await _userService.SetAdministrator(id.ToString());
             return Ok($"User: {id} is set as Admin");
         }
 

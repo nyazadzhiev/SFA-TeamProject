@@ -60,7 +60,7 @@ namespace WorkforceManagementAPI.BLL.Services
             _validationService.EnsureUserExist(user);
 
             _validationService.EnsureEmailIsValid(newEmail);
-            await _validationService.EnsureEmailIsUniqueAsync(newEmail);
+            await _validationService.EnsureUpdateEmailIsUniqueAsync(newEmail,user);
 
             PasswordHasher<User> hasher = new PasswordHasher<User>();
             user.UserName = newEmail;
