@@ -75,7 +75,6 @@ namespace WorkforceManagementAPI.WEB
             //EF
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
             services.AddTransient<ITeamService, TeamService>();
-            services.AddTransient<TeamService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IIdentityUserManager, IdentityUserManager>();
             services.AddTransient<IValidationService, ValidationService>();
