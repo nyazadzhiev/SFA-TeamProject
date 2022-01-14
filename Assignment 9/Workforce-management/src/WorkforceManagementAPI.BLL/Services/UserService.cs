@@ -50,24 +50,24 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> UpdateUser(string userId, string newPassword, string newEmail, string newFirstName, string newLastName)
+        public async Task<bool> UpdateUser(string userId, EditUserReauestDTO editUserReaqest)
         {
-            _validationService.EnsureLenghtIsValid(newPassword, 7, nameof(newPassword));
-            _validationService.EnsureLenghtIsValid(newFirstName, 2, nameof(newFirstName));
-            _validationService.EnsureLenghtIsValid(newLastName, 2, nameof(newLastName));
+            _validationService.EnsureLenghtIsValid(editUserReaqest.NewPassword, 7, nameof(editUserReaqest.NewPassword));
+            _validationService.EnsureLenghtIsValid(editUserReaqest.NewFirstName, 2, nameof(editUserReaqest.NewFirstName));
+            _validationService.EnsureLenghtIsValid(editUserReaqest.NewLastName, 2, nameof(editUserReaqest.NewLastName));
 
             User user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.EnsureEmailIsValid(newEmail);
-            await _validationService.EnsureUpdateEmailIsUniqueAsync(newEmail,user);
+            _validationService.EnsureEmailIsValid(editUserReaqest.NewEmail);
+            await _validationService.EnsureUpdateEmailIsUniqueAsync(editUserReaqest.NewEmail, user);
 
             PasswordHasher<User> hasher = new PasswordHasher<User>();
-            user.UserName = newEmail;
-            user.FirstName = newFirstName;
-            user.LastName = newLastName;
-            user.PasswordHash = hasher.HashPassword(user, newPassword);
-            user.Email = newEmail;
+            user.UserName = editUserReaqest.NewEmail;
+            user.FirstName = editUserReaqest.NewFirstName;
+            user.LastName = editUserReaqest.NewLastName;
+            user.PasswordHash = hasher.HashPassword(user, editUserReaqest.NewPassword);
+            user.Email = editUserReaqest.NewEmail;
             await _userManager.UpdateUserDataAsync(user);
 
             return true;
