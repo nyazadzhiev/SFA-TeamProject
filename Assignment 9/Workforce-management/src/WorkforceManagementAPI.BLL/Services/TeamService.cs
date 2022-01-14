@@ -20,7 +20,6 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository)
         {
-            _context = context;
             _validationService = validationService;
             _teamRepository = teamRepository;
         }
@@ -66,10 +65,9 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public async Task<bool> EditTeamAsync(Guid teamId, string modifierId, string title, string description)
         {
-            _validationService.CheckTeamName(title);
-
-            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
+            _validationService.CheckTeamNameForEdit(title, team.Title);
 
             team.Title = title;
             team.Description = description;
@@ -84,7 +82,7 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public async Task<bool> DeleteTeamAsync(Guid teamId)
         {
-            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
 
             _teamRepository.RemoveTeam(team);
@@ -95,7 +93,7 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public async Task<bool> AssignUserToTeamAsync(Guid teamId, string userId)
         {
-            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
@@ -106,7 +104,7 @@ namespace WorkforceManagementAPI.BLL.Service
             if (team.Users.Count == 0)
             {
                 team.TeamLeaderId = userId;
-                _context.Teams.Update(team);
+                _teamRepository.UpdateTeam(team);
             }
 
             _teamRepository.AddTeamUser(team, user);
@@ -118,7 +116,7 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public async Task<bool> UnassignUserFromTeamAsync(Guid teamId, string userId)
         {
-            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
@@ -135,12 +133,11 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public async Task<bool> AssignTeamLeaderAsync(Guid teamId, string userId)
         {
-            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             _validationService.EnsureUserExist(user);
-
 
             _validationService.CheckIfUserToAssignIsTeamLeader(team, userId);
             _validationService.CheckIfUserToAssignIsMember(team, userId);

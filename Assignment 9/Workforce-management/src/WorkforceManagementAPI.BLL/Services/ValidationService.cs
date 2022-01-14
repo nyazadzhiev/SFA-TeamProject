@@ -78,6 +78,14 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
+        public void CheckTeamNameForEdit(string newTitle, string oldTitle)
+        {
+            if (_context.Teams.Any(p => p.Title == newTitle) && newTitle != oldTitle)
+            {
+                throw new NameExistException(String.Format(Constants.NameAlreadyInUse, "Team name"));
+            }
+        }
+
         public async Task EnsureUpdateEmailIsUniqueAsync(string email,User user)
         {
             if (await _userManager.VerifyEmail(email) == false && user.Email != email)
