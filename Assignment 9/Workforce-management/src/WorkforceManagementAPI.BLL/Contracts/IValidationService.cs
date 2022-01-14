@@ -25,6 +25,6 @@ namespace WorkforceManagementAPI.BLL.Contracts
 
         void EnsureInput(int bound, int input);
 
-        void ValidateDate(DateTime date);
+        void ValidateDate(DateTime date, DateTime end);
     }
 }

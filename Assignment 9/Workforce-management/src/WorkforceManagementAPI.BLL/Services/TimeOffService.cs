@@ -27,7 +27,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             _validationService.EnsureInput(2, ((int)type));
             _validationService.EnsureInput(3, ((int)status));
-            _validationService.ValidateDate(startDate);
+            _validationService.ValidateDate(startDate, endDate);
 
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
@@ -87,7 +87,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             _validationService.EnsureInput(2, ((int)newType));
             _validationService.EnsureInput(3, ((int)newStatus));
-            _validationService.ValidateDate(newStart);
+            _validationService.ValidateDate(newStart, newEnd);
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
