@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WorkforceManagementAPI.Common\WorkforceManagementAPI.Common.csproj" />
     <ProjectReference Include="..\WorkforceManagementAPI.DAL\WorkforceManagementAPI.DAL.csproj" />
     <ProjectReference Include="..\WorkforceManagementAPI.DTO\WorkforceManagementAPI.DTO.csproj" />

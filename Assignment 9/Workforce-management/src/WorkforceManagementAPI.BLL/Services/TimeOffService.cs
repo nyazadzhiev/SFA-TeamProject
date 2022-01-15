@@ -2,8 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
+using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
@@ -15,12 +18,14 @@ namespace WorkforceManagementAPI.BLL.Services
         private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
         private readonly IUserService _userService;
+        private readonly INotificationService _notificationService;
 
-        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService)
+        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService, INotificationService notificationService)
         {
             _context = context;
             _validationService = validationService;
             _userService = userService;
+            _notificationService = notificationService;
         }
 
         public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, Status status, DateTime startDate, DateTime endDate, string creatorId)
@@ -47,8 +52,15 @@ namespace WorkforceManagementAPI.BLL.Services
                 Modifier = user
             };
 
+            string subject = timeOff.Type.ToString() + " Time Off";
+            string message = String.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+
+            user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
+            timeOff.Reviewers = user.Teams.Select(t => t.TeamLeader).ToList();
             await _context.Requests.AddAsync(timeOff);
             await _context.SaveChangesAsync();
+
+            await _notificationService.Send(timeOff.Reviewers, subject, message);
 
             return true;
         }

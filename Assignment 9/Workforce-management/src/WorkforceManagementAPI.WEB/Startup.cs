@@ -17,6 +17,7 @@ using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.WEB.IdentityAuth;
 
 namespace WorkforceManagementAPI.WEB
@@ -34,6 +35,8 @@ namespace WorkforceManagementAPI.WEB
         [System.Obsolete]
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -79,6 +82,7 @@ namespace WorkforceManagementAPI.WEB
             //EF
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
             services.AddTransient<ITeamService, TeamService>();
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IIdentityUserManager, IdentityUserManager>();
             services.AddTransient<IValidationService, ValidationService>();
             services.AddTransient<ITimeOffService, TimeOffService>();
