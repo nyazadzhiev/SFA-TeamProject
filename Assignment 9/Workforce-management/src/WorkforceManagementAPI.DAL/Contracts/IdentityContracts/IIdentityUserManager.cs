@@ -19,5 +19,6 @@ namespace WorkforceManagementAPI.DAL.Contracts.IdentityContracts
         Task<bool> ValidateUserCredentials(string userName, string password);
         Task<IdentityResult> UpdateUserDataAsync(User user);
         Task<User> FindByIdAsync(string id);
+        Task<User> FindByNameAsync(string UserName);
     }
 }

@@ -14,15 +14,20 @@ namespace WorkforceManagementAPI.BLL.Services
     {
         private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
+        private readonly IUserService _userService;
 
-        public TimeOffService(DatabaseContext context, IValidationService validationService)
+        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService)
         {
             _context = context;
             _validationService = validationService;
+            _userService = userService;
         }
 
         public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, Status status, DateTime startDate, DateTime endDate, string creatorId)
         {
+            var user = await _userService.GetUserById(creatorId);
+            _validationService.EnsureUserExist(user);
+
             var timeOff = new TimeOff()
             {
                 Reason = reason,
@@ -33,7 +38,9 @@ namespace WorkforceManagementAPI.BLL.Services
                 CreatedAt = DateTime.Now,
                 ModifiedAt = DateTime.Now,
                 CreatorId = creatorId,
-                ModifierId = creatorId
+                Creator = user,
+                ModifierId = creatorId,
+                Modifier = user
             };
 
             await _context.Requests.AddAsync(timeOff);
@@ -49,6 +56,9 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public async Task<List<TimeOff>> GetMyTimeOffs(string userId)
         {
+            var user = await _userService.GetUserById(userId);
+            _validationService.EnsureUserExist(user);
+
             return await _context.Requests.Where(r => r.CreatorId.Equals(userId)).ToListAsync();
         }
 
@@ -72,7 +82,6 @@ namespace WorkforceManagementAPI.BLL.Services
         public async Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType, Status newStatus)
         {
             var timeOff = await GetTimeOffAsync(id);
-
             _validationService.EnsureTimeOffExist(timeOff);
 
             timeOff.Reason = newReason;
