@@ -8,9 +8,9 @@ namespace WorkforceManagementAPI.DAL.Entities.Enums
 {
     public enum Status
     {
-        Created = 1,
-        Rejected = 0,
-        Awaiting = 2,
-        Approved = 3
+        Rejected,
+        Created,
+        Awaiting,
+        Approved
     }
 }
