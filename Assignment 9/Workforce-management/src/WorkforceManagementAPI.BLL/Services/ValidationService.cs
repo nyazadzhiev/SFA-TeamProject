@@ -86,19 +86,31 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void EnsureInputFitsBoundaries(int input, int maxValue)
+        public void EnsureInputFitsBoundaries(int input, int minValue = 0, int maxValue = 1)
         {
-            if(input < 0 || input > maxValue)
+            if(input < minValue || input > maxValue)
             {
-                throw new InputOutOfBoundsException(Constants.InvalidInput);
+                throw new InputOutOfBoundsException(String.Format(Constants.InputOutOfBounds, nameof(Int32)));
+
             }
         }
 
-        public void EnsureInputFitsBoundaries(DateTime minValue, DateTime maxValue)
+        public void ValidateDateRange(DateTime startDate, DateTime endDate)
         {
-            if(DateTime.Compare(DateTime.Now, minValue) > 0 || DateTime.Compare(DateTime.Now, maxValue) > 0 || minValue > maxValue)
+            EnsureInputFitsBoundaries(startDate, DateTime.Now, new DateTime(DateTime.Now.Year + 1, 1, 1));
+            EnsureInputFitsBoundaries(endDate, DateTime.Now, new DateTime(DateTime.Now.Year + 1, 1, 1));
+
+            if (startDate > endDate)
             {
-                throw new InputOutOfBoundsException(Constants.InvalidInput);
+                throw new ArgumentException(Constants.InvalidInput);
+            }
+        }
+
+        public void EnsureInputFitsBoundaries(DateTime input, DateTime minValue, DateTime maxValue)
+        {
+            if (input < minValue || input > maxValue)
+            {
+                throw new InputOutOfBoundsException(String.Format(Constants.InputOutOfBounds, nameof(DateTime)));
             }
         }
     }
