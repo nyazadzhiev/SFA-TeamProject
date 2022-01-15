@@ -25,5 +25,7 @@ namespace WorkforceManagementAPI.Common
         public const string OperationFailed = "Error!! Operation Failed";
 
         public const string InvalidInput = "Invalid input";
+
+        public const string InputOutOfBounds = "{0} input is exceeds predifined boundaries";
     }
 }
