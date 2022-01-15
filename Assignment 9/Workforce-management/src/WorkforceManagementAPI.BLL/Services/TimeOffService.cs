@@ -53,12 +53,27 @@ namespace WorkforceManagementAPI.BLL.Services
             };
 
             string subject = timeOff.Type.ToString() + " Time Off";
-            string message = String.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+            string message;
 
-            user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
             timeOff.Reviewers = user.Teams.Select(t => t.TeamLeader).ToList();
             await _context.Requests.AddAsync(timeOff);
             await _context.SaveChangesAsync();
+
+            if (type == RequestType.SickLeave)
+            {
+                message = String.Format(Constants.SickMessage, user.FirstName, user.LastName, timeOff.StartDate, timeOff.EndDate, timeOff.Reason);
+
+                timeOff.Status = Status.Approved;
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                message = String.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+
+                user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
+                await _context.SaveChangesAsync();
+            }
 
             await _notificationService.Send(timeOff.Reviewers, subject, message);
 
