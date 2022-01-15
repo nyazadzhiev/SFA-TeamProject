@@ -10,9 +10,6 @@ namespace WorkforceManagementAPI.DTO.Models.Requests
         public string Reason { get; set; }
 
         [Required]
-        public Status Status { get; set; }
-
-        [Required]
         public RequestType Type { get; set; }
 
         [Required]

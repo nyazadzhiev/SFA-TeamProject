@@ -8,7 +8,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
 {
     public interface ITimeOffService
     {
-        Task<bool> CreateTimeOffAsync(string reason, RequestType type, Status status, DateTime startDate, DateTime endDate, string creatorId);
+        Task<bool> CreateTimeOffAsync(string reason, RequestType type, DateTime startDate, DateTime endDate, string creatorId);
 
         Task<List<TimeOff>> GetAllAsync();
 

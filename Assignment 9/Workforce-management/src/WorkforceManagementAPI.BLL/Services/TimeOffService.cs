@@ -28,10 +28,9 @@ namespace WorkforceManagementAPI.BLL.Services
             _notificationService = notificationService;
         }
 
-        public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, Status status, DateTime startDate, DateTime endDate, string creatorId)
+        public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, DateTime startDate, DateTime endDate, string creatorId)
         {
             _validationService.EnsureInputFitsBoundaries(((int)type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.EnsureInputFitsBoundaries(((int)status), 0, Enum.GetNames(typeof(Status)).Length - 1);
             _validationService.ValidateDateRange(startDate, endDate);
 
             var user = await _userService.GetUserById(creatorId);
@@ -41,7 +40,7 @@ namespace WorkforceManagementAPI.BLL.Services
             {
                 Reason = reason,
                 Type = type,
-                Status = status,
+                Status = Status.Created,
                 StartDate = startDate,
                 EndDate = endDate,
                 CreatedAt = DateTime.Now,
