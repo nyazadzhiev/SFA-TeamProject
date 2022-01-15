@@ -110,6 +110,19 @@ namespace WorkforceManagementAPI.BLL.Services
             return await _userManager.IsUserInRole(userId, roleName);
         }
 
+        public async Task<bool> Login(string email, string password)
+        {
+            var authResult = await _userManager.ValidateUserCredentials(email, password);
+
+            if (authResult)
+            {
+                return true;
+            }
+
+            return false;
+            
+        }
+
 
     }
 }

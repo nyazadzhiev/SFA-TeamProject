@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using System.Text;
 using WebApi.Middleware;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Service;
@@ -33,7 +35,6 @@ namespace WorkforceManagementAPI.WEB
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WorkforceManagementAPI.WEB", Version = "v1" });
@@ -43,7 +44,10 @@ namespace WorkforceManagementAPI.WEB
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
+                    Type = SecuritySchemeType.Http, //SecuritySchemeType.ApiKey
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
+
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
@@ -128,6 +132,7 @@ namespace WorkforceManagementAPI.WEB
                 {
                     options.Authority = "https://localhost:5001";
                     options.Audience = "https://localhost:5001/resources";
+                    
                 });
 
         }
@@ -150,7 +155,7 @@ namespace WorkforceManagementAPI.WEB
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            
+
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthentication();
