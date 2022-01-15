@@ -8,8 +8,8 @@ namespace WorkforceManagementAPI.DAL.Entities.Enums
 {
     public enum RequestType
     {
-        Paid = 1,
-        NonPaid = 0,
-        SickLeave = 2
+        NonPaid,
+        Paid,
+        SickLeave
     }
 }

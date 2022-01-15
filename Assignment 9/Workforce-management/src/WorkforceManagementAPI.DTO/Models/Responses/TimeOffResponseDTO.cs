@@ -5,11 +5,13 @@ namespace WorkforceManagementAPI.DTO.Models.Responses
 {
     public class TimeOffResponseDTO
     {
+        public Guid Id { get; set; }
+
         public string Reason { get; set; }
 
-        public RequestType Type { get; set; }
+        public string Type { get; set; }
 
-        public Status Status { get; set; }
+        public string Status { get; set; }
 
         public string CreatorName { get; set; }
 

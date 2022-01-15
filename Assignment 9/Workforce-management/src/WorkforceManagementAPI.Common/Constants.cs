@@ -23,5 +23,9 @@ namespace WorkforceManagementAPI.Common
         public const string Deleted = "{0} was deleted";
 
         public const string OperationFailed = "Error!! Operation Failed";
+
+        public const string InvalidInput = "Invalid input";
+
+        public const string InputOutOfBounds = "{0} input is exceeds predifined boundaries";
     }
 }
