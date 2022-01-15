@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,16 +18,18 @@ namespace WorkforceManagementAPI.WEB.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService) : base()
+        public UsersController(IUserService userService,IMapper mapper) : base()
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserRequestDTO user)
         {
-            bool result = await _userService.CreateUser(user.Email, user.Password, user.FirstName, user.LastName);
+            bool result = await _userService.CreateUser(user);
             if (result)
             {
                 return Ok("User created successfully");
@@ -42,40 +45,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
         public async Task<List<UserResponseDTO>> GetAll()
         {
             var users = await _userService.GetAll();
-            return users
-                    .Select(user => new UserResponseDTO()
-                    {
-                        Id = user.Id,
-                        UserName = user.UserName,
-                        Email = user.Email,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                    })
-                    .ToList();
+            return _mapper.Map<List<UserResponseDTO>>(users);
         }
 
         [HttpGet("{id}")]
         public async Task<UserResponseDTO> GetUserById(Guid id)
         {
             User user = await _userService.GetUserById(id.ToString());
-            if (user != null)
-            {
-                return new UserResponseDTO()
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                };
-            }
-            return new UserResponseDTO();
+            return _mapper.Map<UserResponseDTO>(user);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(Guid id, EditUserReauestDTO user)
         {
-            bool isEdited = await _userService.UpdateUser(id.ToString(), user.NewPassword, user.NewEmail, user.NewFirstName, user.NewLastName);
+            bool isEdited = await _userService.UpdateUser(id.ToString(), user);
             if (isEdited && ModelState.IsValid)
             {
                 return Ok("User edited successfully");
