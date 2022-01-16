@@ -28,6 +28,15 @@ namespace WorkforceManagementAPI.Test
 
         public ServicesTestBase()
         {
+            this.defaultUser = new User()
+            {
+                UserName = "test@abv.bg",
+                Email = "test@abv.bg",
+                FirstName = "test",
+                LastName = "tester",
+                Id = "7cd150cd-413d-43d1-bdff-73cc5d4f04e3"
+            };
+
             this.regularTeam = new Team()
             {
                 Title = "testteam"
