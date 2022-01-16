@@ -121,29 +121,33 @@ namespace WorkforceManagementAPI.BLL.Services
             var timeOff = await GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
 
-            Vote vote = new Vote()
-            {
-                TeamLeader = user,
-                TimeOff = timeOff,
-                Response = status
-            };
-
-            timeOff.Votes.Add(vote);
             timeOff.Reviewers.Remove(user);
+            user.UnderReviewRequests.Remove(timeOff);
+
+            string message = "";
+
+            if (status == Status.Rejected)
+            {
+                message = "Rejected.";
+                timeOff.Status = Status.Rejected;
+                timeOff.Reviewers.Clear();
+            }
+            else
+            {
+                timeOff.Status = Status.Awaiting;
+            }
 
             if (timeOff.Reviewers.Count == 0)
             {
-                if (timeOff.Votes.Any(v => v.Response == Status.Rejected))
+                if (timeOff.Status != Status.Rejected)
                 {
-                    timeOff.Status = Status.Rejected;
-                }
-                else
-                {
+                    message = "Approved.";
                     timeOff.Status = Status.Approved;
                 }
+
+                await _notificationService.Send(new List<User>() { timeOff.Creator }, "response", message);
             }
 
-            await _context.Votes.AddAsync(vote);
             await _context.SaveChangesAsync();
 
             return true;

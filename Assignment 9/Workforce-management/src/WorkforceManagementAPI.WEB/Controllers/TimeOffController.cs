@@ -98,7 +98,7 @@ namespace ProjectManagementApp.WEB.Controllers
 
             bool isCreated = await _timeOffService.CreateTimeOffAsync(model.Reason, model.Type, model.Status, model.StartDate, model.EndDate, currentUser.Id);
 
-            if(isCreated && ModelState.IsValid)
+            if (isCreated && ModelState.IsValid)
             {
                 return Created(nameof(HttpPostAttribute), String.Format(Constants.Created, "TimeOff request"));
             }
@@ -150,6 +150,21 @@ namespace ProjectManagementApp.WEB.Controllers
             }
 
             return Ok(String.Format(Constants.Deleted, "TimeOff request"));
+        }
+
+        [HttpPost("{timeOffId}")]
+        public async Task<ActionResult> AnswerRequestAsync(Guid timeOffId, CreateVoteRequestDTO vote)
+        {
+            User currentUser = await _userService.GetCurrentUser(User);
+            _validationService.EnsureUserExist(currentUser);
+
+            bool isCompleted = await _timeOffService.AnswerRequests(currentUser, timeOffId, vote.Status);
+            if (!isCompleted)
+            {
+                return BadRequest(Constants.OperationFailed);
+            }
+
+            return Ok(String.Format(Constants.Created, "TimeOff request"));
         }
     }
 }
