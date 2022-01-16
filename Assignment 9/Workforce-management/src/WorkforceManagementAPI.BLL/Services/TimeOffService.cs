@@ -109,17 +109,15 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType, Status newStatus)
+        public async Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType)
         {
             _validationService.EnsureInputFitsBoundaries(((int)newType), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.EnsureInputFitsBoundaries(((int)newStatus), 0, Enum.GetNames(typeof(Status)).Length - 1);
             _validationService.ValidateDateRange(newStart, newEnd);
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
 
             timeOff.Reason = newReason;
-            timeOff.Status = newStatus;
             timeOff.Type = newType;
             timeOff.StartDate = newStart;
             timeOff.EndDate = newEnd;
