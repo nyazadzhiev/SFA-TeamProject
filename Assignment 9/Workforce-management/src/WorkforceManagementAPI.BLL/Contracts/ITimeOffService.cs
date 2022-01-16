@@ -8,7 +8,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
 {
     public interface ITimeOffService
     {
-        Task<bool> CreateTimeOffAsync(string reason, RequestType type, Status status, DateTime startDate, DateTime endDate, string creatorId);
+        Task<bool> CreateTimeOffAsync(string reason, RequestType type, DateTime startDate, DateTime endDate, string creatorId);
 
         Task<List<TimeOff>> GetAllAsync();
 
@@ -18,6 +18,6 @@ namespace WorkforceManagementAPI.BLL.Contracts
 
         Task<bool> DeleteTimeOffAsync(Guid id);
 
-        Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType, Status newStatus);
+        Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType);
     }
 }
