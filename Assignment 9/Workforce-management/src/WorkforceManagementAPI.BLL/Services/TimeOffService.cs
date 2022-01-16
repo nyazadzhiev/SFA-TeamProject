@@ -115,5 +115,38 @@ namespace WorkforceManagementAPI.BLL.Services
 
             return true;
         }
+
+        public async Task<bool> AnswerRequests(User user, Guid timeOffId, Status status)
+        {
+            var timeOff = await GetTimeOffAsync(timeOffId);
+            _validationService.EnsureTimeOffExist(timeOff);
+
+            Vote vote = new Vote()
+            {
+                TeamLeader = user,
+                TimeOff = timeOff,
+                Response = status
+            };
+
+            timeOff.Votes.Add(vote);
+            timeOff.Reviewers.Remove(user);
+
+            if (timeOff.Reviewers.Count == 0)
+            {
+                if (timeOff.Votes.Any(v => v.Response == Status.Rejected))
+                {
+                    timeOff.Status = Status.Rejected;
+                }
+                else
+                {
+                    timeOff.Status = Status.Approved;
+                }
+            }
+
+            await _context.Votes.AddAsync(vote);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
