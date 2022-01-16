@@ -9,7 +9,10 @@ namespace WorkforceManagementAPI.DAL
 
         public virtual DbSet<Team> Teams { get; set; }
 
-        public virtual DbSet<TimeOff> Requests { get; set; }    
+        public virtual DbSet<TimeOff> Requests { get; set; }
+
+        public virtual DbSet<Vote> Votes { get; set; }
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base (options)
         {
 
@@ -29,6 +32,7 @@ namespace WorkforceManagementAPI.DAL
             SetupUserConfiguration(modelBuilder);
             SetupTeamConfiguration(modelBuilder);
             SetupRequestsConfiguration(modelBuilder);
+            SetupVoteConfiguration(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
         }
@@ -44,6 +48,7 @@ namespace WorkforceManagementAPI.DAL
             modelBuilder.Entity<TimeOff>().HasOne(t => t.Creator).WithMany(u => u.Requests ).HasForeignKey(t => t.CreatorId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<TimeOff>().HasOne(t => t.Modifier).WithMany().HasForeignKey(t => t.ModifierId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<TimeOff>().HasMany(t => t.Reviewers).WithMany(u => u.UnderReviewRequests);
+            modelBuilder.Entity<TimeOff>().HasMany(t => t.Votes);
         }
 
         private static void SetupTeamConfiguration(ModelBuilder modelBuilder)
@@ -62,6 +67,13 @@ namespace WorkforceManagementAPI.DAL
             modelBuilder.Entity<User>().Property(u => u.LastName).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<User>().HasMany<Team>(u => u.Teams).WithMany(t => t.Users);
             modelBuilder.Entity<User>().HasMany<TimeOff>(u => u.UnderReviewRequests).WithMany(r => r.Reviewers);
+        }
+
+        private static void SetupVoteConfiguration(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Vote>().HasKey(v => v.Id);
+            modelBuilder.Entity<Vote>().HasOne(v => v.TeamLeader).WithMany().HasForeignKey(v => v.TeamLeaderId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Vote>().HasOne(v => v.TimeOff).WithMany().HasForeignKey(v => v.TimeOffId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

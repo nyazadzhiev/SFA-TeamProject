@@ -35,9 +35,13 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public virtual List<User> Reviewers { get; set; }
 
+        public virtual List<Vote> Votes { get; set; }
+
         public TimeOff()
         {
-            this.Reviewers = new List<User>();
+            Reviewers = new List<User>();
+
+            Votes = new List<Vote>();
         }
     }
 }
