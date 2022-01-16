@@ -164,7 +164,7 @@ namespace ProjectManagementApp.WEB.Controllers
                 return BadRequest(Constants.OperationFailed);
             }
 
-            return Ok(String.Format(Constants.Created, "TimeOff request"));
+            return Ok(Constants.AnswerToRequest);
         }
     }
 }

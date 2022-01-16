@@ -29,5 +29,7 @@ namespace WorkforceManagementAPI.Common
         public const string RequestMessage = "Dear Team Lead\n I ({0} {1}) want to leave from {2} to {3} for a {4} vacantion because of {5}";
 
         public const string InputOutOfBounds = "{0} input is exceeds predifined boundaries";
+
+        public const string AnswerToRequest = "Answer to request has been submited.";
     }
 }

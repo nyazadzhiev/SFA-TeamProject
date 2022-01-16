@@ -121,6 +121,21 @@ namespace WorkforceManagementAPI.BLL.Services
             var timeOff = await GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
 
+            if (timeOff.Reviewers.Count == 0)
+            {
+                throw new Exception("Time off request is already completed.");
+            }
+
+            if (!timeOff.Reviewers.Any(u => u.Id == user.Id))
+            {
+                throw new Exception("User is not a reviewer.");
+            }
+
+            if (status != Status.Rejected && status != Status.Approved)
+            {
+                throw new Exception("Invalid status.");
+            }
+
             timeOff.Reviewers.Remove(user);
             user.UnderReviewRequests.Remove(timeOff);
 
@@ -128,7 +143,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
             if (status == Status.Rejected)
             {
-                message = "Rejected.";
+                message = "Your time off request has been rejected.";
                 timeOff.Status = Status.Rejected;
                 timeOff.Reviewers.Clear();
             }
@@ -141,7 +156,7 @@ namespace WorkforceManagementAPI.BLL.Services
             {
                 if (timeOff.Status != Status.Rejected)
                 {
-                    message = "Approved.";
+                    message = "Your time off request has been approved.";
                     timeOff.Status = Status.Approved;
                 }
 
