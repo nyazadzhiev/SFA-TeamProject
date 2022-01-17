@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,15 @@ namespace WorkforceManagementAPI.BLL.Services
         private readonly IValidationService _validationService;
         private readonly IUserService _userService;
         private readonly INotificationService _notificationService;
+        private readonly IMapper _mapper;
 
-        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService, INotificationService notificationService)
+        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService, INotificationService notificationService, IMapper mapper)
         {
             _context = context;
             _validationService = validationService;
             _userService = userService;
             _notificationService = notificationService;
+            _mapper = mapper;
         }
 
         public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, DateTime startDate, DateTime endDate, string creatorId)
