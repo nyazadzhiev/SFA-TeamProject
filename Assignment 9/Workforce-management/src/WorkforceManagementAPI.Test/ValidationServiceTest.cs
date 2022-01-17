@@ -102,5 +102,38 @@ namespace WorkforceManagementAPI.Test
 
             Assert.Throws<InputOutOfBoundsException>(() => validation.ValidateDateRange(new DateTime(2022, 1, 18), new DateTime(2022, 1, 15)));
         }
+
+        [Fact]
+        public void CheckAccessToTeam_Must_Throw_Exception_When_User_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<UnautohrizedUserEcxeption>(() => validation.CheckAccessToTeam(regularTeam, defaultUser));
+        }
+
+        [Fact]
+        public void CheckTeamLeader_Must_Throw_Exception_When_User_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<UnautohrizedUserEcxeption>(() => validation.CheckTeamLeader(regularTeam, TeamLeader));
+        }
+
+        [Fact]
+        public void CanAddToTeam_Must_Throw_Exception_When_User_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<UserAlreadyInTeamException>(() => validation.CanAddToTeam(regularTeam, TeamLeader));
+        }
     }
 }
