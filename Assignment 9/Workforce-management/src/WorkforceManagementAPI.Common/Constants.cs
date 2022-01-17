@@ -31,5 +31,11 @@ namespace WorkforceManagementAPI.Common
         public const string SickMessage = "Dear Team Lead\n I ({0} {1}) am writing this letter to inform you that I need to take sick leave from work. I will need to remain off work from {2} to {3} because of {4}";
 
         public const string InputOutOfBounds = "{0} input is exceeds predifined boundaries";
+
+        public const string TeamAccess = "Can't assign user as a leader in a team where they are not a member of.";
+
+        public const string InvalidTeamLeader = "User is already the assigned team leader.";
+
+        public const string UserAlreadyMember = "User is already a member.";
     }
 }
