@@ -36,9 +36,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         public async Task<ActionResult<IEnumerable<TeamResponseDTO>>> GetAllTeamsAsync()
         {
             var teams = await _teamService.GetAllTeamsAsync();
-            return teams
-                .Select(team => MapTeam(team))
-                .ToList();
+            return _mapper.Map<ActionResult<IEnumerable<TeamResponseDTO>>>(teams);
         }
 
         [HttpGet("{id}")]
@@ -46,7 +44,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             var team = await _teamService.GetTeamByIdAsync(id);
 
-            return MapTeam(team);
+            return _mapper.Map<ActionResult<TeamResponseDTO>>(team);
         }
 
         [HttpGet("My/")]
@@ -55,9 +53,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
             currentUser = await _userService.GetCurrentUser(User);
 
             var teams = await _teamService.GetMyTeamsAsync(currentUser.Id);
-            return teams
-                .Select(team => MapTeam(team))
-                .ToList();
+            return _mapper.Map<ActionResult<IEnumerable<TeamResponseDTO>>>(teams);
         }
 
         [HttpPost]
@@ -144,7 +140,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
-        private TeamResponseDTO MapTeam(Team teamEntity)
+      /*  private TeamResponseDTO MapTeam(Team teamEntity)
         {
             var team = new TeamResponseDTO()
             {
@@ -159,6 +155,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
             };
 
             return team;
-        }
+        }*/
+
     }
 }
