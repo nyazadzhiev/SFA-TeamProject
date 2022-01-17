@@ -10,6 +10,7 @@ using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Service
 {
@@ -45,20 +46,16 @@ namespace WorkforceManagementAPI.BLL.Service
             return team;
         }
 
-        public async Task<bool> CreateTeamAsync(string title, string description, string creatorId)
+        public async Task<bool> CreateTeamAsync(TeamRequestDTO teamRequest, string creatorId)
         {
-            _validationService.CheckTeamName(title);
+            _validationService.CheckTeamName(teamRequest.Title);
 
             var now = DateTime.Now;
-            var team = new Team()
-            {
-                Title = title,
-                Description = description,
-                CreatorId = creatorId,
-                ModifierId = creatorId,
-                CreatedAt = now,
-                ModifiedAt = now
-            };
+            var team = _mapper.Map<Team>(teamRequest);
+            team.CreatorId = creatorId;
+            team.ModifierId = creatorId;
+            team.CreatedAt = now;
+            team.ModifiedAt = now;
 
             await _teamRepository.AddTeamAsync(team);
             await _teamRepository.SaveChangesAsync();

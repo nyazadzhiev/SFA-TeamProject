@@ -62,7 +62,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isCreated = await _teamService.CreateTeamAsync(team.Title, team.Description, currentUser.Id);
+            bool isCreated = await _teamService.CreateTeamAsync(team, currentUser.Id);
             if (isCreated && ModelState.IsValid)
             {
                 return Ok("Team created successfully.");
