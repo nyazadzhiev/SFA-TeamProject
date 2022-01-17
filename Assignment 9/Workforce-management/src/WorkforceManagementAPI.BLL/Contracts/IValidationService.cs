@@ -30,5 +30,11 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void ValidateDateRange(DateTime minValue, DateTime maxValue);
 
         void EnsureInputFitsBoundaries(DateTime input, DateTime minValue, DateTime maxValue);
+
+        void CheckAccessToTeam(Team team, User user);
+
+        void CheckTeamLeader(Team team, User user);
+
+        void CanAddToTeam(Team team, User user);
     }
 }

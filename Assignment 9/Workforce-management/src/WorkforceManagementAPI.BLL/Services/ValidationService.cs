@@ -113,5 +113,29 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new InputOutOfBoundsException(String.Format(Constants.InputOutOfBounds, nameof(DateTime)));
             }
         }
+
+        public void CheckAccessToTeam(Team team, User user)
+        {
+            if (!team.Users.Any(u => u.Id == user.Id))
+            {
+                throw new UnautohrizedUserEcxeption(Constants.TeamAccess);
+            }
+        }
+
+        public void CheckTeamLeader(Team team, User user)
+        {
+            if (team.TeamLeaderId == user.Id)
+            {
+                throw new UnautohrizedUserEcxeption(Constants.InvalidTeamLeader);
+            }
+        }
+
+        public void CanAddToTeam(Team team, User user)
+        {
+            if (team.Users.Any(u => u.Id == user.Id))
+            {
+                throw new UnautohrizedUserEcxeption(Constants.UserAlreadyMember);
+            }
+        }
     }
 }
