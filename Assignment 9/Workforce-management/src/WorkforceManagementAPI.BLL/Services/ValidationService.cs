@@ -94,6 +94,34 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
+        public void EnsureInputFitsBoundaries(int input, int minValue = 0, int maxValue = 1)
+        {
+            if(input < minValue || input > maxValue)
+            {
+                throw new InputOutOfBoundsException(String.Format(Constants.InputOutOfBounds, nameof(Int32)));
+
+            }
+        }
+
+        public void ValidateDateRange(DateTime startDate, DateTime endDate)
+        {
+            EnsureInputFitsBoundaries(startDate, DateTime.Now, new DateTime(DateTime.Now.Year + 1, 1, 1));
+            EnsureInputFitsBoundaries(endDate, DateTime.Now, new DateTime(DateTime.Now.Year + 1, 1, 1));
+
+            if (startDate > endDate)
+            {
+                throw new ArgumentException(Constants.InvalidInput);
+            }
+        }
+
+        public void EnsureInputFitsBoundaries(DateTime input, DateTime minValue, DateTime maxValue)
+        {
+            if (input < minValue || input > maxValue)
+            {
+                throw new InputOutOfBoundsException(String.Format(Constants.InputOutOfBounds, nameof(DateTime)));
+            }
+        }
+
         public void CheckIfUserIsMember(Team team, string userId)
         {
             if (team.Users.Any(u => u.Id == userId))

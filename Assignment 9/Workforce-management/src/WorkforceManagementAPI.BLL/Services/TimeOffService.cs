@@ -2,8 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
+using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
@@ -15,16 +18,21 @@ namespace WorkforceManagementAPI.BLL.Services
         private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
         private readonly IUserService _userService;
+        private readonly INotificationService _notificationService;
 
-        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService)
+        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService, INotificationService notificationService)
         {
             _context = context;
             _validationService = validationService;
             _userService = userService;
+            _notificationService = notificationService;
         }
 
-        public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, Status status, DateTime startDate, DateTime endDate, string creatorId)
+        public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, DateTime startDate, DateTime endDate, string creatorId)
         {
+            _validationService.EnsureInputFitsBoundaries(((int)type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.ValidateDateRange(startDate, endDate);
+
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
 
@@ -32,7 +40,7 @@ namespace WorkforceManagementAPI.BLL.Services
             {
                 Reason = reason,
                 Type = type,
-                Status = status,
+                Status = Status.Created,
                 StartDate = startDate,
                 EndDate = endDate,
                 CreatedAt = DateTime.Now,
@@ -43,8 +51,30 @@ namespace WorkforceManagementAPI.BLL.Services
                 Modifier = user
             };
 
+            string subject = timeOff.Type.ToString() + " Time Off";
+            string message;
+
+            timeOff.Reviewers = user.Teams.Select(t => t.TeamLeader).ToList();
             await _context.Requests.AddAsync(timeOff);
             await _context.SaveChangesAsync();
+
+            if (type == RequestType.SickLeave)
+            {
+                message = String.Format(Constants.SickMessage, user.FirstName, user.LastName, timeOff.StartDate, timeOff.EndDate, timeOff.Reason);
+
+                timeOff.Status = Status.Approved;
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                message = String.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+
+                user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
+                await _context.SaveChangesAsync();
+            }
+
+            await _notificationService.Send(timeOff.Reviewers, subject, message);
 
             return true;
         }
@@ -79,13 +109,15 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType, Status newStatus)
+        public async Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType)
         {
+            _validationService.EnsureInputFitsBoundaries(((int)newType), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.ValidateDateRange(newStart, newEnd);
+
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
 
             timeOff.Reason = newReason;
-            timeOff.Status = newStatus;
             timeOff.Type = newType;
             timeOff.StartDate = newStart;
             timeOff.EndDate = newEnd;

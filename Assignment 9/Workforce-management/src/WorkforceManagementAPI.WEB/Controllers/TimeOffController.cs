@@ -35,6 +35,7 @@ namespace ProjectManagementApp.WEB.Controllers
             return Ok(requests
                         .Select(request => new TimeOffResponseDTO()
                         {
+                            Id = request.Id,
                             Reason = request.Reason,
                             Type = request.Type,
                             Status = request.Status,
@@ -56,6 +57,7 @@ namespace ProjectManagementApp.WEB.Controllers
             return Ok(requests
                         .Select(request => new TimeOffResponseDTO()
                         {
+                            Id = request.Id,
                             Reason = request.Reason,
                             Type = request.Type,
                             Status = request.Status,
@@ -77,6 +79,7 @@ namespace ProjectManagementApp.WEB.Controllers
 
             return new TimeOffResponseDTO()
             {
+                Id = timeOff.Id,
                 Reason = timeOff.Reason,
                 Type = timeOff.Type,
                 Status = timeOff.Status,
@@ -93,11 +96,11 @@ namespace ProjectManagementApp.WEB.Controllers
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            bool isCreated = await _timeOffService.CreateTimeOffAsync(model.Reason, model.Type, model.Status, model.StartDate, model.EndDate, currentUser.Id);
+            bool isCreated = await _timeOffService.CreateTimeOffAsync(model.Reason, model.Type, model.StartDate, model.EndDate, currentUser.Id);
 
             if(isCreated && ModelState.IsValid)
             {
-                return CreatedAtAction("Post", String.Format(Constants.Created, "TimeOff request"));
+                return Created(nameof(HttpPostAttribute), String.Format(Constants.Created, "TimeOff request"));
             }
             else
             {
@@ -111,7 +114,7 @@ namespace ProjectManagementApp.WEB.Controllers
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            bool isEdited = await _timeOffService.EditTimeOffAsync(timeOffId, model.Reason, model.StartDate, model.EndDate, model.Type, model.Status);
+            bool isEdited = await _timeOffService.EditTimeOffAsync(timeOffId, model.Reason, model.StartDate, model.EndDate, model.Type);
 
             if (!isEdited)
             {
@@ -123,6 +126,7 @@ namespace ProjectManagementApp.WEB.Controllers
 
             return new TimeOffResponseDTO()
             {
+                Id = timeOff.Id,
                 Reason = timeOff.Reason,
                 Type = timeOff.Type,
                 Status = timeOff.Status,

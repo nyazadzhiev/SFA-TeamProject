@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using System.Reflection;
 using WebApi.Middleware;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Service;
@@ -17,6 +18,7 @@ using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.WEB.IdentityAuth;
 
@@ -32,8 +34,11 @@ namespace WorkforceManagementAPI.WEB
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        [System.Obsolete]
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -69,11 +74,17 @@ namespace WorkforceManagementAPI.WEB
                         new List<string>()
                     }
                 });
+
+                c.DescribeAllEnumsAsStrings();
             });
+
+            // Register Automapper
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             //EF
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
             services.AddTransient<ITeamService, TeamService>();
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IIdentityUserManager, IdentityUserManager>();
             services.AddTransient<IValidationService, ValidationService>();
             services.AddTransient<ITimeOffService, TimeOffService>();
