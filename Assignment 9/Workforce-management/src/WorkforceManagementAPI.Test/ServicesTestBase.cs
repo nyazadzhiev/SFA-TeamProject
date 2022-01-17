@@ -169,8 +169,12 @@ namespace WorkforceManagementAPI.Test
         {
             var mockContext = new Mock<DatabaseContext>();
             var mockValidationService = new Mock<IValidationService>();
+            mockValidationService.Setup(v => v.EnsureUserExist(It.IsAny<User>())).Equals(defaultUser);
+
             var mockTeamRepository = new Mock<ITeamRepository>();
             mockTeamRepository.Setup(t => t.GetTeamByIdAsync(It.IsAny<Guid>())).ReturnsAsync(regularTeam);
+            mockTeamRepository.Setup(t => t.GetAllTeamsAsync()).ReturnsAsync(new List<Team>());
+            mockTeamRepository.Setup(t => t.GetMyTeamsAsync(It.IsAny<string>())).ReturnsAsync(new List<Team>());
 
             var mockTeamService = new TeamService(mockContext.Object, mockValidationService.Object, mockTeamRepository.Object);
 
