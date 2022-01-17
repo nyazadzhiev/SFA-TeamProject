@@ -121,15 +121,7 @@ namespace WorkforceManagementAPI.Test
 
         protected UserService SetupMockedDefaultUserService()
         {
-            if (_mapper == null)
-            {
-                var mappingConfig = new MapperConfiguration(mc =>
-                {
-                    mc.AddProfile(new UserProfile());
-                });
-                IMapper mapper = mappingConfig.CreateMapper();
-                _mapper = mapper;
-            }
+            SetupMockedMapperUser();
             var mockedManager = new Mock<IIdentityUserManager>();
             var validationMock = new Mock<IValidationService>();
             var userService = new UserService(mockedManager.Object, validationMock.Object, _mapper);
@@ -137,18 +129,16 @@ namespace WorkforceManagementAPI.Test
             return userService;
         }
 
+        private static void SetupMockedMapperUser()
+        {
+            var myProfile = new UserProfile();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+            _mapper = new Mapper(configuration);
+        }
+
         protected UserService SetupMockedDefaultUserServiceWithDefaultUser()
         {
-            if (_mapper == null)
-            {
-                var mappingConfig = new MapperConfiguration(mc =>
-                {
-                    mc.AddProfile(new UserProfile());
-                });
-                IMapper mapper = mappingConfig.CreateMapper();
-                _mapper = mapper;
-            }
-
+            SetupMockedMapperUser();
             var mockedManager = new Mock<IIdentityUserManager>();
             mockedManager.Setup(userRep => userRep.FindByIdAsync(It.IsAny<String>()))
                     .ReturnsAsync(new User());
@@ -161,16 +151,7 @@ namespace WorkforceManagementAPI.Test
 
         protected UserService SetupMockedDefaultUserServiceWithDefaultUsers()
         {
-            if (_mapper == null)
-            {
-                var mappingConfig = new MapperConfiguration(mc =>
-                {
-                    mc.AddProfile(new UserProfile());
-                });
-                IMapper mapper = mappingConfig.CreateMapper();
-                _mapper = mapper;
-            }
-
+            SetupMockedMapperUser();
             var mockedManager = new Mock<IIdentityUserManager>();
             mockedManager.Setup(userRep => userRep.GetAllAsync())
                     .ReturnsAsync(new List<User>());
