@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace WorkforceManagementAPI.BLL.Service
         private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
         private readonly ITeamRepository _teamRepository;
+        private readonly IMapper _mapper;
 
-        public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository)
+        public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository, IMapper mapper)
         {
             _validationService = validationService;
             _teamRepository = teamRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<Team>> GetAllTeamsAsync()
