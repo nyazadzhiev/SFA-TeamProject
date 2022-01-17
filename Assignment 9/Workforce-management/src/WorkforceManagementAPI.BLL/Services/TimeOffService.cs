@@ -120,21 +120,9 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             var timeOff = await GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
-
-            if (timeOff.Reviewers.Count == 0)
-            {
-                throw new Exception("Time off request is already completed.");
-            }
-
-            if (!timeOff.Reviewers.Any(u => u.Id == user.Id))
-            {
-                throw new Exception("User is not a reviewer.");
-            }
-
-            if (status != Status.Rejected && status != Status.Approved)
-            {
-                throw new Exception("Invalid status.");
-            }
+            _validationService.CheckReviewrsCount(timeOff);
+            _validationService.EnsureUserIsReviewer(timeOff, user);
+            _validationService.EnsureResponseIsValid(status);
 
             timeOff.Reviewers.Remove(user);
             user.UnderReviewRequests.Remove(timeOff);

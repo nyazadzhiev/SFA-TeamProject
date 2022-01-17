@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.BLL.Contracts
 {
@@ -30,5 +31,8 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void ValidateDateRange(DateTime minValue, DateTime maxValue);
 
         void EnsureInputFitsBoundaries(DateTime input, DateTime minValue, DateTime maxValue);
+        void CheckReviewrsCount(TimeOff timeOff);
+        void EnsureUserIsReviewer(TimeOff timeOff, User user);
+        void EnsureResponseIsValid(Status status);
     }
 }
