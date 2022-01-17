@@ -12,7 +12,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
         Task<bool> AssignUserToTeamAsync(Guid teamId, string userId);
         Task<bool> CreateTeamAsync(TeamRequestDTO teamRequest, string creatorId);
         Task<bool> DeleteTeamAsync(Guid teamId);
-        Task<bool> EditTeamAsync(Guid teamId, string modifierId, string title, string description);
+        Task<bool> EditTeamAsync(Guid teamId, string modifierId, TeamRequestDTO editTeamRequest);
         Task<List<Team>> GetAllTeamsAsync();
         Task<List<Team>> GetMyTeamsAsync(string userId);
         Task<Team> GetTeamByIdAsync(Guid teamId);

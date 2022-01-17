@@ -63,14 +63,14 @@ namespace WorkforceManagementAPI.BLL.Service
             return true;
         }
 
-        public async Task<bool> EditTeamAsync(Guid teamId, string modifierId, string title, string description)
+        public async Task<bool> EditTeamAsync(Guid teamId, string modifierId, TeamRequestDTO editTeamRequest)
         {
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
-            _validationService.CheckTeamNameForEdit(title, team.Title);
+            _validationService.CheckTeamNameForEdit(editTeamRequest.Title, team.Title);
 
-            team.Title = title;
-            team.Description = description;
+            team.Title = editTeamRequest.Title;
+            team.Description = editTeamRequest.Description;
             team.ModifierId = modifierId;
             team.ModifiedAt = DateTime.Now;
 

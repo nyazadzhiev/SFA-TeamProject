@@ -76,7 +76,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isEdited = await _teamService.EditTeamAsync(id, currentUser.Id, teamEdit.Title, teamEdit.Description);
+            bool isEdited = await _teamService.EditTeamAsync(id, currentUser.Id, teamEdit);
             if (isEdited)
             {
                 return Ok("Team edited successfully.");
