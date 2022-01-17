@@ -102,10 +102,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             _validationService.EnsureUserExist(user);
 
-            if (team.Users.Any(u => u.Id == userId))
-            {
-                throw new Exception("User is already a member.");
-            }
+            _validationService.CanAddToTeam(team, user);
 
             if (team.Users.Count == 0)
             {
@@ -129,10 +126,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             _validationService.EnsureUserExist(user);
 
-            if (team.TeamLeaderId == userId)
-            {
-                throw new Exception("Can't unassign team leader from the team.");
-            }
+            _validationService.CheckTeamLeader(team, user);
 
             team.Users.Remove(user);
             user.Teams.Remove(team);
@@ -150,15 +144,8 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             _validationService.EnsureUserExist(user);
 
-            if (team.TeamLeaderId == userId)
-            {
-                throw new Exception("User is already the assigned team leader.");
-            }
-
-            if (!team.Users.Any(u => u.Id == userId))
-            {
-                throw new Exception("Can't assign user as a leader in a team where they are not a member of.");
-            }
+            _validationService.CheckTeamLeader(team, user);
+            _validationService.CheckAccessToTeam(team, user);
 
             team.TeamLeaderId = userId;
             _context.Teams.Update(team);
