@@ -11,6 +11,7 @@ using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
@@ -31,28 +32,23 @@ namespace WorkforceManagementAPI.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, DateTime startDate, DateTime endDate, string creatorId)
+        public async Task<bool> CreateTimeOffAsync(TimeOffRequestDTO timoffRequest, string creatorId)
         {
-            _validationService.EnsureInputFitsBoundaries(((int)type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.ValidateDateRange(startDate, endDate);
+            _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.ValidateDateRange(timoffRequest.StartDate, timoffRequest.EndDate);
 
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
 
-            var timeOff = new TimeOff()
-            {
-                Reason = reason,
-                Type = type,
-                Status = Status.Created,
-                StartDate = startDate,
-                EndDate = endDate,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now,
-                CreatorId = creatorId,
-                Creator = user,
-                ModifierId = creatorId,
-                Modifier = user
-            };
+            var timeOff = _mapper.Map<TimeOff>(timoffRequest);
+
+            timeOff.CreatedAt = DateTime.Now;
+            timeOff.ModifiedAt = DateTime.Now;
+            timeOff.CreatorId = creatorId;
+            timeOff.Creator = user;
+            timeOff.ModifierId = creatorId;
+            timeOff.Modifier = user;
+        
 
             string subject = timeOff.Type.ToString() + " Time Off";
             string message;
@@ -61,7 +57,7 @@ namespace WorkforceManagementAPI.BLL.Services
             await _context.Requests.AddAsync(timeOff);
             await _context.SaveChangesAsync();
 
-            if (type == RequestType.SickLeave)
+            if (timeOff.Type == RequestType.SickLeave)
             {
                 message = String.Format(Constants.SickMessage, user.FirstName, user.LastName, timeOff.StartDate, timeOff.EndDate, timeOff.Reason);
 

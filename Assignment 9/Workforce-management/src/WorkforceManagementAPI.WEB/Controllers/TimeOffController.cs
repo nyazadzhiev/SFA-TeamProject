@@ -9,6 +9,7 @@ using WorkforceManagementAPI.DTO.Models.Responses;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.Common;
+using AutoMapper;
 
 namespace ProjectManagementApp.WEB.Controllers
 {
@@ -19,12 +20,14 @@ namespace ProjectManagementApp.WEB.Controllers
         private readonly IUserService _userService;
         private IValidationService _validationService;
         private ITimeOffService _timeOffService;
+        private readonly IMapper _mapper;
 
-        public TimeOffCOntroller(IValidationService validationService, IUserService userService, ITimeOffService timeOffService) : base()
+        public TimeOffCOntroller(IValidationService validationService, IUserService userService, ITimeOffService timeOffService, IMapper mapper) : base()
         {
             _validationService = validationService;
             _userService = userService;
             _timeOffService = timeOffService;
+            _mapper = mapper;
         }
 
         [HttpGet()]
@@ -96,7 +99,7 @@ namespace ProjectManagementApp.WEB.Controllers
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            bool isCreated = await _timeOffService.CreateTimeOffAsync(model.Reason, model.Type, model.StartDate, model.EndDate, currentUser.Id);
+            bool isCreated = await _timeOffService.CreateTimeOffAsync(model, currentUser.Id);
 
             if(isCreated && ModelState.IsValid)
             {
