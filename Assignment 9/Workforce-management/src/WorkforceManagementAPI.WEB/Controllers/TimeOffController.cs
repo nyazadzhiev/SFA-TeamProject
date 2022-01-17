@@ -31,48 +31,26 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult> GetAll()
+        public async Task<List<TimeOffResponseDTO>> GetAll()
         {
             var requests = await _timeOffService.GetAllAsync();
 
-            return Ok(requests
-                        .Select(request => new TimeOffResponseDTO()
-                        {
-                            Id = request.Id,
-                            Reason = request.Reason,
-                            Type = request.Type,
-                            Status = request.Status,
-                            startDate = request.StartDate,
-                            endDate = request.EndDate,
-                            CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
-                            ModifierName = request.Modifier.FirstName + " " + request.Modifier.LastName
-                        }).ToList());
+            return _mapper.Map<List<TimeOffResponseDTO>>(requests);
         }
 
         [HttpGet("MyRequests")]
-        public async Task<ActionResult<TimeOffResponseDTO>> GetMyRequests()
+        public async Task<List<TimeOffResponseDTO>> GetMyRequests()
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
             var requests = await _timeOffService.GetMyTimeOffs(currentUser.Id);
 
-            return Ok(requests
-                        .Select(request => new TimeOffResponseDTO()
-                        {
-                            Id = request.Id,
-                            Reason = request.Reason,
-                            Type = request.Type,
-                            Status = request.Status,
-                            startDate = request.StartDate,
-                            endDate = request.EndDate,
-                            CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
-                            ModifierName = request.Modifier.FirstName + " " + request.Modifier.LastName
-                        }).ToList());
+            return _mapper.Map<List<TimeOffResponseDTO>>(requests);
         }
 
         [HttpGet("{timeOffId}")]
-        public async Task<ActionResult<TimeOffResponseDTO>> GetById(Guid timeOffId)
+        public async Task<TimeOffResponseDTO> GetById(Guid timeOffId)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
@@ -80,20 +58,10 @@ namespace ProjectManagementApp.WEB.Controllers
             TimeOff timeOff = await _timeOffService.GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
 
-            return new TimeOffResponseDTO()
-            {
-                Id = timeOff.Id,
-                Reason = timeOff.Reason,
-                Type = timeOff.Type,
-                Status = timeOff.Status,
-                startDate = timeOff.StartDate,
-                endDate = timeOff.EndDate,
-                CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
-                ModifierName = timeOff.Modifier.FirstName + " " + timeOff.Modifier.LastName
-            };
+            return _mapper.Map<TimeOffResponseDTO>(timeOff);
         }
 
-        [HttpPost]
+            [HttpPost]
         public async Task<ActionResult> CreateTimeOff(TimeOffRequestDTO model)
         {
             User currentUser = await _userService.GetCurrentUser(User);
@@ -127,17 +95,7 @@ namespace ProjectManagementApp.WEB.Controllers
             TimeOff timeOff = await _timeOffService.GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
 
-            return new TimeOffResponseDTO()
-            {
-                Id = timeOff.Id,
-                Reason = timeOff.Reason,
-                Type = timeOff.Type,
-                Status = timeOff.Status,
-                startDate = timeOff.StartDate,
-                endDate = timeOff.EndDate,
-                CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
-                ModifierName = timeOff.Modifier.FirstName + " " + timeOff.Modifier.LastName
-            };
+            return _mapper.Map<TimeOffResponseDTO>(timeOff);
         }
 
         [HttpDelete("{timeOffId}")]
