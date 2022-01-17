@@ -153,12 +153,12 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         [HttpPost("{timeOffId}")]
-        public async Task<ActionResult> AnswerRequestAsync(Guid timeOffId, CreateVoteRequestDTO vote)
+        public async Task<ActionResult> ResondToTimeOffAsync(Guid timeOffId, CreateVoteRequestDTO vote)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            bool isCompleted = await _timeOffService.AnswerRequests(currentUser, timeOffId, vote.Status);
+            bool isCompleted = await _timeOffService.RespondToTimeOffAsync(currentUser, timeOffId, vote.Status);
             if (!isCompleted)
             {
                 return BadRequest(Constants.OperationFailed);

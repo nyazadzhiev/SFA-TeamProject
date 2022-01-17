@@ -116,7 +116,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> AnswerRequests(User user, Guid timeOffId, Status status)
+        public async Task<bool> RespondToTimeOffAsync(User user, Guid timeOffId, Status status)
         {
             var timeOff = await GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
