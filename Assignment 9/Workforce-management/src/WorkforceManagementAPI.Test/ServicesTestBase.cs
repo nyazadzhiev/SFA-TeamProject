@@ -11,6 +11,7 @@ using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
+using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.WEB.AutoMapperProfiles;
@@ -162,6 +163,14 @@ namespace WorkforceManagementAPI.Test
             return userService;
         }
 
+        protected TeamService SetupMockedDefaultTeamService()
+        {
+            var mockContext = new Mock<DatabaseContext>();
+            var mockValidationService = new Mock<IValidationService>();
+            var mockTeamRepository = new Mock<ITeamRepository>();
+            var mockTeamService = new TeamService(mockContext.Object, mockValidationService.Object, mockTeamRepository.Object);
 
+            return mockTeamService;
+        }
     }
 }

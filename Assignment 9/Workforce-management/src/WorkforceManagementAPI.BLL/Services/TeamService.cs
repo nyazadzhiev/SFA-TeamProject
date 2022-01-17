@@ -20,6 +20,7 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository)
         {
+            _context = context;
             _validationService = validationService;
             _teamRepository = teamRepository;
         }
