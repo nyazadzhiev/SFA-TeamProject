@@ -27,15 +27,8 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, TeamLeaderRequirement requirement)
         {
-
-            var loggedUser = await userManager.GetUserAsync(context.User);
-            var timeOffId = httpContextAccessor.HttpContext.GetRouteValue("timeOffId").ToString();
-            Guid actualId = new Guid(timeOffId);
-            var timeOff = await timeOffService.GetTimeOffAsync(actualId);
-            var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
-            var isLoggedUserValidTeamLeader = timeOffCreator.Teams.Any(t => t.TeamLeaderId == loggedUser.Id);
             
-            if (isLoggedUserValidTeamLeader)
+            if (await TeamLeaderValidaition(context))
             {
                 context.Succeed(requirement);
                 await Task.CompletedTask;
@@ -46,6 +39,22 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader
                 context.Fail();
                 await Task.CompletedTask;
             }
+
+        }
+
+        private async Task<bool> TeamLeaderValidaition(AuthorizationHandlerContext context)
+        {
+
+            var loggedUser = await userManager.GetUserAsync(context.User);
+
+            var timeOffId = httpContextAccessor.HttpContext.GetRouteValue("timeOffId").ToString();
+            Guid actualId = new Guid(timeOffId);
+            var timeOff = await timeOffService.GetTimeOffAsync(actualId);
+            var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
+
+            var isLoggedUserValidTeamLeader = timeOffCreator.Teams.Any(t => t.TeamLeaderId == loggedUser.Id);
+
+            return isLoggedUserValidTeamLeader;
 
         }
     }
