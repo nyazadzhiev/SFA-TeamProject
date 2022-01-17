@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,14 @@ namespace WorkforceManagementAPI.WEB.Controllers
     {
         private static IUserService _userService;
         private static ITeamService _teamService;
+        private readonly IMapper _mapper;
         private User currentUser;
 
-        public TeamController(IUserService userService, ITeamService teamService) : base()
+        public TeamController(IUserService userService, ITeamService teamService, IMapper mapper) : base()
         {
             _userService = userService;
             _teamService = teamService;
+            _mapper = mapper;
         }
 
         [HttpGet]
