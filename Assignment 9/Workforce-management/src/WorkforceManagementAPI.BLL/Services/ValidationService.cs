@@ -78,6 +78,14 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
+        public void CheckTeamNameForEdit(string newTitle, string oldTitle)
+        {
+            if (_context.Teams.Any(p => p.Title == newTitle) && newTitle != oldTitle)
+            {
+                throw new NameExistException(String.Format(Constants.NameAlreadyInUse, "Team name"));
+            }
+        }
+
         public async Task EnsureUpdateEmailIsUniqueAsync(string email,User user)
         {
             if (await _userManager.VerifyEmail(email) == false && user.Email != email)
@@ -111,6 +119,38 @@ namespace WorkforceManagementAPI.BLL.Services
             if (input < minValue || input > maxValue)
             {
                 throw new InputOutOfBoundsException(String.Format(Constants.InputOutOfBounds, nameof(DateTime)));
+            }
+        }
+
+        public void CheckIfUserIsMember(Team team, string userId)
+        {
+            if (team.Users.Any(u => u.Id == userId))
+            {
+                throw new Exception("User is already a member.");
+            }
+        }
+
+        public void CheckIfUserToUnassignIsTeamLeader(Team team, string userId)
+        {
+            if (team.TeamLeaderId == userId)
+            {
+                throw new Exception("Can't unassign team leader from the team.");
+            }
+        }
+
+        public void CheckIfUserToAssignIsTeamLeader(Team team, string userId)
+        {
+            if (team.TeamLeaderId == userId)
+            {
+                throw new Exception("User is already the assigned team leader.");
+            }
+        }
+
+        public void CheckIfUserToAssignIsMember(Team team, string userId)
+        {
+            if (!team.Users.Any(u => u.Id == userId))
+            {
+                throw new Exception("Can't assign user as a leader in a team where they are not a member of.");
             }
         }
     }
