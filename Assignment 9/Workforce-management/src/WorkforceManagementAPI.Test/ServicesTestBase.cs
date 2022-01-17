@@ -40,7 +40,9 @@ namespace WorkforceManagementAPI.Test
 
             this.regularTeam = new Team()
             {
-                Title = "testteam"
+                Id = Guid.NewGuid(),
+                Title = "testteam",
+                Description = "testdescription"
             };
 
             this.testTimeOff = new TimeOff()
@@ -168,6 +170,8 @@ namespace WorkforceManagementAPI.Test
             var mockContext = new Mock<DatabaseContext>();
             var mockValidationService = new Mock<IValidationService>();
             var mockTeamRepository = new Mock<ITeamRepository>();
+            mockTeamRepository.Setup(t => t.GetTeamByIdAsync(It.IsAny<Guid>())).ReturnsAsync(regularTeam);
+
             var mockTeamService = new TeamService(mockContext.Object, mockValidationService.Object, mockTeamRepository.Object);
 
             return mockTeamService;
