@@ -21,6 +21,7 @@ using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.WEB.IdentityAuth;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -127,6 +128,9 @@ namespace WorkforceManagementAPI.WEB
 
                 options.AddPolicy("User", policy =>
                 policy.RequireRole("User"));
+
+                options.AddPolicy("TeamLeader", policy =>
+                policy.Requirements.Add(new TeamLeaderRequirement()));
             }
             )
                 .AddAuthentication(options =>

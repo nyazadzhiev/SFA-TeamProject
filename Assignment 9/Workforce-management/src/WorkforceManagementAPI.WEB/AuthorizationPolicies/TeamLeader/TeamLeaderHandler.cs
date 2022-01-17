@@ -40,11 +40,13 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader
                 context.Succeed(requirement);
                 await Task.CompletedTask;
             }
+
             else
             {
                 context.Fail();
                 await Task.CompletedTask;
             }
+
         }
     }
 }
