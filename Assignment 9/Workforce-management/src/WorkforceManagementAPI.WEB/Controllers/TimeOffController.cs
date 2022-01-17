@@ -117,7 +117,7 @@ namespace ProjectManagementApp.WEB.Controllers
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            bool isEdited = await _timeOffService.EditTimeOffAsync(timeOffId, model.Reason, model.StartDate, model.EndDate, model.Type);
+            bool isEdited = await _timeOffService.EditTimeOffAsync(timeOffId, model);
 
             if (!isEdited)
             {

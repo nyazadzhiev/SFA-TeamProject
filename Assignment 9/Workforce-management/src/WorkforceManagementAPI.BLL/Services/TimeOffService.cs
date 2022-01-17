@@ -108,18 +108,18 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType)
+        public async Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest)
         {
-            _validationService.EnsureInputFitsBoundaries(((int)newType), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.ValidateDateRange(newStart, newEnd);
+            _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.ValidateDateRange(timoffRequest.StartDate, timoffRequest.EndDate);
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
 
-            timeOff.Reason = newReason;
-            timeOff.Type = newType;
-            timeOff.StartDate = newStart;
-            timeOff.EndDate = newEnd;
+            timeOff.Reason = timoffRequest.Reason;
+            timeOff.Type = timoffRequest.Type;
+            timeOff.StartDate = timoffRequest.StartDate;
+            timeOff.EndDate = timoffRequest.EndDate;
             timeOff.ModifiedAt = DateTime.Now;
 
             await _context.SaveChangesAsync();
