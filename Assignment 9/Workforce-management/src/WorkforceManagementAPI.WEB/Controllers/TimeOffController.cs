@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.DTO.Models.Responses;
+using WorkforceManagementAPI.BLL.Services;
+using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
-using WorkforceManagementAPI.Common;
+using WorkforceManagementAPI.DTO.Models.Responses;
 
 namespace ProjectManagementApp.WEB.Controllers
 {
