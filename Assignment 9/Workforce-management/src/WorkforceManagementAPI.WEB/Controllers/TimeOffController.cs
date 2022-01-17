@@ -152,13 +152,13 @@ namespace ProjectManagementApp.WEB.Controllers
             return Ok(String.Format(Constants.Deleted, "TimeOff request"));
         }
 
-        [HttpPost("{timeOffId}")]
-        public async Task<ActionResult> ResondToTimeOffAsync(Guid timeOffId, CreateVoteRequestDTO vote)
+        [HttpPost("SubmitFeedback/{timeOffId}")]
+        public async Task<ActionResult> SubmitFeedbackForTimeOffRequest(Guid timeOffId, CreateVoteRequestDTO vote)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            bool isCompleted = await _timeOffService.RespondToTimeOffAsync(currentUser, timeOffId, vote.Status);
+            bool isCompleted = await _timeOffService.SubmitFeedbackForTimeOffRequestAsync(currentUser, timeOffId, vote.Status);
             if (!isCompleted)
             {
                 return BadRequest(Constants.OperationFailed);

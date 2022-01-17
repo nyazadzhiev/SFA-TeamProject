@@ -116,7 +116,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> RespondToTimeOffAsync(User user, Guid timeOffId, Status status)
+        public async Task<bool> SubmitFeedbackForTimeOffRequestAsync(User user, Guid timeOffId, Status status)
         {
             var timeOff = await GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
@@ -139,33 +139,42 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.Reviewers.Remove(user);
             user.UnderReviewRequests.Remove(timeOff);
 
-            string message = "";
+            var message = UpdateRequestStatus(status, timeOff);
 
-            if (status == Status.Rejected)
+            bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
+            if (allReviersGaveFeedback)
             {
-                message = "Your time off request has been rejected.";
-                timeOff.Status = Status.Rejected;
-                timeOff.Reviewers.Clear();
-            }
-            else
-            {
-                timeOff.Status = Status.Awaiting;
-            }
-
-            if (timeOff.Reviewers.Count == 0)
-            {
-                if (timeOff.Status != Status.Rejected)
-                {
-                    message = "Your time off request has been approved.";
-                    timeOff.Status = Status.Approved;
-                }
-
-                await _notificationService.Send(new List<User>() { timeOff.Creator }, "response", message);
+                await FinalizeRequestFeedback(timeOff, message);
             }
 
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        private string UpdateRequestStatus(Status status, TimeOff timeOff)
+        {
+            if (status == Status.Rejected)
+            {
+                timeOff.Status = Status.Rejected;
+                timeOff.Reviewers.Clear();
+                return "Your time off request has been rejected.";
+            }
+
+            timeOff.Status = Status.Awaiting;
+
+            return string.Empty;
+        }
+
+        private async Task FinalizeRequestFeedback(TimeOff timeOff, string message)
+        {
+            if (timeOff.Status != Status.Rejected)
+            {
+                message = "Your time off request has been approved.";
+                timeOff.Status = Status.Approved;
+            }
+
+            await _notificationService.Send(new List<User>() { timeOff.Creator }, "response", message);
         }
     }
 }
