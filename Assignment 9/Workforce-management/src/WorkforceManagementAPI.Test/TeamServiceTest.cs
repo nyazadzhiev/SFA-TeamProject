@@ -66,6 +66,26 @@ namespace WorkforceManagementAPI.Test
         }
 
         [Fact]
+        public async Task UnassignUserToTeam_ReturnsTrue()
+        {
+            var teamService = SetupMockedDefaultTeamService();
+
+            var result = await teamService.UnassignUserFromTeamAsync(regularTeam.Id, defaultUser.Id);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task AssignTeamLeader_ReturnsTrue()
+        {
+            var teamService = SetupMockedDefaultTeamService();
+
+            var result = await teamService.AssignTeamLeaderAsync(regularTeam.Id, defaultUser.Id);
+
+            Assert.True(result);
+        }
+
+        [Fact]
         public async Task GetAllTeams_ReturnsListOfTeams()
         {
             var teamService = SetupMockedDefaultTeamService();

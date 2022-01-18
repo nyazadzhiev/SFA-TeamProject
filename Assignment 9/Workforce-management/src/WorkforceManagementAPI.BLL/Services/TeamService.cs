@@ -7,6 +7,7 @@ using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
 
@@ -17,12 +18,14 @@ namespace WorkforceManagementAPI.BLL.Service
         private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
         private readonly ITeamRepository _teamRepository;
+        private readonly IIdentityUserManager _userManager;
 
-        public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository)
+        public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository, IIdentityUserManager userManager)
         {
             _context = context;
             _validationService = validationService;
             _teamRepository = teamRepository;
+            _userManager = userManager;
         }
 
         public async Task<List<Team>> GetAllTeamsAsync()
@@ -97,7 +100,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
             _validationService.CheckIfUserIsMember(team, userId);
@@ -120,7 +123,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
             _validationService.CheckIfUserToUnassignIsTeamLeader(team, userId);
@@ -137,7 +140,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
             _validationService.CheckIfUserToAssignIsTeamLeader(team, userId);
