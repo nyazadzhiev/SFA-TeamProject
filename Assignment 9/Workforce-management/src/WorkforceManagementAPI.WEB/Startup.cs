@@ -21,6 +21,7 @@ using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.WEB.IdentityAuth;
+using System;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -76,6 +77,8 @@ namespace WorkforceManagementAPI.WEB
                 });
 
                 c.DescribeAllEnumsAsStrings();
+
+                c.MapType<DateTime>(() => new OpenApiSchema { Type = "string", Format = "date" });
             });
 
             // Register Automapper
