@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
@@ -19,46 +21,57 @@ namespace WorkforceManagementAPI.BLL.Services
         private readonly IValidationService _validationService;
         private readonly IUserService _userService;
         private readonly INotificationService _notificationService;
+        private readonly IMapper _mapper;
 
-        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService, INotificationService notificationService)
+        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService, INotificationService notificationService, IMapper mapper)
         {
             _context = context;
             _validationService = validationService;
             _userService = userService;
             _notificationService = notificationService;
+            _mapper = mapper;
         }
 
-        public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, Status status, DateTime startDate, DateTime endDate, string creatorId)
+        public async Task<bool> CreateTimeOffAsync(TimeOffRequestDTO timoffRequest, string creatorId)
         {
-            _validationService.EnsureInputFitsBoundaries(((int)type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.EnsureInputFitsBoundaries(((int)status), 0, Enum.GetNames(typeof(Status)).Length - 1);
-            _validationService.ValidateDateRange(startDate, endDate);
+            _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.ValidateDateRange(timoffRequest.StartDate, timoffRequest.EndDate);
 
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
 
-            var timeOff = new TimeOff()
-            {
-                Reason = reason,
-                Type = type,
-                Status = status,
-                StartDate = startDate,
-                EndDate = endDate,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now,
-                CreatorId = creatorId,
-                Creator = user,
-                ModifierId = creatorId,
-                Modifier = user
-            };
+            var timeOff = _mapper.Map<TimeOff>(timoffRequest);
+
+            timeOff.CreatedAt = DateTime.Now;
+            timeOff.ModifiedAt = DateTime.Now;
+            timeOff.CreatorId = creatorId;
+            timeOff.Creator = user;
+            timeOff.ModifierId = creatorId;
+            timeOff.Modifier = user;
+        
 
             string subject = timeOff.Type.ToString() + " Time Off";
-            string message = String.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+            string message;
 
-            user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
             timeOff.Reviewers = user.Teams.Select(t => t.TeamLeader).ToList();
             await _context.Requests.AddAsync(timeOff);
             await _context.SaveChangesAsync();
+
+            if (timeOff.Type == RequestType.SickLeave)
+            {
+                message = String.Format(Constants.SickMessage, user.FirstName, user.LastName, timeOff.StartDate, timeOff.EndDate, timeOff.Reason);
+
+                timeOff.Status = Status.Approved;
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                message = String.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+
+                user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
+                await _context.SaveChangesAsync();
+            }
 
             await _notificationService.Send(timeOff.Reviewers, subject, message);
 
@@ -95,20 +108,18 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType, Status newStatus)
+        public async Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest)
         {
-            _validationService.EnsureInputFitsBoundaries(((int)newType), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.EnsureInputFitsBoundaries(((int)newStatus), 0, Enum.GetNames(typeof(Status)).Length - 1);
-            _validationService.ValidateDateRange(newStart, newEnd);
+            _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.ValidateDateRange(timoffRequest.StartDate, timoffRequest.EndDate);
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
 
-            timeOff.Reason = newReason;
-            timeOff.Status = newStatus;
-            timeOff.Type = newType;
-            timeOff.StartDate = newStart;
-            timeOff.EndDate = newEnd;
+            timeOff.Reason = timoffRequest.Reason;
+            timeOff.Type = timoffRequest.Type;
+            timeOff.StartDate = timoffRequest.StartDate;
+            timeOff.EndDate = timoffRequest.EndDate;
             timeOff.ModifiedAt = DateTime.Now;
 
             await _context.SaveChangesAsync();

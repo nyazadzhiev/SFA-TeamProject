@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
@@ -6,25 +7,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.WEB.AutoMapperProfiles;
 
 namespace WorkforceManagementAPI.Test
 {
     public class ServicesTestBase
     {
+        private static IMapper _mapper;
+        public User defaultUser { get; set; }
+
+        public User TeamLeader { get; set; }
+
         public Team regularTeam { get; set; }
 
         public TimeOff testTimeOff { get; set; }
 
         public ServicesTestBase()
         {
+            this.TeamLeader = new User();
+
+            this.defaultUser = new User()
+            {
+                UserName = "test@abv.bg",
+                Email = "test@abv.bg",
+                FirstName = "test",
+                LastName = "tester",
+                Id = "7cd150cd-413d-43d1-bdff-73cc5d4f04e3"
+            };
+
             this.regularTeam = new Team()
             {
-                Title = "testteam"
+                Title = "testteam",
+                TeamLeader = TeamLeader,
+                TeamLeaderId = TeamLeader.Id,
+                Users = new List<User>() { TeamLeader }
             };
 
             this.testTimeOff = new TimeOff()
@@ -103,5 +125,50 @@ namespace WorkforceManagementAPI.Test
 
             return mockSet.Object;
         }
+
+        protected UserService SetupMockedDefaultUserService()
+        {
+            SetupMockedMapperUser();
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validationMock = new Mock<IValidationService>();
+            var userService = new UserService(mockedManager.Object, validationMock.Object, _mapper);
+
+            return userService;
+        }
+
+        private static void SetupMockedMapperUser()
+        {
+            var myProfile = new UserProfile();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+            _mapper = new Mapper(configuration);
+        }
+
+        protected UserService SetupMockedDefaultUserServiceWithDefaultUser()
+        {
+            SetupMockedMapperUser();
+            var mockedManager = new Mock<IIdentityUserManager>();
+            mockedManager.Setup(userRep => userRep.FindByIdAsync(It.IsAny<String>()))
+                    .ReturnsAsync(new User());
+
+            var validationMock = new Mock<IValidationService>();
+            var userService = new UserService(mockedManager.Object, validationMock.Object, _mapper);
+
+            return userService;
+        }
+
+        protected UserService SetupMockedDefaultUserServiceWithDefaultUsers()
+        {
+            SetupMockedMapperUser();
+            var mockedManager = new Mock<IIdentityUserManager>();
+            mockedManager.Setup(userRep => userRep.GetAllAsync())
+                    .ReturnsAsync(new List<User>());
+
+            var validationMock = new Mock<IValidationService>();
+            var userService = new UserService(mockedManager.Object, validationMock.Object, _mapper);
+
+            return userService;
+        }
+
+
     }
 }

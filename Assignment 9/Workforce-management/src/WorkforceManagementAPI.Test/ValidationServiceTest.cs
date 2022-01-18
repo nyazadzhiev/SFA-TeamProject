@@ -1,4 +1,5 @@
 using Moq;
+using System;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.BLL.Services;
@@ -67,6 +68,72 @@ namespace WorkforceManagementAPI.Test
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
             Assert.Throws<NameExistException>(() => validation.CheckTeamName(regularTeam.Title));
+        }
+
+        [Fact]
+        public void EnsureInputFitsBoundaries_Must_Throw_Exception_When_Input_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<InputOutOfBoundsException>(() => validation.EnsureInputFitsBoundaries(10, 0, 5));
+        }
+
+        [Fact]
+        public void EnsureInputFitsBoundaries_Must_Throw_Exception_When_Date_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<InputOutOfBoundsException>(() => validation.EnsureInputFitsBoundaries(new DateTime(2022, 1, 14), new DateTime(2022, 1, 15), new DateTime(2023, 1, 1)));
+        }
+
+        [Fact]
+        public void ValidateDateRange_Must_Throw_Exception_When_Date_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<InputOutOfBoundsException>(() => validation.ValidateDateRange(new DateTime(2022, 1, 18), new DateTime(2022, 1, 15)));
+        }
+
+        [Fact]
+        public void CheckAccessToTeam_Must_Throw_Exception_When_User_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<UnautohrizedUserEcxeption>(() => validation.CheckAccessToTeam(regularTeam, defaultUser));
+        }
+
+        [Fact]
+        public void CheckTeamLeader_Must_Throw_Exception_When_User_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<UnautohrizedUserEcxeption>(() => validation.CheckTeamLeader(regularTeam, TeamLeader));
+        }
+
+        [Fact]
+        public void CanAddToTeam_Must_Throw_Exception_When_User_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<UserAlreadyInTeamException>(() => validation.CanAddToTeam(regularTeam, TeamLeader));
         }
     }
 }

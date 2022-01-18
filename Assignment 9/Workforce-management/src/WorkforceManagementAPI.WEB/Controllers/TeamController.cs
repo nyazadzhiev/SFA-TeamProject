@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.DTO.Models.Responses;
@@ -21,40 +20,38 @@ namespace WorkforceManagementAPI.WEB.Controllers
     {
         private static IUserService _userService;
         private static ITeamService _teamService;
+        private readonly IMapper _mapper;
         private User currentUser;
 
-        public TeamController(IUserService userService, ITeamService teamService) : base()
+        public TeamController(IUserService userService, ITeamService teamService, IMapper mapper) : base()
         {
             _userService = userService;
             _teamService = teamService;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TeamResponseDTO>>> GetAllTeamsAsync()
+        public async Task<IEnumerable<TeamResponseDTO>> GetAllTeamsAsync()
         {
             var teams = await _teamService.GetAllTeamsAsync();
-            return teams
-                .Select(team => MapTeam(team))
-                .ToList();
+            return _mapper.Map<IEnumerable<TeamResponseDTO>>(teams);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TeamResponseDTO>> GetTeamByIdAsync(Guid id)
+        public async Task<TeamResponseDTO> GetTeamByIdAsync(Guid id)
         {
             var team = await _teamService.GetTeamByIdAsync(id);
 
-            return MapTeam(team);
+            return _mapper.Map<TeamResponseDTO>(team);
         }
 
         [HttpGet("My/")]
-        public async Task<ActionResult<IEnumerable<TeamResponseDTO>>> GetMyTeamsAsync()
+        public async Task<IEnumerable<TeamResponseDTO>> GetMyTeamsAsync()
         {
             currentUser = await _userService.GetCurrentUser(User);
 
             var teams = await _teamService.GetMyTeamsAsync(currentUser.Id);
-            return teams
-                .Select(team => MapTeam(team))
-                .ToList();
+            return _mapper.Map<IEnumerable<TeamResponseDTO>>(teams);
         }
 
         [HttpPost]
@@ -62,7 +59,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isCreated = await _teamService.CreateTeamAsync(team.Title, team.Description, currentUser.Id);
+            bool isCreated = await _teamService.CreateTeamAsync(team, currentUser.Id);
             if (isCreated && ModelState.IsValid)
             {
                 return Ok("Team created successfully.");
@@ -76,7 +73,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isEdited = await _teamService.EditTeamAsync(id, currentUser.Id, teamEdit.Title, teamEdit.Description);
+            bool isEdited = await _teamService.EditTeamAsync(id, currentUser.Id, teamEdit);
             if (isEdited)
             {
                 return Ok("Team edited successfully.");
@@ -141,21 +138,6 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
-        private TeamResponseDTO MapTeam(Team teamEntity)
-        {
-            var team = new TeamResponseDTO()
-            {
-                Id = teamEntity.Id,
-                Title = teamEntity.Title,
-                Description = teamEntity.Description,
-                TeamLeaderId = teamEntity.TeamLeaderId,
-                CreatorId = teamEntity.CreatorId,
-                ModifierId = teamEntity.ModifierId,
-                CreatedAt = teamEntity.CreatedAt,
-                ModifiedAt = teamEntity.ModifiedAt
-            };
 
-            return team;
-        }
     }
 }

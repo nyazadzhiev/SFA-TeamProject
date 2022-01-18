@@ -19,6 +19,7 @@
     <ProjectReference Include="..\WorkforceManagementAPI.BLL\WorkforceManagementAPI.BLL.csproj" />
     <ProjectReference Include="..\WorkforceManagementAPI.Common\WorkforceManagementAPI.Common.csproj" />
     <ProjectReference Include="..\WorkforceManagementAPI.DAL\WorkforceManagementAPI.DAL.csproj" />
+    <ProjectReference Include="..\WorkforceManagementAPI.WEB\WorkforceManagementAPI.WEB.csproj" />
   </ItemGroup>
 
 </Project>

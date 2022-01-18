@@ -79,6 +79,14 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
+        public void CheckTeamNameForEdit(string newTitle, string oldTitle)
+        {
+            if (_context.Teams.Any(p => p.Title == newTitle) && newTitle != oldTitle)
+            {
+                throw new NameExistException(String.Format(Constants.NameAlreadyInUse, "Team name"));
+            }
+        }
+
         public async Task EnsureUpdateEmailIsUniqueAsync(string email,User user)
         {
             if (await _userManager.VerifyEmail(email) == false && user.Email != email)
@@ -112,6 +120,30 @@ namespace WorkforceManagementAPI.BLL.Services
             if (input < minValue || input > maxValue)
             {
                 throw new InputOutOfBoundsException(String.Format(Constants.InputOutOfBounds, nameof(DateTime)));
+            }
+        }
+
+        public void CheckAccessToTeam(Team team, User user)
+        {
+            if (!team.Users.Any(u => u.Id == user.Id))
+            {
+                throw new UnautohrizedUserEcxeption(Constants.TeamAccess);
+            }
+        }
+
+        public void CheckTeamLeader(Team team, User user)
+        {
+            if (team.TeamLeaderId == user.Id)
+            {
+                throw new UnautohrizedUserEcxeption(Constants.InvalidTeamLeader);
+            }
+        }
+
+        public void CanAddToTeam(Team team, User user)
+        {
+            if (team.Users.Any(u => u.Id == user.Id))
+            {
+                throw new UserAlreadyInTeamException(Constants.UserAlreadyMember);
             }
         }
 
