@@ -31,6 +31,8 @@ namespace WorkforceManagementAPI.BLL.Contracts
 
         void EnsureInputFitsBoundaries(DateTime input, DateTime minValue, DateTime maxValue);
 
+        void CheckTeamNameForEdit(string newTitle, string oldTitle);
+
         void CheckAccessToTeam(Team team, User user);
 
         void CheckTeamLeader(Team team, User user);
