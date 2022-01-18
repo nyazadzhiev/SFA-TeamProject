@@ -182,6 +182,8 @@ namespace WorkforceManagementAPI.Test
             mockTeamRepository.Setup(t => t.GetMyTeamsAsync(It.IsAny<string>())).ReturnsAsync(new List<Team>());
 
             var mockMapper = new Mock<IMapper>();
+            mockMapper.Setup(m => m.Map<Team>(It.IsAny<TeamRequestDTO>())).Returns(regularTeam);
+
             var mockUserManager = new Mock<IIdentityUserManager>();
             mockUserManager.Setup(u => u.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(defaultUser);
 
