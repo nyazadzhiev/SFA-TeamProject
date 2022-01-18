@@ -51,7 +51,7 @@ namespace WorkforceManagementAPI.Test
 
             var result = await service.DeleteTimeOffAsync(testTimeOff.Id);
 
-            //Assert.True(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -88,9 +88,9 @@ namespace WorkforceManagementAPI.Test
 
             var service = new TimeOffService(mockDB, mockValidation.Object, mockUserService.Object, mockNotification.Object, mockMapper.Object);
 
-            //var result = await service.GetTimeOffAsync(testTimeOff.Id);
+            var result = await service.GetTimeOffAsync(testTimeOff.Id);
 
-            //Assert.Null(result);
+            Assert.Null(result);
         }
     }
 }
