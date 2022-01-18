@@ -99,7 +99,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.CheckIfUserIsMember(team, userId);
+            _validationService.CanAddToTeam(team, user);
 
             if (team.Users.Count == 0)
             {
@@ -122,7 +122,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.CheckIfUserToUnassignIsTeamLeader(team, userId);
+            _validationService.CheckTeamLeader(team, user);
 
             _teamRepository.RemoveTeamUser(team, user);
 
@@ -139,8 +139,8 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.CheckIfUserToAssignIsTeamLeader(team, userId);
-            _validationService.CheckIfUserToAssignIsMember(team, userId);
+            _validationService.CheckTeamLeader(team, user);
+            _validationService.CheckAccessToTeam(team, user);
 
             team.TeamLeaderId = userId;
             _teamRepository.UpdateTeam(team);

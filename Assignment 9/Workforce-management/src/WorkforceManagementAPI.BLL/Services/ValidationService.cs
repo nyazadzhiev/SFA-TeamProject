@@ -122,35 +122,27 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void CheckIfUserIsMember(Team team, string userId)
+        public void CheckAccessToTeam(Team team, User user)
         {
-            if (team.Users.Any(u => u.Id == userId))
+            if (!team.Users.Any(u => u.Id == user.Id))
             {
-                throw new Exception("User is already a member.");
+                throw new UnautohrizedUserEcxeption(Constants.TeamAccess);
             }
         }
 
-        public void CheckIfUserToUnassignIsTeamLeader(Team team, string userId)
+        public void CheckTeamLeader(Team team, User user)
         {
-            if (team.TeamLeaderId == userId)
+            if (team.TeamLeaderId == user.Id)
             {
-                throw new Exception("Can't unassign team leader from the team.");
+                throw new UnautohrizedUserEcxeption(Constants.InvalidTeamLeader);
             }
         }
 
-        public void CheckIfUserToAssignIsTeamLeader(Team team, string userId)
+        public void CanAddToTeam(Team team, User user)
         {
-            if (team.TeamLeaderId == userId)
+            if (team.Users.Any(u => u.Id == user.Id))
             {
-                throw new Exception("User is already the assigned team leader.");
-            }
-        }
-
-        public void CheckIfUserToAssignIsMember(Team team, string userId)
-        {
-            if (!team.Users.Any(u => u.Id == userId))
-            {
-                throw new Exception("Can't assign user as a leader in a team where they are not a member of.");
+                throw new UserAlreadyInTeamException(Constants.UserAlreadyMember);
             }
         }
     }
