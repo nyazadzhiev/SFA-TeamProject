@@ -11,6 +11,7 @@ using WorkforceManagementAPI.Common;
 using AutoMapper;
 using WorkforceManagementAPI.DTO.Models.Responses;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProjectManagementApp.WEB.Controllers
 {
@@ -31,6 +32,7 @@ namespace ProjectManagementApp.WEB.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpGet()]
         public async Task<List<TimeOffResponseDTO>> GetAll()
         {
@@ -39,6 +41,7 @@ namespace ProjectManagementApp.WEB.Controllers
             return _mapper.Map<List<TimeOffResponseDTO>>(requests);
         }
 
+        [Authorize]
         [HttpGet("MyRequests")]
         public async Task<List<TimeOffResponseDTO>> GetMyRequests()
         {
@@ -50,6 +53,7 @@ namespace ProjectManagementApp.WEB.Controllers
             return _mapper.Map<List<TimeOffResponseDTO>>(requests);
         }
 
+        [Authorize(Policy = "TimeOffCreator, TeamLeader")]
         [HttpGet("{timeOffId}")]
         public async Task<TimeOffResponseDTO> GetById(Guid timeOffId)
         {
@@ -62,7 +66,8 @@ namespace ProjectManagementApp.WEB.Controllers
             return _mapper.Map<TimeOffResponseDTO>(timeOff);
         }
 
-            [HttpPost]
+        [Authorize]
+        [HttpPost]
         public async Task<ActionResult> CreateTimeOff(TimeOffRequestDTO model)
         {
             User currentUser = await _userService.GetCurrentUser(User);
@@ -80,6 +85,7 @@ namespace ProjectManagementApp.WEB.Controllers
             }
         }
 
+        [Authorize(Policy = "TimeOffCreator")]
         [HttpPut("{timeOffId}")]
         public async Task<ActionResult<TimeOffResponseDTO>> Edit(Guid timeOffId, TimeOffRequestDTO model)
         {
@@ -99,6 +105,7 @@ namespace ProjectManagementApp.WEB.Controllers
             return _mapper.Map<TimeOffResponseDTO>(timeOff);
         }
 
+        [Authorize(Policy = "TimeOffCreator")]
         [HttpDelete("{timeOffId}")]
         public async Task<ActionResult> Delete(Guid timeOffId)
         {
@@ -114,6 +121,7 @@ namespace ProjectManagementApp.WEB.Controllers
             return Ok(String.Format(Constants.Deleted, "TimeOff request"));
         }
 
+        [Authorize(Policy = "TeamLeader")]
         [HttpPost("SubmitFeedback/{timeOffId}")]
         public async Task<ActionResult> SubmitFeedbackForTimeOffRequest(Guid timeOffId, CreateVoteRequestDTO vote)
         {
