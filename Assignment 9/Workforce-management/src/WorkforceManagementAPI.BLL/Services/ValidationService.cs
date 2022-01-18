@@ -8,6 +8,7 @@ using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
@@ -143,6 +144,30 @@ namespace WorkforceManagementAPI.BLL.Services
             if (team.Users.Any(u => u.Id == user.Id))
             {
                 throw new UserAlreadyInTeamException(Constants.UserAlreadyMember);
+            }
+        }
+
+        public void CheckReviewrsCount(TimeOff timeOff)
+        {
+            if (timeOff.Reviewers.Count == 0)
+            {
+                throw new Exception("Time off request is already completed.");
+            }
+        }
+
+        public void EnsureUserIsReviewer(TimeOff timeOff, User user)
+        {
+            if (!timeOff.Reviewers.Any(u => u.Id == user.Id))
+            {
+                throw new Exception("User is not a reviewer.");
+            }
+        }
+
+        public void EnsureResponseIsValid(Status status)
+        {
+            if (status != Status.Rejected && status != Status.Approved)
+            {
+                throw new Exception("Invalid status.");
             }
         }
     }

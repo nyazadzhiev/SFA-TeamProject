@@ -37,5 +37,7 @@ namespace WorkforceManagementAPI.Common
         public const string InvalidTeamLeader = "User is already the assigned team leader.";
 
         public const string UserAlreadyMember = "User is already a member.";
+
+        public const string AnswerToRequest = "Answer to request has been submited.";
     }
 }

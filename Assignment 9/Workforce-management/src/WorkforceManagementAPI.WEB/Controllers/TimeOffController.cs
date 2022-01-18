@@ -10,6 +10,7 @@ using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.Common;
 using AutoMapper;
 using WorkforceManagementAPI.DTO.Models.Responses;
+using System.Collections.Generic;
 
 namespace ProjectManagementApp.WEB.Controllers
 {
@@ -69,7 +70,7 @@ namespace ProjectManagementApp.WEB.Controllers
 
             bool isCreated = await _timeOffService.CreateTimeOffAsync(model, currentUser.Id);
 
-            if(isCreated && ModelState.IsValid)
+            if (isCreated && ModelState.IsValid)
             {
                 return Created(nameof(HttpPostAttribute), String.Format(Constants.Created, "TimeOff request"));
             }
@@ -111,6 +112,21 @@ namespace ProjectManagementApp.WEB.Controllers
             }
 
             return Ok(String.Format(Constants.Deleted, "TimeOff request"));
+        }
+
+        [HttpPost("SubmitFeedback/{timeOffId}")]
+        public async Task<ActionResult> SubmitFeedbackForTimeOffRequest(Guid timeOffId, CreateVoteRequestDTO vote)
+        {
+            User currentUser = await _userService.GetCurrentUser(User);
+            _validationService.EnsureUserExist(currentUser);
+
+            bool isCompleted = await _timeOffService.SubmitFeedbackForTimeOffRequestAsync(currentUser, timeOffId, vote.Status);
+            if (!isCompleted)
+            {
+                return BadRequest(Constants.OperationFailed);
+            }
+
+            return Ok(Constants.AnswerToRequest);
         }
     }
 }

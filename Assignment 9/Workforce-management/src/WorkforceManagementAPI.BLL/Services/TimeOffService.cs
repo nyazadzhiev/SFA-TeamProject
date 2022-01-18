@@ -126,5 +126,54 @@ namespace WorkforceManagementAPI.BLL.Services
 
             return true;
         }
+
+        public async Task<bool> SubmitFeedbackForTimeOffRequestAsync(User user, Guid timeOffId, Status status)
+        {
+            var timeOff = await GetTimeOffAsync(timeOffId);
+            _validationService.EnsureTimeOffExist(timeOff);
+            _validationService.CheckReviewrsCount(timeOff);
+            _validationService.EnsureUserIsReviewer(timeOff, user);
+            _validationService.EnsureResponseIsValid(status);
+
+            timeOff.Reviewers.Remove(user);
+            user.UnderReviewRequests.Remove(timeOff);
+
+            var message = UpdateRequestStatus(status, timeOff);
+
+            bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
+            if (allReviersGaveFeedback)
+            {
+                await FinalizeRequestFeedback(timeOff, message);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        private string UpdateRequestStatus(Status status, TimeOff timeOff)
+        {
+            if (status == Status.Rejected)
+            {
+                timeOff.Status = Status.Rejected;
+                timeOff.Reviewers.Clear();
+                return "Your time off request has been rejected.";
+            }
+
+            timeOff.Status = Status.Awaiting;
+
+            return string.Empty;
+        }
+
+        private async Task FinalizeRequestFeedback(TimeOff timeOff, string message)
+        {
+            if (timeOff.Status != Status.Rejected)
+            {
+                message = "Your time off request has been approved.";
+                timeOff.Status = Status.Approved;
+            }
+
+            await _notificationService.Send(new List<User>() { timeOff.Creator }, "response", message);
+        }
     }
 }

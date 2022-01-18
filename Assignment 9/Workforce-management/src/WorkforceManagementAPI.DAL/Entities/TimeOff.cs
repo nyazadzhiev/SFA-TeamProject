@@ -34,7 +34,7 @@ namespace WorkforceManagementAPI.DAL.Entities
 
         public TimeOff()
         {
-            this.Reviewers = new List<User>();
+            Reviewers = new List<User>();
         }
     }
 }

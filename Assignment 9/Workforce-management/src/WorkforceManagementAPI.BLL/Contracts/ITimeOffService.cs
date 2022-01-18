@@ -20,5 +20,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
         Task<bool> DeleteTimeOffAsync(Guid id);
 
         Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest);
+
+        Task<bool> SubmitFeedbackForTimeOffRequestAsync(User user, Guid timeOffId, Status status);
     }
 }
