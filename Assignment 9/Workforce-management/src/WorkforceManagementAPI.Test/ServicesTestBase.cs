@@ -22,12 +22,16 @@ namespace WorkforceManagementAPI.Test
         private static IMapper _mapper;
         public User defaultUser { get; set; }
 
+        public User TeamLeader { get; set; }
+
         public Team regularTeam { get; set; }
 
         public TimeOff testTimeOff { get; set; }
 
         public ServicesTestBase()
         {
+            this.TeamLeader = new User();
+
             this.defaultUser = new User()
             {
                 UserName = "test@abv.bg",
@@ -39,7 +43,10 @@ namespace WorkforceManagementAPI.Test
 
             this.regularTeam = new Team()
             {
-                Title = "testteam"
+                Title = "testteam",
+                TeamLeader = TeamLeader,
+                TeamLeaderId = TeamLeader.Id,
+                Users = new List<User>() { TeamLeader }
             };
 
             this.testTimeOff = new TimeOff()
