@@ -45,12 +45,12 @@ namespace WorkforceManagementAPI.Test
 
             this.regularTeam = new Team()
             {
+                Id = Guid.NewGuid(),
                 Title = "testteam",
+                Description = "testdescription",
                 TeamLeader = TeamLeader,
                 TeamLeaderId = TeamLeader.Id,
-                Users = new List<User>() { TeamLeader },
-                Id = Guid.NewGuid(),
-                Description = "testdescription"
+                Users = new List<User>() { TeamLeader }
             };
 
             this.testTimeOff = new TimeOff()
