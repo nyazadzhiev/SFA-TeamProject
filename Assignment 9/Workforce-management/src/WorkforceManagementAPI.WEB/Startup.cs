@@ -15,10 +15,13 @@ using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.DAL;
+using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models;
+using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.WEB.IdentityAuth;
+using System;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -74,6 +77,8 @@ namespace WorkforceManagementAPI.WEB
                 });
 
                 c.DescribeAllEnumsAsStrings();
+
+                c.MapType<DateTime>(() => new OpenApiSchema { Type = "string", Format = "date" });
             });
 
             // Register Automapper
@@ -87,6 +92,8 @@ namespace WorkforceManagementAPI.WEB
             services.AddTransient<IValidationService, ValidationService>();
             services.AddTransient<ITimeOffService, TimeOffService>();
             services.AddTransient<IUserService, UserService>();
+
+            services.AddTransient<ITeamRepository, TeamRepository>();
 
             //EF Identity
             services.AddIdentityCore<User>(options =>
