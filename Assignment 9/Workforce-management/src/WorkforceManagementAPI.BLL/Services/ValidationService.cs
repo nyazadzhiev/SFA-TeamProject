@@ -118,7 +118,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (!team.Users.Any(u => u.Id == user.Id))
             {
-                throw new UnautohrizedUserEcxeption(Constants.TeamAccess);
+                throw new UnautohrizedUserException(Constants.TeamAccess);
             }
         }
 
@@ -126,7 +126,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (team.TeamLeaderId == user.Id)
             {
-                throw new UnautohrizedUserEcxeption(Constants.InvalidTeamLeader);
+                throw new UnautohrizedUserException(Constants.InvalidTeamLeader);
             }
         }
 
@@ -134,7 +134,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (team.Users.Any(u => u.Id == user.Id))
             {
-                throw new UnautohrizedUserEcxeption(Constants.UserAlreadyMember);
+                throw new UnautohrizedUserException(Constants.UserAlreadyMember);
             }
         }
     }
