@@ -13,7 +13,6 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember
 
         public TeamMemberHandler(IIdentityUserManager userManager)
         {
-            
             this.userManager = userManager;
         }
 
@@ -23,11 +22,9 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember
             
             if (loggedUser.Teams.Count != 0)
             {
-
                 context.Succeed(requirement);
                 await Task.CompletedTask;
             }
-
             else
             {
                 context.Fail();
