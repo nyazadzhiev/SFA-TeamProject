@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models.Requests;
 using Xunit;
 
 namespace WorkforceManagementAPI.Test
@@ -23,11 +25,17 @@ namespace WorkforceManagementAPI.Test
             var mockValidation = new Mock<IValidationService>();
             var mockUserService = new Mock<IUserService>();
             var mockNotification = new Mock<INotificationService>();
-            //var service = new TimeOffService(mockDB, mockValidation.Object, mockUserService.Object, mockNotification.Object);
+            var mockMapper = new Mock<IMapper>();
+            mockMapper.Setup(m => m.Map<TimeOff>(It.IsAny<TimeOff>())).Returns(testTimeOff);
 
-            //var result = await service.CreateTimeOffAsync(testTimeOff.Reason, testTimeOff.Type, testTimeOff.StartDate, testTimeOff.EndDate, testTimeOff.CreatorId);
+            var model = new TimeOffRequestDTO()
+            {
+            };
 
-            //Assert.True(result);
+            var service = new TimeOffService(mockDB, mockValidation.Object, mockUserService.Object, mockNotification.Object, mockMapper.Object);
+
+            var result = await service.CreateTimeOffAsync(model, testTimeOff.CreatorId);
+            Assert.True(result);
         }
 
         [Fact]
@@ -37,9 +45,11 @@ namespace WorkforceManagementAPI.Test
             var mockValidation = new Mock<IValidationService>();
             var mockUserService = new Mock<IUserService>();
             var mockNotification = new Mock<INotificationService>();
-            //var service = new TimeOffService(mockDB, mockValidation.Object, mockUserService.Object, mockNotification.Object);
+            var mockMapper = new Mock<IMapper>();
 
-            //var result = await service.DeleteTimeOffAsync(testTimeOff.Id);
+            var service = new TimeOffService(mockDB, mockValidation.Object, mockUserService.Object, mockNotification.Object, mockMapper.Object);
+
+            var result = await service.DeleteTimeOffAsync(testTimeOff.Id);
 
             //Assert.True(result);
         }
@@ -51,11 +61,19 @@ namespace WorkforceManagementAPI.Test
             var mockValidation = new Mock<IValidationService>();
             var mockUserService = new Mock<IUserService>();
             var mockNotification = new Mock<INotificationService>();
-            //var service = new TimeOffService(mockDB, mockValidation.Object, mockUserService.Object, mockNotification.Object);
+            var mockMapper = new Mock<IMapper>();
+            mockMapper.Setup(m => m.Map<TimeOff>(It.IsAny<TimeOff>())).Returns(testTimeOff);
 
-            //var result = await service.EditTimeOffAsync(testTimeOff.Id, testTimeOff.Reason, testTimeOff.StartDate, testTimeOff.EndDate, testTimeOff.Type);
+            var model = new TimeOffRequestDTO()
+            {
+            };
 
-         //  Assert.True(result);
+            var service = new TimeOffService(mockDB, mockValidation.Object, mockUserService.Object, mockNotification.Object, mockMapper.Object);
+
+
+            var result = await service.EditTimeOffAsync(testTimeOff.Id, model);
+
+            Assert.True(result);
         }
 
         [Fact]
@@ -65,7 +83,10 @@ namespace WorkforceManagementAPI.Test
             var mockValidation = new Mock<IValidationService>();
             var mockUserService = new Mock<IUserService>();
             var mockNotification = new Mock<INotificationService>();
-            //var service = new TimeOffService(mockDB, mockValidation.Object, mockUserService.Object, mockNotification.Object);
+            var mockMapper = new Mock<IMapper>();
+            mockMapper.Setup(m => m.Map<TimeOff>(It.IsAny<TimeOff>())).Returns(testTimeOff);
+
+            var service = new TimeOffService(mockDB, mockValidation.Object, mockUserService.Object, mockNotification.Object, mockMapper.Object);
 
             //var result = await service.GetTimeOffAsync(testTimeOff.Id);
 
