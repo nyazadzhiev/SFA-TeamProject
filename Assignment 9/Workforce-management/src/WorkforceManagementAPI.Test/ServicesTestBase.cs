@@ -14,6 +14,7 @@ using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.WEB.AutoMapperProfiles;
 
 namespace WorkforceManagementAPI.Test
@@ -23,12 +24,16 @@ namespace WorkforceManagementAPI.Test
         private static IMapper _mapper;
         public User defaultUser { get; set; }
 
+        public User TeamLeader { get; set; }
+
         public Team regularTeam { get; set; }
 
         public TimeOff testTimeOff { get; set; }
 
         public ServicesTestBase()
         {
+            this.TeamLeader = new User();
+
             this.defaultUser = new User()
             {
                 UserName = "test@abv.bg",
@@ -40,8 +45,11 @@ namespace WorkforceManagementAPI.Test
 
             this.regularTeam = new Team()
             {
-                Id = Guid.NewGuid(),
                 Title = "testteam",
+                TeamLeader = TeamLeader,
+                TeamLeaderId = TeamLeader.Id,
+                Users = new List<User>() { TeamLeader },
+                Id = Guid.NewGuid(),
                 Description = "testdescription"
             };
 
@@ -167,17 +175,17 @@ namespace WorkforceManagementAPI.Test
 
         protected TeamService SetupMockedDefaultTeamService()
         {
-            var mockContext = new Mock<DatabaseContext>();
             var mockValidationService = new Mock<IValidationService>();
             var mockTeamRepository = new Mock<ITeamRepository>();
             mockTeamRepository.Setup(t => t.GetTeamByIdAsync(It.IsAny<Guid>())).ReturnsAsync(regularTeam);
             mockTeamRepository.Setup(t => t.GetAllTeamsAsync()).ReturnsAsync(new List<Team>());
             mockTeamRepository.Setup(t => t.GetMyTeamsAsync(It.IsAny<string>())).ReturnsAsync(new List<Team>());
 
+            var mockMapper = new Mock<IMapper>();
             var mockUserManager = new Mock<IIdentityUserManager>();
             mockUserManager.Setup(u => u.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(defaultUser);
 
-            var mockTeamService = new TeamService(mockContext.Object, mockValidationService.Object, mockTeamRepository.Object, mockUserManager.Object);
+            var mockTeamService = new TeamService(mockValidationService.Object, mockTeamRepository.Object, mockUserManager.Object, mockMapper.Object);
 
             return mockTeamService;
         }

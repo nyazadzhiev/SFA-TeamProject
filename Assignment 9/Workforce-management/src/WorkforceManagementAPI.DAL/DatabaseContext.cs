@@ -9,7 +9,8 @@ namespace WorkforceManagementAPI.DAL
 
         public virtual DbSet<Team> Teams { get; set; }
 
-        public virtual DbSet<TimeOff> Requests { get; set; }    
+        public virtual DbSet<TimeOff> Requests { get; set; }
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base (options)
         {
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,21 +11,22 @@ using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Service
 {
     public class TeamService : ITeamService
     {
-        private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
         private readonly ITeamRepository _teamRepository;
+        private readonly IMapper _mapper;
         private readonly IIdentityUserManager _userManager;
 
-        public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository, IIdentityUserManager userManager)
+        public TeamService(IValidationService validationService, ITeamRepository teamRepository, IIdentityUserManager userManager, IMapper mapper)
         {
-            _context = context;
             _validationService = validationService;
             _teamRepository = teamRepository;
+            _mapper = mapper;
             _userManager = userManager;
         }
 
@@ -46,20 +48,16 @@ namespace WorkforceManagementAPI.BLL.Service
             return team;
         }
 
-        public async Task<bool> CreateTeamAsync(string title, string description, string creatorId)
+        public async Task<bool> CreateTeamAsync(TeamRequestDTO teamRequest, string creatorId)
         {
-            _validationService.CheckTeamName(title);
+            _validationService.CheckTeamName(teamRequest.Title);
 
             var now = DateTime.Now;
-            var team = new Team()
-            {
-                Title = title,
-                Description = description,
-                CreatorId = creatorId,
-                ModifierId = creatorId,
-                CreatedAt = now,
-                ModifiedAt = now
-            };
+            var team = _mapper.Map<Team>(teamRequest);
+            team.CreatorId = creatorId;
+            team.ModifierId = creatorId;
+            team.CreatedAt = now;
+            team.ModifiedAt = now;
 
             await _teamRepository.AddTeamAsync(team);
             await _teamRepository.SaveChangesAsync();
@@ -67,14 +65,14 @@ namespace WorkforceManagementAPI.BLL.Service
             return true;
         }
 
-        public async Task<bool> EditTeamAsync(Guid teamId, string modifierId, string title, string description)
+        public async Task<bool> EditTeamAsync(Guid teamId, string modifierId, TeamRequestDTO editTeamRequest)
         {
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
-            _validationService.CheckTeamNameForEdit(title, team.Title);
+            _validationService.CheckTeamNameForEdit(editTeamRequest.Title, team.Title);
 
-            team.Title = title;
-            team.Description = description;
+            team.Title = editTeamRequest.Title;
+            team.Description = editTeamRequest.Description;
             team.ModifierId = modifierId;
             team.ModifiedAt = DateTime.Now;
 
@@ -103,7 +101,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.CheckIfUserIsMember(team, userId);
+            _validationService.CanAddToTeam(team, user);
 
             if (team.Users.Count == 0)
             {
@@ -126,7 +124,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.CheckIfUserToUnassignIsTeamLeader(team, userId);
+            _validationService.CheckTeamLeader(team, user);
 
             _teamRepository.RemoveTeamUser(team, user);
 
@@ -143,8 +141,8 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.CheckIfUserToAssignIsTeamLeader(team, userId);
-            _validationService.CheckIfUserToAssignIsMember(team, userId);
+            _validationService.CheckTeamLeader(team, user);
+            _validationService.CheckAccessToTeam(team, user);
 
             team.TeamLeaderId = userId;
             _teamRepository.UpdateTeam(team);

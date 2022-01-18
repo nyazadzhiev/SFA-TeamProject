@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.DTO.Models.Responses;
+using WorkforceManagementAPI.BLL.Services;
+using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.Common;
+using AutoMapper;
+using WorkforceManagementAPI.DTO.Models.Responses;
+using System.Collections.Generic;
 
 namespace ProjectManagementApp.WEB.Controllers
 {
@@ -19,57 +21,37 @@ namespace ProjectManagementApp.WEB.Controllers
         private readonly IUserService _userService;
         private IValidationService _validationService;
         private ITimeOffService _timeOffService;
+        private readonly IMapper _mapper;
 
-        public TimeOffCOntroller(IValidationService validationService, IUserService userService, ITimeOffService timeOffService) : base()
+        public TimeOffCOntroller(IValidationService validationService, IUserService userService, ITimeOffService timeOffService, IMapper mapper) : base()
         {
             _validationService = validationService;
             _userService = userService;
             _timeOffService = timeOffService;
+            _mapper = mapper;
         }
 
         [HttpGet()]
-        public async Task<ActionResult> GetAll()
+        public async Task<List<TimeOffResponseDTO>> GetAll()
         {
             var requests = await _timeOffService.GetAllAsync();
 
-            return Ok(requests
-                        .Select(request => new TimeOffResponseDTO()
-                        {
-                            Id = request.Id,
-                            Reason = request.Reason,
-                            Type = request.Type,
-                            Status = request.Status,
-                            startDate = request.StartDate,
-                            endDate = request.EndDate,
-                            CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
-                            ModifierName = request.Modifier.FirstName + " " + request.Modifier.LastName
-                        }).ToList());
+            return _mapper.Map<List<TimeOffResponseDTO>>(requests);
         }
 
         [HttpGet("MyRequests")]
-        public async Task<ActionResult<TimeOffResponseDTO>> GetMyRequests()
+        public async Task<List<TimeOffResponseDTO>> GetMyRequests()
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
             var requests = await _timeOffService.GetMyTimeOffs(currentUser.Id);
 
-            return Ok(requests
-                        .Select(request => new TimeOffResponseDTO()
-                        {
-                            Id = request.Id,
-                            Reason = request.Reason,
-                            Type = request.Type,
-                            Status = request.Status,
-                            startDate = request.StartDate,
-                            endDate = request.EndDate,
-                            CreatorName = request.Creator.FirstName + " " + request.Creator.LastName,
-                            ModifierName = request.Modifier.FirstName + " " + request.Modifier.LastName
-                        }).ToList());
+            return _mapper.Map<List<TimeOffResponseDTO>>(requests);
         }
 
         [HttpGet("{timeOffId}")]
-        public async Task<ActionResult<TimeOffResponseDTO>> GetById(Guid timeOffId)
+        public async Task<TimeOffResponseDTO> GetById(Guid timeOffId)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
@@ -77,28 +59,18 @@ namespace ProjectManagementApp.WEB.Controllers
             TimeOff timeOff = await _timeOffService.GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
 
-            return new TimeOffResponseDTO()
-            {
-                Id = timeOff.Id,
-                Reason = timeOff.Reason,
-                Type = timeOff.Type,
-                Status = timeOff.Status,
-                startDate = timeOff.StartDate,
-                endDate = timeOff.EndDate,
-                CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
-                ModifierName = timeOff.Modifier.FirstName + " " + timeOff.Modifier.LastName
-            };
+            return _mapper.Map<TimeOffResponseDTO>(timeOff);
         }
 
-        [HttpPost]
+            [HttpPost]
         public async Task<ActionResult> CreateTimeOff(TimeOffRequestDTO model)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            bool isCreated = await _timeOffService.CreateTimeOffAsync(model.Reason, model.Type, model.StartDate, model.EndDate, currentUser.Id);
+            bool isCreated = await _timeOffService.CreateTimeOffAsync(model, currentUser.Id);
 
-            if(isCreated && ModelState.IsValid)
+            if (isCreated && ModelState.IsValid)
             {
                 return Created(nameof(HttpPostAttribute), String.Format(Constants.Created, "TimeOff request"));
             }
@@ -114,7 +86,7 @@ namespace ProjectManagementApp.WEB.Controllers
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
 
-            bool isEdited = await _timeOffService.EditTimeOffAsync(timeOffId, model.Reason, model.StartDate, model.EndDate, model.Type);
+            bool isEdited = await _timeOffService.EditTimeOffAsync(timeOffId, model);
 
             if (!isEdited)
             {
@@ -124,17 +96,7 @@ namespace ProjectManagementApp.WEB.Controllers
             TimeOff timeOff = await _timeOffService.GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
 
-            return new TimeOffResponseDTO()
-            {
-                Id = timeOff.Id,
-                Reason = timeOff.Reason,
-                Type = timeOff.Type,
-                Status = timeOff.Status,
-                startDate = timeOff.StartDate,
-                endDate = timeOff.EndDate,
-                CreatorName = timeOff.Creator.FirstName + " " + timeOff.Creator.LastName,
-                ModifierName = timeOff.Modifier.FirstName + " " + timeOff.Modifier.LastName
-            };
+            return _mapper.Map<TimeOffResponseDTO>(timeOff);
         }
 
         [HttpDelete("{timeOffId}")]
@@ -150,6 +112,21 @@ namespace ProjectManagementApp.WEB.Controllers
             }
 
             return Ok(String.Format(Constants.Deleted, "TimeOff request"));
+        }
+
+        [HttpPost("SubmitFeedback/{timeOffId}")]
+        public async Task<ActionResult> SubmitFeedbackForTimeOffRequest(Guid timeOffId, CreateVoteRequestDTO vote)
+        {
+            User currentUser = await _userService.GetCurrentUser(User);
+            _validationService.EnsureUserExist(currentUser);
+
+            bool isCompleted = await _timeOffService.SubmitFeedbackForTimeOffRequestAsync(currentUser, timeOffId, vote.Status);
+            if (!isCompleted)
+            {
+                return BadRequest(Constants.OperationFailed);
+            }
+
+            return Ok(Constants.AnswerToRequest);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.BLL.Contracts
 {
@@ -30,10 +31,16 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void ValidateDateRange(DateTime minValue, DateTime maxValue);
 
         void EnsureInputFitsBoundaries(DateTime input, DateTime minValue, DateTime maxValue);
-        void CheckIfUserIsMember(Team team, string userId);
-        void CheckIfUserToUnassignIsTeamLeader(Team team, string userId);
-        void CheckIfUserToAssignIsTeamLeader(Team team, string userId);
-        void CheckIfUserToAssignIsMember(Team team, string userId);
+
         void CheckTeamNameForEdit(string newTitle, string oldTitle);
+
+        void CheckAccessToTeam(Team team, User user);
+
+        void CheckTeamLeader(Team team, User user);
+
+        void CanAddToTeam(Team team, User user);
+        void CheckReviewrsCount(TimeOff timeOff);
+        void EnsureUserIsReviewer(TimeOff timeOff, User user);
+        void EnsureResponseIsValid(Status status);
     }
 }

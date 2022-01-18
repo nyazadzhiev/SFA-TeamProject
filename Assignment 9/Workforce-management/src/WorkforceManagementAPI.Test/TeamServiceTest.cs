@@ -25,7 +25,7 @@ namespace WorkforceManagementAPI.Test
                 Description = "Test Description"
             };
             
-            var result = await teamService.CreateTeamAsync(createRequest.Title, createRequest.Description, defaultUser.Id);
+            var result = await teamService.CreateTeamAsync(createRequest, defaultUser.Id);
 
             Assert.True(result);
         }
@@ -40,7 +40,7 @@ namespace WorkforceManagementAPI.Test
                 Description = "Edited Test Description"
             };
 
-            var result = await teamService.EditTeamAsync(regularTeam.Id, defaultUser.Id, editRequest.Title, editRequest.Description);
+            var result = await teamService.EditTeamAsync(regularTeam.Id, defaultUser.Id, editRequest);
 
             Assert.True(result);
         }

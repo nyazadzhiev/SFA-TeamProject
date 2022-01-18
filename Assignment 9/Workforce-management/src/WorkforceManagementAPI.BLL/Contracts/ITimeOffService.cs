@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Contracts
 {
     public interface ITimeOffService
     {
-        Task<bool> CreateTimeOffAsync(string reason, RequestType type, DateTime startDate, DateTime endDate, string creatorId);
+        Task<bool> CreateTimeOffAsync(TimeOffRequestDTO timoffRequest, string creatorId);
 
         Task<List<TimeOff>> GetAllAsync();
 
@@ -18,6 +19,8 @@ namespace WorkforceManagementAPI.BLL.Contracts
 
         Task<bool> DeleteTimeOffAsync(Guid id);
 
-        Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType);
+        Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest);
+
+        Task<bool> SubmitFeedbackForTimeOffRequestAsync(User user, Guid timeOffId, Status status);
     }
 }

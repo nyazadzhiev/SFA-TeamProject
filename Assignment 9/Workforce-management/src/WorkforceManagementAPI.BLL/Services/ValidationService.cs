@@ -8,6 +8,7 @@ using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
@@ -122,35 +123,51 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void CheckIfUserIsMember(Team team, string userId)
+        public void CheckAccessToTeam(Team team, User user)
         {
-            if (team.Users.Any(u => u.Id == userId))
+            if (!team.Users.Any(u => u.Id == user.Id))
             {
-                throw new Exception("User is already a member.");
+                throw new UnautohrizedUserException(Constants.TeamAccess);
             }
         }
 
-        public void CheckIfUserToUnassignIsTeamLeader(Team team, string userId)
+        public void CheckTeamLeader(Team team, User user)
         {
-            if (team.TeamLeaderId == userId)
+            if (team.TeamLeaderId == user.Id)
             {
-                throw new Exception("Can't unassign team leader from the team.");
+                throw new UnautohrizedUserException(Constants.InvalidTeamLeader);
             }
         }
 
-        public void CheckIfUserToAssignIsTeamLeader(Team team, string userId)
+        public void CanAddToTeam(Team team, User user)
         {
-            if (team.TeamLeaderId == userId)
+            if (team.Users.Any(u => u.Id == user.Id))
             {
-                throw new Exception("User is already the assigned team leader.");
+                throw new UserAlreadyInTeamException(Constants.UserAlreadyMember);
             }
         }
 
-        public void CheckIfUserToAssignIsMember(Team team, string userId)
+        public void CheckReviewrsCount(TimeOff timeOff)
         {
-            if (!team.Users.Any(u => u.Id == userId))
+            if (timeOff.Reviewers.Count == 0)
             {
-                throw new Exception("Can't assign user as a leader in a team where they are not a member of.");
+                throw new Exception("Time off request is already completed.");
+            }
+        }
+
+        public void EnsureUserIsReviewer(TimeOff timeOff, User user)
+        {
+            if (!timeOff.Reviewers.Any(u => u.Id == user.Id))
+            {
+                throw new Exception("User is not a reviewer.");
+            }
+        }
+
+        public void EnsureResponseIsValid(Status status)
+        {
+            if (status != Status.Rejected && status != Status.Approved)
+            {
+                throw new Exception("Invalid status.");
             }
         }
     }

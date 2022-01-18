@@ -34,11 +34,13 @@ namespace WebApi.Middleware
                         break;
                     case NameExistException nameExistException:
                     case EmailAlreadyInUseException emailAlreadyInUse:
+                    case UserAlreadyInTeamException userAlreadyInTeamException:
                         response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
                     case InputOutOfBoundsException inputException:
                     case InvalidEmailException invalidEmail:
                     case InvalidLengthException invalidLength:
+                    case UnauthorizedAccessException unauthorizedAccessException:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     default:
