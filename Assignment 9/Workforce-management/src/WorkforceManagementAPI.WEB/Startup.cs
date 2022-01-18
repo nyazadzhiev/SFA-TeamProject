@@ -134,6 +134,9 @@ namespace WorkforceManagementAPI.WEB
 
                 options.AddPolicy("TeamLeader", policy =>
                 policy.Requirements.Add(new TeamLeaderRequirement()));
+
+                options.AddPolicy("TimeOffCreator", policy =>
+                policy.Requirements.Add(new TeamLeaderRequirement()));
             }
             )
                 .AddAuthentication(options =>
