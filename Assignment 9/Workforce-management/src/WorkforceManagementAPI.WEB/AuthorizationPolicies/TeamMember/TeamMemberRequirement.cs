@@ -1,6 +1,8 @@
-﻿namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember
 {
-    public class TeamMemberRequirement
+    public class TeamMemberRequirement : IAuthorizationRequirement
     {
     }
 }
