@@ -23,6 +23,7 @@ using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.WEB.IdentityAuth;
 using System;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -135,6 +136,9 @@ namespace WorkforceManagementAPI.WEB
 
                 options.AddPolicy("TeamLeader", policy =>
                 policy.Requirements.Add(new TeamLeaderRequirement()));
+
+                options.AddPolicy("TeamMember", policy =>
+                policy.Requirements.Add(new TeamMemberRequirement()));
 
                 options.AddPolicy("TimeOffCreator", policy =>
                 policy.Requirements.Add(new TeamLeaderRequirement()));
