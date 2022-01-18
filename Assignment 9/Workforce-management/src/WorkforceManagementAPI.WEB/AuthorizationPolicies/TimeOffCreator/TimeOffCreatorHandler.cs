@@ -36,7 +36,6 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TimeOffCreator
                 context.Succeed(requirement);
                 await Task.CompletedTask;
             }
-
             else
             {
                 context.Fail();
@@ -52,7 +51,6 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TimeOffCreator
             Guid actualId = new Guid(timeOffId);
             var timeOff = await timeOffService.GetTimeOffAsync(actualId);
             var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
-
             return timeOffCreator; 
 
         }

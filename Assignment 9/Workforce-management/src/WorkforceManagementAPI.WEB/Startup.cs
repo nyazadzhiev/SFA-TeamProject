@@ -126,6 +126,7 @@ namespace WorkforceManagementAPI.WEB
             services
                 .AddAuthorization(options =>
             {
+
                 options.AddPolicy("Admin", policy =>
                 policy.RequireRole("Admin"));
 
@@ -137,8 +138,9 @@ namespace WorkforceManagementAPI.WEB
 
                 options.AddPolicy("TimeOffCreator", policy =>
                 policy.Requirements.Add(new TeamLeaderRequirement()));
-            }
-            )
+
+            })
+            
                 .AddAuthentication(options =>
                 {
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
