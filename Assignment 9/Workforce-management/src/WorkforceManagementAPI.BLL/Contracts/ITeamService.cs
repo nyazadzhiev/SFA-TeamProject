@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Contracts
 {
@@ -9,9 +10,9 @@ namespace WorkforceManagementAPI.BLL.Contracts
     {
         Task<bool> AssignTeamLeaderAsync(Guid teamId, string userId);
         Task<bool> AssignUserToTeamAsync(Guid teamId, string userId);
-        Task<bool> CreateTeamAsync(string title, string description, string creatorId);
+        Task<bool> CreateTeamAsync(TeamRequestDTO teamRequest, string creatorId);
         Task<bool> DeleteTeamAsync(Guid teamId);
-        Task<bool> EditTeamAsync(Guid teamId, string modifierId, string title, string description);
+        Task<bool> EditTeamAsync(Guid teamId, string modifierId, TeamRequestDTO editTeamRequest);
         Task<List<Team>> GetAllTeamsAsync();
         Task<List<Team>> GetMyTeamsAsync(string userId);
         Task<Team> GetTeamByIdAsync(Guid teamId);

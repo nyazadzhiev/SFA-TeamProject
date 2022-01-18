@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Service
 {
@@ -17,11 +19,13 @@ namespace WorkforceManagementAPI.BLL.Service
         private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
         private readonly ITeamRepository _teamRepository;
+        private readonly IMapper _mapper;
 
-        public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository)
+        public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository, IMapper mapper)
         {
             _validationService = validationService;
             _teamRepository = teamRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<Team>> GetAllTeamsAsync()
@@ -42,20 +46,16 @@ namespace WorkforceManagementAPI.BLL.Service
             return team;
         }
 
-        public async Task<bool> CreateTeamAsync(string title, string description, string creatorId)
+        public async Task<bool> CreateTeamAsync(TeamRequestDTO teamRequest, string creatorId)
         {
-            _validationService.CheckTeamName(title);
+            _validationService.CheckTeamName(teamRequest.Title);
 
             var now = DateTime.Now;
-            var team = new Team()
-            {
-                Title = title,
-                Description = description,
-                CreatorId = creatorId,
-                ModifierId = creatorId,
-                CreatedAt = now,
-                ModifiedAt = now
-            };
+            var team = _mapper.Map<Team>(teamRequest);
+            team.CreatorId = creatorId;
+            team.ModifierId = creatorId;
+            team.CreatedAt = now;
+            team.ModifiedAt = now;
 
             await _teamRepository.AddTeamAsync(team);
             await _teamRepository.SaveChangesAsync();
@@ -63,14 +63,14 @@ namespace WorkforceManagementAPI.BLL.Service
             return true;
         }
 
-        public async Task<bool> EditTeamAsync(Guid teamId, string modifierId, string title, string description)
+        public async Task<bool> EditTeamAsync(Guid teamId, string modifierId, TeamRequestDTO editTeamRequest)
         {
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
-            _validationService.CheckTeamNameForEdit(title, team.Title);
+            _validationService.CheckTeamNameForEdit(editTeamRequest.Title, team.Title);
 
-            team.Title = title;
-            team.Description = description;
+            team.Title = editTeamRequest.Title;
+            team.Description = editTeamRequest.Description;
             team.ModifierId = modifierId;
             team.ModifiedAt = DateTime.Now;
 
