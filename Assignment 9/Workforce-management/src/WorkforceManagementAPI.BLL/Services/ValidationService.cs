@@ -142,7 +142,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (team.Users.Any(u => u.Id == user.Id))
             {
-                throw new UnautohrizedUserException(Constants.UserAlreadyMember);
+                throw new UserAlreadyInTeamException(Constants.UserAlreadyMember);
             }
         }
     }
