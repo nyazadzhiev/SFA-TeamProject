@@ -39,5 +39,7 @@ namespace WorkforceManagementAPI.Common
         public const string UserAlreadyMember = "User is already a member.";
 
         public const string AnswerToRequest = "Answer to request has been submited.";
+
+        public const string EditRestrictionMessage = "You can't edit request that is not approved";
     }
 }
