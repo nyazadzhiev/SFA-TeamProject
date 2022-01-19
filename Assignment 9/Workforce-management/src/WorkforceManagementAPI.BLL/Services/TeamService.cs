@@ -8,6 +8,7 @@ using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.DTO.Models.Requests;
@@ -16,16 +17,17 @@ namespace WorkforceManagementAPI.BLL.Service
 {
     public class TeamService : ITeamService
     {
-        private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
         private readonly ITeamRepository _teamRepository;
         private readonly IMapper _mapper;
+        private readonly IIdentityUserManager _userManager;
 
-        public TeamService(DatabaseContext context, IValidationService validationService, ITeamRepository teamRepository, IMapper mapper)
+        public TeamService(IValidationService validationService, ITeamRepository teamRepository, IIdentityUserManager userManager, IMapper mapper)
         {
             _validationService = validationService;
             _teamRepository = teamRepository;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<List<Team>> GetAllTeamsAsync()
@@ -96,7 +98,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
             _validationService.CanAddToTeam(team, user);
@@ -119,7 +121,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
             _validationService.CheckTeamLeader(team, user);
@@ -136,7 +138,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
             _validationService.CheckTeamLeader(team, user);
