@@ -147,7 +147,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void CheckReviewrsCount(TimeOff timeOff)
+        public void CheckReviewersCount(TimeOff timeOff)
         {
             if (timeOff.Reviewers.Count == 0)
             {

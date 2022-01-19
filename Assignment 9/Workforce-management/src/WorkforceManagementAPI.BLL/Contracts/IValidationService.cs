@@ -36,7 +36,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void CheckTeamLeader(Team team, User user);
 
         void CanAddToTeam(Team team, User user);
-        void CheckReviewrsCount(TimeOff timeOff);
+        void CheckReviewersCount(TimeOff timeOff);
         void EnsureUserIsReviewer(TimeOff timeOff, User user);
         void EnsureResponseIsValid(Status status);
     }
