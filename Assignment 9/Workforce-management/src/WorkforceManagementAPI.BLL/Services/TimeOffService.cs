@@ -56,7 +56,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
             if (timeOff.Type == RequestType.SickLeave)
             {
-                message = String.Format(Constants.SickMessage, user.FirstName, user.LastName, timeOff.StartDate, timeOff.EndDate, timeOff.Reason);
+                message = string.Format(Constants.SickMessage, user.FirstName, user.LastName, timeOff.StartDate, timeOff.EndDate, timeOff.Reason);
 
                 timeOff.Status = Status.Approved;
 
@@ -64,7 +64,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
             else
             {
-                message = String.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+                message = string.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
 
                 user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
                 await timeOffRepository.SaveChangesAsync();
@@ -135,15 +135,15 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.Reviewers.Remove(user);
             user.UnderReviewRequests.Remove(timeOff);
 
-            var message = UpdateRequestStatus(status, timeOff);
+            await timeOffRepository.SaveChangesAsync();
+
+            var message = await UpdateRequestStatus(status, timeOff);
 
             bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
             if (allReviersGaveFeedback)
             {
-                await FinalizeRequestFeedback(timeOff, await message);
+                await FinalizeRequestFeedback(timeOff, message);
             }
-
-            await timeOffRepository.SaveChangesAsync();
 
             return true;
         }

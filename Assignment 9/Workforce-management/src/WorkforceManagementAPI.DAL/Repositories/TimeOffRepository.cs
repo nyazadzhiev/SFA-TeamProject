@@ -45,11 +45,6 @@ namespace WorkforceManagementAPI.DAL.Repositories
             return await _context.Requests.FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public void UpdateTimeOff(TimeOff timeOff)
-        {
-           _context.Update(timeOff);
-        }
-
         public void DeleteTimeOffAsync(TimeOff timeOff)
         {
             _context.Remove(timeOff);
