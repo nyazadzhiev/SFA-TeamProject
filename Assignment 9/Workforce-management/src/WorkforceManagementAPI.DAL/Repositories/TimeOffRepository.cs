@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Contracts;
 
 namespace WorkforceManagementAPI.DAL.Repositories
 {
-    public  class TimeOffRepository
+    public class TimeOffRepository : ITimeOffRepository
     {
         private readonly DatabaseContext _context;
 

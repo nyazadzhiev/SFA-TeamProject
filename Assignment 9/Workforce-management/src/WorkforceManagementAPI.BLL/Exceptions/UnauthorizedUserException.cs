@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WorkforceManagementAPI.BLL.Exceptions
 {
-    public class UnautohrizedUserException : Exception
+    public class UnauthorizedUserException : Exception
     {
-        public UnautohrizedUserException(string message) : base(message)
+        public UnauthorizedUserException(string message) : base(message)
         {
 
         }

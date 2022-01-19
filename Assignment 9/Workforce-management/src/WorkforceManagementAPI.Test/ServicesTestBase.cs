@@ -13,6 +13,7 @@ using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.WEB.AutoMapperProfiles;
 
 namespace WorkforceManagementAPI.Test
@@ -20,6 +21,7 @@ namespace WorkforceManagementAPI.Test
     public class ServicesTestBase
     {
         private static IMapper _mapper;
+        private DateTime testDate;
         public User defaultUser { get; set; }
 
         public User TeamLeader { get; set; }
@@ -30,6 +32,7 @@ namespace WorkforceManagementAPI.Test
 
         public ServicesTestBase()
         {
+            testDate = new DateTime(2022, 2, 1, 16, 5, 7, 123);
             this.TeamLeader = new User();
 
             this.defaultUser = new User()
@@ -51,7 +54,14 @@ namespace WorkforceManagementAPI.Test
 
             this.testTimeOff = new TimeOff()
             {
-            };
+                Reason = "Test",
+                CreatedAt = DateTime.Now,
+                CreatorId = defaultUser.Id,
+                ModifiedAt = DateTime.Now,
+                StartDate = DateTime.Now,
+                EndDate = testDate,
+                Type = RequestType.Paid,
+        };
         }
 
         protected ValidationService SetupMockedDefaultValidationService()
