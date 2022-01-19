@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
@@ -193,18 +189,21 @@ namespace WorkforceManagementAPI.Test
             return userService;
         }
 
-        protected void SetupMockedTimeOff()
+        protected Mapper SetupMockedTimeOff()
         {
             var timeOffProfile = new TimeOffProfile();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(timeOffProfile));
-            _mapper = new Mapper(configuration);
+            return new Mapper(configuration);
+
         }
 
         protected UserService SetupMockedDefaultUserServiceForTimeOffs()
         {
             SetupMockedMapperUser();
+            
             var mockedManager = new Mock<IIdentityUserManager>();
-            mockedManager.Setup(cu => cu.CreateUserAsync(defaultUser, "123456789"));
+            mockedManager.Setup(userRep => userRep.FindByIdAsync(It.IsAny<String>()))
+                    .ReturnsAsync(defaultUser);
             var validationMock = new Mock<IValidationService>();
             var userService = new UserService(mockedManager.Object, validationMock.Object, _mapper);
 
@@ -213,14 +212,15 @@ namespace WorkforceManagementAPI.Test
 
         protected TimeOffService SetupMockedTimeOffService()
         {
-            SetupMockedTimeOff();
+
+            var mockedTimeOffMapper = SetupMockedTimeOff();
             var validationServiceMock = new Mock<IValidationService>();
             var userServiceMock = SetupMockedDefaultUserServiceForTimeOffs();
             var notificationServiceMock = new Mock<INotificationService>();
             var timeOffRepositoryMock = new Mock<ITimeOffRepository>();
 
             var timeOffService = new TimeOffService(validationServiceMock.Object, userServiceMock
-                , notificationServiceMock.Object, _mapper, timeOffRepositoryMock.Object);
+                , notificationServiceMock.Object, mockedTimeOffMapper, timeOffRepositoryMock.Object);
 
             return timeOffService;
         }
@@ -230,8 +230,6 @@ namespace WorkforceManagementAPI.Test
             var userManagerMock = new Mock<IIdentityUserManager>();
             return userManagerMock.Object;
         }
-
-
 
     }
 }
