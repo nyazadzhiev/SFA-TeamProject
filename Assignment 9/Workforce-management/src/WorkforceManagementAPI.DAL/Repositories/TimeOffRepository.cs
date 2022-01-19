@@ -2,10 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
-using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.DAL.Repositories
 {
@@ -47,19 +45,14 @@ namespace WorkforceManagementAPI.DAL.Repositories
             return await _context.Requests.FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task UpdateTimeOffAsync(Guid id)
+        public void UpdateTimeOff(TimeOff timeOff)
         {
-            await _context.SaveChangesAsync();
+           _context.Update(timeOff);
         }
 
-        public async Task DeleteTimeOffAsync(Guid id)
+        public void DeleteTimeOffAsync(TimeOff timeOff)
         {
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task SubmitFeedbackForTimeOffRequestAsync(User user, Guid timeOffId, Status status)
-        {
-            await _context.SaveChangesAsync(); 
+            _context.Remove(timeOff);
         }
 
     }
