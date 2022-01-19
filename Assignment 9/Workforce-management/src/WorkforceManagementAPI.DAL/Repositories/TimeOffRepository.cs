@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.DAL.Repositories
 {
@@ -39,6 +40,26 @@ namespace WorkforceManagementAPI.DAL.Repositories
                     .ToListAsync();
 
             return timeOffs;
+        }
+
+        public async Task<TimeOff> GetTimeOffAsync(Guid id)
+        {
+            return await _context.Requests.FirstOrDefaultAsync(r => r.Id == id);
+        }
+
+        public async Task UpdateTimeOffAsync(Guid id)
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteTimeOffAsync(Guid id)
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SubmitFeedbackForTimeOffRequestAsync(User user, Guid timeOffId, Status status)
+        {
+            await _context.SaveChangesAsync(); 
         }
 
     }

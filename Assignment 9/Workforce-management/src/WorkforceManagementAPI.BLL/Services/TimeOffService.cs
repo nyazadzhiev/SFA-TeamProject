@@ -99,7 +99,7 @@ namespace WorkforceManagementAPI.BLL.Services
         public async Task<bool> DeleteTimeOffAsync(Guid id)
         {
             TimeOff timeOff = await GetTimeOffAsync(id);
-
+                    
             _validationService.EnsureTimeOffExist(timeOff);
 
             _context.Requests.Remove(timeOff);
