@@ -52,7 +52,6 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.Reviewers = user.Teams.Select(t => t.TeamLeader).ToList();
 
             await timeOffRepository.CreateTimeOffAsync(timeOff);
-            await timeOffRepository.SaveChangesAsync();
 
             if (timeOff.Type == RequestType.SickLeave)
             {
@@ -137,7 +136,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
             await timeOffRepository.SaveChangesAsync();
 
-            var message = await UpdateRequestStatus(status, timeOff);
+            var message = UpdateRequestStatus(status, timeOff);
 
             bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
             if (allReviersGaveFeedback)
@@ -148,7 +147,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        private async Task<string> UpdateRequestStatus(Status status, TimeOff timeOff)
+        private string UpdateRequestStatus(Status status, TimeOff timeOff)
         {
             if (status == Status.Rejected)
             {
@@ -158,8 +157,6 @@ namespace WorkforceManagementAPI.BLL.Services
             }
 
             timeOff.Status = Status.Awaiting;
-
-            await timeOffRepository.SaveChangesAsync();
 
             return string.Empty;
         }
@@ -171,8 +168,6 @@ namespace WorkforceManagementAPI.BLL.Services
                 message = "Your time off request has been approved.";
                 timeOff.Status = Status.Approved;
             }
-
-            await timeOffRepository.SaveChangesAsync();
 
             await _notificationService.Send(new List<User>() { timeOff.Creator }, "response", message);
         }
