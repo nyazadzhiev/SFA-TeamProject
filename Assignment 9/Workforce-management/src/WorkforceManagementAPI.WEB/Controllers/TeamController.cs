@@ -37,15 +37,15 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return _mapper.Map<IEnumerable<TeamResponseDTO>>(teams);
         }
 
-        [HttpGet("{id}")]
-        public async Task<TeamResponseDTO> GetTeamByIdAsync(Guid id)
+        [HttpGet("{teamId}")]
+        public async Task<TeamResponseDTO> GetTeamByIdAsync(Guid teamId)
         {
-            var team = await _teamService.GetTeamByIdAsync(id);
+            var team = await _teamService.GetTeamByIdAsync(teamId);
 
             return _mapper.Map<TeamResponseDTO>(team);
         }
 
-        [HttpGet("My/")]
+        [HttpGet("MyTeams/")]
         public async Task<IEnumerable<TeamResponseDTO>> GetMyTeamsAsync()
         {
             currentUser = await _userService.GetCurrentUser(User);
@@ -68,12 +68,12 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditTeamAsync(Guid id, TeamRequestDTO teamEdit)
+        [HttpPut("{teamId}")]
+        public async Task<IActionResult> EditTeamAsync(Guid teamId, TeamRequestDTO teamEdit)
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isEdited = await _teamService.EditTeamAsync(id, currentUser.Id, teamEdit);
+            bool isEdited = await _teamService.EditTeamAsync(teamId, currentUser.Id, teamEdit);
             if (isEdited)
             {
                 return Ok("Team edited successfully.");
@@ -82,12 +82,12 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTeamAsync(Guid id)
+        [HttpDelete("{teamId}")]
+        public async Task<IActionResult> DeleteTeamAsync(Guid teamId)
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isDeleted = await _teamService.DeleteTeamAsync(id);
+            bool isDeleted = await _teamService.DeleteTeamAsync(teamId);
             if (isDeleted)
             {
                 return Ok("Team deleted successfully.");

@@ -40,7 +40,7 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         [Authorize]
-        [HttpGet("MyRequests")]
+        [HttpGet("MyRequests/")]
         public async Task<List<TimeOffResponseDTO>> GetMyRequests()
         {
             User currentUser = await _userService.GetCurrentUser(User);

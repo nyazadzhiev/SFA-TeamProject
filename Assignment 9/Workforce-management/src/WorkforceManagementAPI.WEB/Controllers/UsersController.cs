@@ -40,24 +40,23 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         [HttpGet]
-        [Route("All")]
         public async Task<List<UserResponseDTO>> GetAll()
         {
             var users = await _userService.GetAll();
             return _mapper.Map<List<UserResponseDTO>>(users);
         }
 
-        [HttpGet("{id}")]
-        public async Task<UserResponseDTO> GetUserById(Guid id)
+        [HttpGet("{userId}")]
+        public async Task<UserResponseDTO> GetUserById(Guid userId)
         {
-            User user = await _userService.GetUserById(id.ToString());
+            User user = await _userService.GetUserById(userId.ToString());
             return _mapper.Map<UserResponseDTO>(user);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, EditUserReauestDTO user)
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> UpdateUser(Guid userId, EditUserReauestDTO user)
         {
-            bool isEdited = await _userService.UpdateUser(id.ToString(), user);
+            bool isEdited = await _userService.UpdateUser(userId.ToString(), user);
             if (isEdited && ModelState.IsValid)
             {
                 return Ok("User edited successfully");
@@ -65,10 +64,10 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteUser(Guid userId)
         {
-            bool isDeleted = await _userService.DeleteUser(id.ToString());
+            bool isDeleted = await _userService.DeleteUser(userId.ToString());
             if (isDeleted)
             {
                 return Ok("User deleted successfully");
@@ -76,11 +75,11 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
-        [HttpPost("SetAdministrator/{id}")]
-        public async Task<IActionResult> SetAdministrator(Guid id)
+        [HttpPost("SetAdmin/{userId}")]
+        public async Task<IActionResult> SetAdministrator(Guid userId)
         {
-            await _userService.SetAdministrator(id.ToString());
-            return Ok($"User: {id} is set as Admin");
+            await _userService.SetAdministrator(userId.ToString());
+            return Ok($"User: {userId} is set as Admin");
         }
 
 
