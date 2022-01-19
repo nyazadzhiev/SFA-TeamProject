@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
@@ -16,13 +15,14 @@ namespace WorkforceManagementAPI.WEB.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
+    
     public class TeamController : ControllerBase
     {
         private static IUserService _userService;
         private static ITeamService _teamService;
         private readonly IMapper _mapper;
         private User currentUser;
-
+        
         public TeamController(IUserService userService, ITeamService teamService, IMapper mapper) : base()
         {
             _userService = userService;
@@ -30,13 +30,22 @@ namespace WorkforceManagementAPI.WEB.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// List all teams, existing in the database.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IEnumerable<TeamResponseDTO>> GetAllTeamsAsync()
         {
             var teams = await _teamService.GetAllTeamsAsync();
             return _mapper.Map<IEnumerable<TeamResponseDTO>>(teams);
         }
-
+        /// <summary>
+        /// Find a team by its Id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        
         [HttpGet("{id}")]
         public async Task<TeamResponseDTO> GetTeamByIdAsync(Guid id)
         {
@@ -44,7 +53,11 @@ namespace WorkforceManagementAPI.WEB.Controllers
 
             return _mapper.Map<TeamResponseDTO>(team);
         }
-
+        /// <summary>
+        /// List all teams, the logged user is member of.
+        /// </summary>
+        /// <returns></returns>
+        
         [HttpGet("My/")]
         public async Task<IEnumerable<TeamResponseDTO>> GetMyTeamsAsync()
         {
@@ -53,7 +66,12 @@ namespace WorkforceManagementAPI.WEB.Controllers
             var teams = await _teamService.GetMyTeamsAsync(currentUser.Id);
             return _mapper.Map<IEnumerable<TeamResponseDTO>>(teams);
         }
-
+        /// <summary>
+        /// Create a team.
+        /// </summary>
+        /// <param name="team"></param>
+        /// <returns></returns>
+        
         [HttpPost]
         public async Task<ActionResult> CreateTeamAsync(TeamRequestDTO team)
         {
@@ -67,7 +85,13 @@ namespace WorkforceManagementAPI.WEB.Controllers
 
             return BadRequest();
         }
-
+        /// <summary>
+        /// Edit a team.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="teamEdit"></param>
+        /// <returns></returns>
+       
         [HttpPut("{id}")]
         public async Task<IActionResult> EditTeamAsync(Guid id, TeamRequestDTO teamEdit)
         {
@@ -81,7 +105,12 @@ namespace WorkforceManagementAPI.WEB.Controllers
 
             return BadRequest();
         }
-
+        /// <summary>
+        /// REMOVE a team.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+       
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeamAsync(Guid id)
         {
@@ -95,7 +124,13 @@ namespace WorkforceManagementAPI.WEB.Controllers
 
             return BadRequest();
         }
-
+        /// <summary>
+        /// Assign user to a team.
+        /// </summary>
+        /// <param name="teamId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+       
         [HttpPost("{teamId}/Assign/{userId}")]
         public async Task<IActionResult> AssignUserToTeamAsync(Guid teamId, string userId)
         {
@@ -110,6 +145,13 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// REMOVE user from a team.
+        /// </summary>
+        /// <param name="teamId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+       
         [HttpDelete("{teamId}/Unassign/{userId}")]
         public async Task<IActionResult> UnassignUserFromTeamAsync(Guid teamId, string userId)
         {
@@ -124,6 +166,13 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// Assign user as a TEAM LEADER.
+        /// </summary>
+        /// <param name="teamId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        
         [HttpPut("{teamId}/AssignLeader/{userId}")]
         public async Task<IActionResult> AssignTeamLeaderAsync(Guid teamId, string userId)
         {
