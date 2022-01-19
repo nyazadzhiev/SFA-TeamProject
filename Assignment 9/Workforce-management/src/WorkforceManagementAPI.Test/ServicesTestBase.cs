@@ -11,8 +11,10 @@ using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
+using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.WEB.AutoMapperProfiles;
 
 namespace WorkforceManagementAPI.Test
@@ -43,7 +45,9 @@ namespace WorkforceManagementAPI.Test
 
             this.regularTeam = new Team()
             {
+                Id = Guid.NewGuid(),
                 Title = "testteam",
+                Description = "testdescription",
                 TeamLeader = TeamLeader,
                 TeamLeaderId = TeamLeader.Id,
                 Users = new List<User>() { TeamLeader }
@@ -169,6 +173,23 @@ namespace WorkforceManagementAPI.Test
             return userService;
         }
 
+        protected TeamService SetupMockedDefaultTeamService()
+        {
+            var mockValidationService = new Mock<IValidationService>();
+            var mockTeamRepository = new Mock<ITeamRepository>();
+            mockTeamRepository.Setup(t => t.GetTeamByIdAsync(It.IsAny<Guid>())).ReturnsAsync(regularTeam);
+            mockTeamRepository.Setup(t => t.GetAllTeamsAsync()).ReturnsAsync(new List<Team>());
+            mockTeamRepository.Setup(t => t.GetMyTeamsAsync(It.IsAny<string>())).ReturnsAsync(new List<Team>());
 
+            var mockMapper = new Mock<IMapper>();
+            mockMapper.Setup(m => m.Map<Team>(It.IsAny<TeamRequestDTO>())).Returns(regularTeam);
+
+            var mockUserManager = new Mock<IIdentityUserManager>();
+            mockUserManager.Setup(u => u.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(defaultUser);
+
+            var mockTeamService = new TeamService(mockValidationService.Object, mockTeamRepository.Object, mockUserManager.Object, mockMapper.Object);
+
+            return mockTeamService;
+        }
     }
 }
