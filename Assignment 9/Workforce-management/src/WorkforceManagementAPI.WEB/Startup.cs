@@ -24,6 +24,7 @@ using WorkforceManagementAPI.WEB.IdentityAuth;
 using System;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
+using System.IO;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -55,6 +56,10 @@ namespace WorkforceManagementAPI.WEB
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey
                 });
+
+                // using System.Reflection;
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
