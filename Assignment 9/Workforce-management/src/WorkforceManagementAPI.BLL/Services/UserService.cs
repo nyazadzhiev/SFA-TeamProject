@@ -50,7 +50,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> UpdateUser(string userId, EditUserReauestDTO editUserReaqest)
+        public async Task<bool> UpdateUser(string userId, EditUserRequest editUserReaqest)
         {
             _validationService.EnsureLenghtIsValid(editUserReaqest.NewPassword, 7, nameof(editUserReaqest.NewPassword));
             _validationService.EnsureLenghtIsValid(editUserReaqest.NewFirstName, 2, nameof(editUserReaqest.NewFirstName));

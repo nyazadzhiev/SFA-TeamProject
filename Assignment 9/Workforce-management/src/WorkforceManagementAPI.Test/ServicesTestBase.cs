@@ -11,9 +11,11 @@ using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
+using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
+using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.WEB.AutoMapperProfiles;
 
 namespace WorkforceManagementAPI.Test
@@ -21,7 +23,10 @@ namespace WorkforceManagementAPI.Test
     public class ServicesTestBase
     {
         private static IMapper _mapper;
-        private DateTime testDate;
+
+        public DateTime testDate;
+
+        public CreateUserRequestDTO inputUser;
         public User defaultUser { get; set; }
 
         public User TeamLeader { get; set; }
@@ -33,6 +38,7 @@ namespace WorkforceManagementAPI.Test
         public ServicesTestBase()
         {
             testDate = new DateTime(2022, 2, 1, 16, 5, 7, 123);
+
             this.TeamLeader = new User();
 
             this.defaultUser = new User()
@@ -61,7 +67,16 @@ namespace WorkforceManagementAPI.Test
                 StartDate = DateTime.Now,
                 EndDate = testDate,
                 Type = RequestType.Paid,
-        };
+            };
+
+            inputUser = new CreateUserRequestDTO
+            {
+                Email = "asd@abv.bg",
+                FirstName = "Andrey",
+                LastName = "Andrey",
+                Password = "123456789",
+                RepeatPassword = "123456789"
+            };
         }
 
         protected ValidationService SetupMockedDefaultValidationService()
@@ -92,7 +107,6 @@ namespace WorkforceManagementAPI.Test
 
             var mockContext = new Mock<DatabaseContext>();
             mockContext.Setup(m => m.Requests).Returns(() => ToDbSet(requests));
-
 
             return mockContext.Object;
         }
@@ -178,6 +192,45 @@ namespace WorkforceManagementAPI.Test
 
             return userService;
         }
+
+        protected void SetupMockedTimeOff()
+        {
+            var timeOffProfile = new TimeOffProfile();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(timeOffProfile));
+            _mapper = new Mapper(configuration);
+        }
+
+        protected UserService SetupMockedDefaultUserServiceForTimeOffs()
+        {
+            SetupMockedMapperUser();
+            var mockedManager = new Mock<IIdentityUserManager>();
+            mockedManager.Setup(cu => cu.CreateUserAsync(defaultUser, "123456789"));
+            var validationMock = new Mock<IValidationService>();
+            var userService = new UserService(mockedManager.Object, validationMock.Object, _mapper);
+
+            return userService;
+        }
+
+        protected TimeOffService SetupMockedTimeOffService()
+        {
+            SetupMockedTimeOff();
+            var validationServiceMock = new Mock<IValidationService>();
+            var userServiceMock = SetupMockedDefaultUserServiceForTimeOffs();
+            var notificationServiceMock = new Mock<INotificationService>();
+            var timeOffRepositoryMock = new Mock<ITimeOffRepository>();
+
+            var timeOffService = new TimeOffService(validationServiceMock.Object, userServiceMock
+                , notificationServiceMock.Object, _mapper, timeOffRepositoryMock.Object);
+
+            return timeOffService;
+        }
+
+        protected IIdentityUserManager SetupMockedUserManager()
+        {
+            var userManagerMock = new Mock<IIdentityUserManager>();
+            return userManagerMock.Object;
+        }
+
 
 
     }

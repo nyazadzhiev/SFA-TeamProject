@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.Common;
+using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
-using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Services
@@ -18,9 +18,9 @@ namespace WorkforceManagementAPI.BLL.Services
         private readonly IUserService _userService;
         private readonly INotificationService _notificationService;
         private readonly IMapper _mapper;
-        private readonly TimeOffRepository timeOffRepository;
+        private readonly ITimeOffRepository timeOffRepository;
 
-        public TimeOffService(IValidationService validationService, IUserService userService, INotificationService notificationService, IMapper mapper, TimeOffRepository timeOffRepository)
+        public TimeOffService(IValidationService validationService, IUserService userService, INotificationService notificationService, IMapper mapper, ITimeOffRepository timeOffRepository)
         {
             _validationService = validationService;
             _userService = userService;

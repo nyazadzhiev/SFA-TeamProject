@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WorkforceManagementAPI.DTO.Models.Requests
 {
-    public class EditUserReauestDTO : IValidatableObject
+    public class EditUserRequest : IValidatableObject
     {
         [Required]
         [MinLength(5)]

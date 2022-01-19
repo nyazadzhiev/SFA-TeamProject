@@ -12,7 +12,7 @@ namespace WorkforceManagementAPI.WEB.AutoMapperProfiles
             CreateMap<User, CreateUserRequestDTO>()
                 .ReverseMap();
 
-            CreateMap<User, EditUserReauestDTO>()
+            CreateMap<User, EditUserRequest>()
                 .ReverseMap();
 
             CreateMap<User, UserResponseDTO>()
