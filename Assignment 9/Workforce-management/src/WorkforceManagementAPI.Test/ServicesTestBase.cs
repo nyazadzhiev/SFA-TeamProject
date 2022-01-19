@@ -101,26 +101,6 @@ namespace WorkforceManagementAPI.Test
             return mockContext.Object;
         }
 
-        protected DatabaseContext SetupDefaultMockedDBTimeOffServiceAsync()
-        {
-            List<TimeOff> requests = new List<TimeOff>();
-
-            var mockContext = new Mock<DatabaseContext>();
-            mockContext.Setup(m => m.Requests).Returns(() => ToDbSet(requests));
-
-            return mockContext.Object;
-        }
-
-        protected DatabaseContext SetupMockedDBTimeOffServiceAsync()
-        {
-            List<TimeOff> requests = new List<TimeOff>();
-            requests.Add(testTimeOff);
-
-            var mockContext = new Mock<DatabaseContext>();
-            mockContext.Setup(m => m.Requests).Returns(() => ToDbSet(requests));
-
-            return mockContext.Object;
-        }
 
         private DbSet<Team> ToDbSet(List<Team> sourceList)
         {
@@ -132,20 +112,6 @@ namespace WorkforceManagementAPI.Test
             mockSet.As<IQueryable<Team>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
             mockSet.As<IQueryable<Team>>().Setup(m => m.GetEnumerator()).Returns(queryable.GetEnumerator());
             mockSet.Setup(d => d.Add(It.IsAny<Team>())).Callback<Team>(sourceList.Add);
-
-            return mockSet.Object;
-        }
-
-        private DbSet<TimeOff> ToDbSet(List<TimeOff> sourceList)
-        {
-            var queryable = sourceList.AsQueryable();
-
-            var mockSet = new Mock<DbSet<TimeOff>>();
-            mockSet.As<IQueryable<TimeOff>>().Setup(m => m.Provider).Returns(queryable.Provider);
-            mockSet.As<IQueryable<TimeOff>>().Setup(m => m.Expression).Returns(queryable.Expression);
-            mockSet.As<IQueryable<TimeOff>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
-            mockSet.As<IQueryable<TimeOff>>().Setup(m => m.GetEnumerator()).Returns(queryable.GetEnumerator());
-            mockSet.Setup(d => d.Add(It.IsAny<TimeOff>())).Callback<TimeOff>(sourceList.Add);
 
             return mockSet.Object;
         }
@@ -231,12 +197,6 @@ namespace WorkforceManagementAPI.Test
                 , notificationServiceMock.Object, mockedTimeOffMapper, timeOffRepositoryMock.Object);
 
             return timeOffService;
-        }
-
-        protected IIdentityUserManager SetupMockedUserManager()
-        {
-            var userManagerMock = new Mock<IIdentityUserManager>();
-            return userManagerMock.Object;
         }
 
         protected TimeOffService SetupMockedTimeOffServiceForMyTimeOffsMethod()
