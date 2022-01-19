@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
@@ -98,20 +96,7 @@ namespace WorkforceManagementAPI.BLL.Services
             await _validationService.IsUserAnAdmin(user);
             await _userManager.AddUserToRoleAsync(user, "Admin");
         }
-
-      /*  private async Task IsUserAnAdmin(User user)
-        {
-            if (await IsUserInRole(user.Id, "Admin"))
-            {
-                throw new Exception("User is already an admin");
-            }
-        }
-
-        public async Task<bool> IsUserInRole(string userId, string roleName)
-        {
-            return await _userManager.IsUserInRole(userId, roleName);
-        }*/
-
+      
 
     }
 }
