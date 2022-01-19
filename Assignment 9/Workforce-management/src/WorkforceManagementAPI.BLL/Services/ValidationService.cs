@@ -135,7 +135,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (team.TeamLeaderId == user.Id)
             {
-                throw new UnautohrizedUserException(Constants.InvalidTeamLeader);
+                throw new UserAlreadyTeamLeaderException(Constants.InvalidTeamLeader);
             }
         }
 
