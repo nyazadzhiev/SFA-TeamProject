@@ -170,5 +170,13 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new Exception("Invalid status.");
             }
         }
+
+        public void CheckTimeOffStatus(TimeOff timeOff)
+        {
+            if(timeOff.Status != Status.Approved)
+            {
+                throw new RequestCompletedException(Constants.EditRestrictionMessage);
+            }
+        }
     }
 }

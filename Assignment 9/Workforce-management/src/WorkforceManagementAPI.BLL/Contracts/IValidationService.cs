@@ -42,5 +42,6 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void CheckReviewrsCount(TimeOff timeOff);
         void EnsureUserIsReviewer(TimeOff timeOff, User user);
         void EnsureResponseIsValid(Status status);
+        void CheckTimeOffStatus(TimeOff timeOff);
     }
 }

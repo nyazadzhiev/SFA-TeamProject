@@ -115,6 +115,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
+            _validationService.CheckTimeOffStatus(timeOff);
 
             timeOff.Reason = timoffRequest.Reason;
             timeOff.Type = timoffRequest.Type;
