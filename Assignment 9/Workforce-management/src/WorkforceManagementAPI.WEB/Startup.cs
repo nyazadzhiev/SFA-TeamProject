@@ -196,7 +196,6 @@ namespace WorkforceManagementAPI.WEB
                 app.UseSwagger();
 
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/CustomSwagger/openapi.json", "WorkforceManagementAPI.WEB v1"));
-                //"/CustomSwagger/openapi.json"
             }
 
             app.UseHttpsRedirection();
