@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.WEB.Controllers
@@ -15,13 +13,13 @@ namespace WorkforceManagementAPI.WEB.Controllers
     {
         private IUserService userService;
 
-        public AuthenticationController(IIdentityUserManager userManager)
+        public AuthenticationController(IUserService userService)
         {
-            this.userService = userManager;
+            this.userService = userService;
         }
 
         [HttpPost, Route("Login")]
-        public async Task<string> Login(AuthenticationLoginRequestDTO loginModel)
+        public string Login(AuthenticationLoginRequestDTO loginModel)
         {
             
             var client = new HttpClient();
