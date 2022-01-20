@@ -10,6 +10,7 @@ namespace WorkforceManagementAPI.DAL.Contracts
         Task CreateTimeOffAsync(TimeOff timeOff);
         void DeleteTimeOffAsync(TimeOff timeOff);
         Task<List<TimeOff>> GetAllAsync();
+        int GetDaysTaken(User user);
         Task<List<TimeOff>> GetMyTimeOffsAsync(string userId);
         Task<TimeOff> GetTimeOffAsync(Guid id);
         Task SaveChangesAsync();

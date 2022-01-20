@@ -40,5 +40,6 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void EnsureUserIsReviewer(TimeOff timeOff, User user);
         void EnsureResponseIsValid(Status status);
         Task EnsureUserIsAdminAsync(User user);
+        void EnsureUserHasEnoughDays(int daysTaken, int daysRequested);
     }
 }

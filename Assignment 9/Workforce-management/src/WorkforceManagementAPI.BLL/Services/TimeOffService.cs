@@ -18,7 +18,7 @@ namespace WorkforceManagementAPI.BLL.Services
         private readonly IUserService _userService;
         private readonly INotificationService _notificationService;
         private readonly IMapper _mapper;
-        private readonly ITimeOffRepository timeOffRepository;
+        private readonly ITimeOffRepository _timeOffRepository;
 
         public TimeOffService(IValidationService validationService, IUserService userService, INotificationService notificationService, IMapper mapper, ITimeOffRepository timeOffRepository)
         {
@@ -26,19 +26,25 @@ namespace WorkforceManagementAPI.BLL.Services
             _userService = userService;
             _notificationService = notificationService;
             _mapper = mapper;
-            this.timeOffRepository = timeOffRepository;
+            this._timeOffRepository = timeOffRepository;
         }
 
-        public async Task<bool> CreateTimeOffAsync(TimeOffRequestDTO timoffRequest, string creatorId)
+        public async Task<bool> CreateTimeOffAsync(TimeOffRequestDTO timeOffRequest, string creatorId)
         {
-            _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.ValidateDateRange(timoffRequest.StartDate, timoffRequest.EndDate);
+            _validationService.EnsureInputFitsBoundaries(((int)timeOffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.ValidateDateRange(timeOffRequest.StartDate, timeOffRequest.EndDate);
 
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
 
-            var timeOff = _mapper.Map<TimeOff>(timoffRequest);
+            if (timeOffRequest.Type == RequestType.Paid)
+            {
+                CheckAvailableDaysOff(user, (int)(timeOffRequest.EndDate - timeOffRequest.StartDate).TotalDays);
+            }
 
+            var timeOff = _mapper.Map<TimeOff>(timeOffRequest);
+
+            timeOff.Status = Status.Created;
             timeOff.CreatedAt = DateTime.Now;
             timeOff.ModifiedAt = DateTime.Now;
             timeOff.CreatorId = creatorId;
@@ -51,7 +57,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
             timeOff.Reviewers = user.Teams.Select(t => t.TeamLeader).ToList();
 
-            await timeOffRepository.CreateTimeOffAsync(timeOff);
+            await _timeOffRepository.CreateTimeOffAsync(timeOff);
 
             if (timeOff.Type == RequestType.SickLeave)
             {
@@ -59,14 +65,14 @@ namespace WorkforceManagementAPI.BLL.Services
 
                 timeOff.Status = Status.Approved;
 
-                await timeOffRepository.SaveChangesAsync();
+                await _timeOffRepository.SaveChangesAsync();
             }
             else
             {
                 message = string.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
 
                 user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
-                await timeOffRepository.SaveChangesAsync();
+                await _timeOffRepository.SaveChangesAsync();
             }
 
             await _notificationService.Send(timeOff.Reviewers, subject, message);
@@ -76,7 +82,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public async Task<List<TimeOff>> GetAllAsync()
         {
-            return await timeOffRepository.GetAllAsync();
+            return await _timeOffRepository.GetAllAsync();
         }
 
         public async Task<List<TimeOff>> GetMyTimeOffs(string userId)
@@ -84,12 +90,12 @@ namespace WorkforceManagementAPI.BLL.Services
             var user = await _userService.GetUserById(userId);
             _validationService.EnsureUserExist(user);
 
-            return await timeOffRepository.GetMyTimeOffsAsync(userId);
+            return await _timeOffRepository.GetMyTimeOffsAsync(userId);
         }
 
         public async Task<TimeOff> GetTimeOffAsync(Guid id)
         {
-            return await timeOffRepository.GetTimeOffAsync(id);
+            return await _timeOffRepository.GetTimeOffAsync(id);
         }
 
         public async Task<bool> DeleteTimeOffAsync(Guid id)
@@ -98,8 +104,8 @@ namespace WorkforceManagementAPI.BLL.Services
                     
             _validationService.EnsureTimeOffExist(timeOff);
 
-            timeOffRepository.DeleteTimeOffAsync(timeOff);
-            await timeOffRepository.SaveChangesAsync();
+            _timeOffRepository.DeleteTimeOffAsync(timeOff);
+            await _timeOffRepository.SaveChangesAsync();
 
             return true;
         }
@@ -118,7 +124,7 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.EndDate = timoffRequest.EndDate;
             timeOff.ModifiedAt = DateTime.Now;
 
-            await timeOffRepository.SaveChangesAsync();
+            await _timeOffRepository.SaveChangesAsync();
 
             return true;
         }
@@ -134,8 +140,6 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.Reviewers.Remove(user);
             user.UnderReviewRequests.Remove(timeOff);
 
-            await timeOffRepository.SaveChangesAsync();
-
             var message = UpdateRequestStatus(status, timeOff);
 
             bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
@@ -143,6 +147,8 @@ namespace WorkforceManagementAPI.BLL.Services
             {
                 await FinalizeRequestFeedback(timeOff, message);
             }
+
+            await _timeOffRepository.SaveChangesAsync();
 
             return true;
         }
@@ -170,6 +176,12 @@ namespace WorkforceManagementAPI.BLL.Services
             }
 
             await _notificationService.Send(new List<User>() { timeOff.Creator }, "response", message);
+        }
+
+        private void CheckAvailableDaysOff(User user, int daysRequested)
+        {
+            int daysTaken = _timeOffRepository.GetDaysTaken(user);
+            _validationService.EnsureUserHasEnoughDays(daysTaken, daysRequested);
         }
     }
 }

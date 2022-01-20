@@ -179,6 +179,12 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-
+        public void EnsureUserHasEnoughDays(int daysTaken, int daysRequested)
+        {
+            if ((daysTaken + daysRequested) > 20)
+            {
+                throw new NotEnoughDaysForTimeOffException($"Days requested exceed yearly limit. You have {20 - daysTaken} days remaining from 20.");
+            }
+        }
     }
 }

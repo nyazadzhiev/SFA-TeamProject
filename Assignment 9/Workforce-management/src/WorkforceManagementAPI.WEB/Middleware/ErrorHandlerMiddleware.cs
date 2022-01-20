@@ -43,6 +43,7 @@ namespace WebApi.Middleware
                     case InvalidEmailException invalidEmail:
                     case InvalidLengthException invalidLength:
                     case UnauthorizedAccessException unauthorizedAccessException:
+                    case NotEnoughDaysForTimeOffException notEnoughDaysException:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     default:

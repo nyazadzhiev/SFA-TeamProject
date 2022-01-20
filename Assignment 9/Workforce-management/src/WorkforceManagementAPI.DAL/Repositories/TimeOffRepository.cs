@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Contracts;
+using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.DAL.Repositories
 {
@@ -51,5 +52,11 @@ namespace WorkforceManagementAPI.DAL.Repositories
             _context.Remove(timeOff);
         }
 
+        public int GetDaysTaken(User user)
+        {
+            return user.Requests
+                .Where(r => r.Type == RequestType.Paid && r.Status == Status.Approved)
+                .Sum(r => (int)(r.EndDate - r.StartDate).TotalDays);
+        }
     }
 }
