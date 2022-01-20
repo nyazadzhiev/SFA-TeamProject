@@ -93,7 +93,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
-            await _validationService.IsUserAnAdmin(user);
+            await _validationService.EnsureUserIsAdminAsync(user);
             await _userManager.AddUserToRoleAsync(user, "Admin");
         }
       

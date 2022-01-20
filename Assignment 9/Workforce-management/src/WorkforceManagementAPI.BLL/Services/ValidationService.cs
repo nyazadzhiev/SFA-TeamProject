@@ -171,7 +171,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public async Task IsUserAnAdmin(User user)
+        public async Task EnsureUserIsAdminAsync(User user)
         {
             if (await _userManager.IsUserInRole(user.Id, "Admin"))
             {
