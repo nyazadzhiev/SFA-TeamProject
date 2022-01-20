@@ -5,9 +5,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using WebApi.Middleware;
 using WorkforceManagementAPI.BLL.Contracts;
@@ -18,15 +21,11 @@ using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
-using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.DAL.Repositories;
-using WorkforceManagementAPI.WEB.IdentityAuth;
-using System;
+using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.FileProviders;
+using WorkforceManagementAPI.WEB.IdentityAuth;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -58,6 +57,8 @@ namespace WorkforceManagementAPI.WEB
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey
                 });
+
+                c.DescribeAllEnumsAsStrings();
 
                 // using System.Reflection;
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -186,8 +187,10 @@ namespace WorkforceManagementAPI.WEB
                         Path.Combine(Directory.GetCurrentDirectory())),
                     RequestPath = "/CustomSwagger"
                 });
+
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
+
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/CustomSwagger/openapi.json", "WorkforceManagementAPI.WEB v1"));
                 //"/CustomSwagger/openapi.json"
             }

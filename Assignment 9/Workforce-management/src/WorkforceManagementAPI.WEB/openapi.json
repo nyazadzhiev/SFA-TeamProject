@@ -327,7 +327,7 @@ paths:
     post:
       tags:
         - TimeOff
-      summary: Create a timeOff request.
+      summary: Create a timeOff request. [Request types - NonPaid(0), Paid(1), SickLeave(2)]
       requestBody:
         description: ''
         content:
@@ -413,7 +413,7 @@ paths:
     put:
       tags:
         - TimeOff
-      summary: Edit a timeoff request.
+      summary: Edit a timeoff request. [Request types - NonPaid(0), Paid(1), SickLeave(2)]
       parameters:
         - name: timeOffId
           in: path
@@ -486,7 +486,7 @@ paths:
     post:
       tags:
         - TimeOff
-      summary: APPROVE or REJECT a timeoff request.
+      summary: APPROVE or REJECT a timeoff request. [Statuses - Rejected(0), Created(1), Awaiting(2), Approved(3)]
       parameters:
         - name: timeOffId
           in: path
