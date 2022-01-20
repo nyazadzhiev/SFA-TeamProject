@@ -40,6 +40,9 @@ namespace WorkforceManagementAPI.BLL.Services
 
             var timeOff = _mapper.Map<TimeOff>(timeOffRequest);
 
+            _validationService.EnsureNoDuplicateTimeOff(user, timeOff);
+            _validationService.EnsureTimeOfRequestsDoNotOverlap(user, timeOff);
+
             if (timeOffRequest.Type == RequestType.Paid)
             {
                 CheckAvailableDaysOff(user, timeOff);
@@ -53,8 +56,6 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.ModifierId = creatorId;
             timeOff.Modifier = user;
 
-            _validationService.EnsureNoDuplicateTimeOff(user, timeOff);
-        
             string subject = timeOff.Type.ToString() + " Time Off";
             string message;
 

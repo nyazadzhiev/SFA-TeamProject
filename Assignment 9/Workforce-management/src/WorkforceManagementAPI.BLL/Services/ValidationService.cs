@@ -194,5 +194,13 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new TimeOffAlreadyExistsException("You can't have TimeOff requests with duplicate start and end dates.");
             }
         }
+
+        public void EnsureTimeOfRequestsDoNotOverlap(User user, TimeOff timeOff)
+        {
+            if (user.Requests.Any(r => r.Status != Status.Rejected && (r.StartDate < timeOff.EndDate && timeOff.StartDate < r.EndDate)))
+            {
+                throw new TimeOffAlreadyExistsException("You can't have TimeOff requests with overlaping start or end dates.");
+            }
+        }
     }
 }
