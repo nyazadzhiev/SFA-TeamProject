@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 
 namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader
 {

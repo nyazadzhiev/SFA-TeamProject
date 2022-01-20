@@ -1,17 +1,17 @@
-﻿using MailKit.Security;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using WorkforceManagementAPI.DTO.Models;
-using WorkforceManagementAPI.BLL.Contracts;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
-using MailKit.Net.Smtp;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
