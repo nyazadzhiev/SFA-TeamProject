@@ -3,8 +3,7 @@ using System;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.BLL.Services.IdentityServices;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using Xunit;
 
 namespace WorkforceManagementAPI.Test
@@ -111,7 +110,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<UnautohrizedUserException>(() => validation.CheckAccessToTeam(regularTeam, defaultUser));
+            Assert.Throws<UnauthorizedAccessException>(() => validation.CheckAccessToTeam(regularTeam, defaultUser));
         }
 
         [Fact]
@@ -122,7 +121,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<UnautohrizedUserException>(() => validation.CheckTeamLeader(regularTeam, TeamLeader));
+            Assert.Throws<UnauthorizedAccessException>(() => validation.CheckTeamLeader(regularTeam, TeamLeader));
         }
 
         [Fact]

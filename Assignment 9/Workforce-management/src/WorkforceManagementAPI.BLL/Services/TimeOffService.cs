@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.Common;
-using WorkforceManagementAPI.DAL;
+using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.DTO.Models.Requests;
@@ -17,19 +14,19 @@ namespace WorkforceManagementAPI.BLL.Services
 {
     public class TimeOffService : ITimeOffService
     {
-        private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
         private readonly IUserService _userService;
         private readonly INotificationService _notificationService;
         private readonly IMapper _mapper;
+        private readonly ITimeOffRepository timeOffRepository;
 
-        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService, INotificationService notificationService, IMapper mapper)
+        public TimeOffService(IValidationService validationService, IUserService userService, INotificationService notificationService, IMapper mapper, ITimeOffRepository timeOffRepository)
         {
-            _context = context;
             _validationService = validationService;
             _userService = userService;
             _notificationService = notificationService;
             _mapper = mapper;
+            this.timeOffRepository = timeOffRepository;
         }
 
         public async Task<bool> CreateTimeOffAsync(TimeOffRequestDTO timoffRequest, string creatorId)
@@ -49,28 +46,27 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.ModifierId = creatorId;
             timeOff.Modifier = user;
         
-
             string subject = timeOff.Type.ToString() + " Time Off";
             string message;
 
             timeOff.Reviewers = user.Teams.Select(t => t.TeamLeader).ToList();
-            await _context.Requests.AddAsync(timeOff);
-            await _context.SaveChangesAsync();
+
+            await timeOffRepository.CreateTimeOffAsync(timeOff);
 
             if (timeOff.Type == RequestType.SickLeave)
             {
-                message = String.Format(Constants.SickMessage, user.FirstName, user.LastName, timeOff.StartDate, timeOff.EndDate, timeOff.Reason);
+                message = string.Format(Constants.SickMessage, user.FirstName, user.LastName, timeOff.StartDate, timeOff.EndDate, timeOff.Reason);
 
                 timeOff.Status = Status.Approved;
 
-                await _context.SaveChangesAsync();
+                await timeOffRepository.SaveChangesAsync();
             }
             else
             {
-                message = String.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+                message = string.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
 
                 user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
-                await _context.SaveChangesAsync();
+                await timeOffRepository.SaveChangesAsync();
             }
 
             await _notificationService.Send(timeOff.Reviewers, subject, message);
@@ -80,7 +76,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public async Task<List<TimeOff>> GetAllAsync()
         {
-            return await _context.Requests.ToListAsync();
+            return await timeOffRepository.GetAllAsync();
         }
 
         public async Task<List<TimeOff>> GetMyTimeOffs(string userId)
@@ -88,22 +84,22 @@ namespace WorkforceManagementAPI.BLL.Services
             var user = await _userService.GetUserById(userId);
             _validationService.EnsureUserExist(user);
 
-            return await _context.Requests.Where(r => r.CreatorId.Equals(userId)).ToListAsync();
+            return await timeOffRepository.GetMyTimeOffsAsync(userId);
         }
 
         public async Task<TimeOff> GetTimeOffAsync(Guid id)
         {
-            return await _context.Requests.FirstOrDefaultAsync(r => r.Id == id);
+            return await timeOffRepository.GetTimeOffAsync(id);
         }
 
         public async Task<bool> DeleteTimeOffAsync(Guid id)
         {
             TimeOff timeOff = await GetTimeOffAsync(id);
-
+                    
             _validationService.EnsureTimeOffExist(timeOff);
 
-            _context.Requests.Remove(timeOff);
-            await _context.SaveChangesAsync();
+            timeOffRepository.DeleteTimeOffAsync(timeOff);
+            await timeOffRepository.SaveChangesAsync();
 
             return true;
         }
@@ -122,7 +118,7 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.EndDate = timoffRequest.EndDate;
             timeOff.ModifiedAt = DateTime.Now;
 
-            await _context.SaveChangesAsync();
+            await timeOffRepository.SaveChangesAsync();
 
             return true;
         }
@@ -131,12 +127,14 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             var timeOff = await GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
-            _validationService.CheckReviewrsCount(timeOff);
+            _validationService.CheckReviewersCount(timeOff);
             _validationService.EnsureUserIsReviewer(timeOff, user);
             _validationService.EnsureResponseIsValid(status);
 
             timeOff.Reviewers.Remove(user);
             user.UnderReviewRequests.Remove(timeOff);
+
+            await timeOffRepository.SaveChangesAsync();
 
             var message = UpdateRequestStatus(status, timeOff);
 
@@ -145,8 +143,6 @@ namespace WorkforceManagementAPI.BLL.Services
             {
                 await FinalizeRequestFeedback(timeOff, message);
             }
-
-            await _context.SaveChangesAsync();
 
             return true;
         }

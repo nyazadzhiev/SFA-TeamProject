@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 
@@ -48,7 +48,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> UpdateUser(string userId, EditUserReauestDTO editUserReaqest)
+        public async Task<bool> UpdateUser(string userId, EditUserRequest editUserReaqest)
         {
             _validationService.EnsureLenghtIsValid(editUserReaqest.NewPassword, 7, nameof(editUserReaqest.NewPassword));
             _validationService.EnsureLenghtIsValid(editUserReaqest.NewFirstName, 2, nameof(editUserReaqest.NewFirstName));

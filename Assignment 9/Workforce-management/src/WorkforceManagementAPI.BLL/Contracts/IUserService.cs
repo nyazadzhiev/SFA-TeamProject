@@ -18,7 +18,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         Task<User> GetUserById(string id);
 
-        Task<bool> UpdateUser(string userId,EditUserReauestDTO editUserReaqest);
+        Task<bool> UpdateUser(string userId,EditUserRequest editUserReaqest);
 
         Task SetAdministrator(string userId);
 

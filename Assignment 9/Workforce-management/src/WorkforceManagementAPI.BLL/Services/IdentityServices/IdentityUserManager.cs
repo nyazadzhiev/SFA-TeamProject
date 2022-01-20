@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 
 namespace WorkforceManagementAPI.BLL.Services.IdentityServices
 {
