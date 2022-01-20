@@ -3,8 +3,7 @@ using System;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.BLL.Services.IdentityServices;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using Xunit;
 
 namespace WorkforceManagementAPI.Test

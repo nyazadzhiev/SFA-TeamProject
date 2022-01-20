@@ -127,7 +127,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             var timeOff = await GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
-            _validationService.CheckReviewrsCount(timeOff);
+            _validationService.CheckReviewersCount(timeOff);
             _validationService.EnsureUserIsReviewer(timeOff, user);
             _validationService.EnsureResponseIsValid(status);
 

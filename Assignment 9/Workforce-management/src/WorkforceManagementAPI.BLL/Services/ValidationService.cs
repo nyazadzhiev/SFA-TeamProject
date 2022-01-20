@@ -6,7 +6,7 @@ using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 
@@ -135,7 +135,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (team.TeamLeaderId == user.Id)
             {
-                throw new UnauthorizedUserException(Constants.InvalidTeamLeader);
+                throw new UserAlreadyTeamLeaderException(Constants.InvalidTeamLeader);
             }
         }
 
@@ -147,7 +147,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void CheckReviewrsCount(TimeOff timeOff)
+        public void CheckReviewersCount(TimeOff timeOff)
         {
             if (timeOff.Reviewers.Count == 0)
             {
