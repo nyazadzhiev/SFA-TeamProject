@@ -1,17 +1,10 @@
-﻿using IdentityServer4.Models;
-using IdentityServer4.Validation;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using WorkforceManagementAPI.BLL.Services;
+using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
-using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.WEB.Controllers
@@ -20,52 +13,36 @@ namespace WorkforceManagementAPI.WEB.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private GrantValidationResult result;
         private IUserService userService;
-        private IIdentityUserManager userManager;
 
-        public AuthenticationController(IUserService userService, IIdentityUserManager userManager)
+        public AuthenticationController(IIdentityUserManager userManager)
         {
-            this.userService = userService;
-            this.userManager = userManager;
+            this.userService = userManager;
         }
 
         [HttpPost, Route("Login")]
-        public async Task<IActionResult> Login(UserLoginRequestDTO model)
+        public async Task<string> Login(AuthenticationLoginRequestDTO loginModel)
         {
+            
+            var client = new HttpClient();
 
-            var authResult = await userService.Login(model.Email, model.Password);
-            if (authResult)
+            var url = "https://localhost:5001/connect/token";
+
+            var nvc = new List<KeyValuePair<string, string>>();
+            nvc.Add(new KeyValuePair<string, string>("grant_type", "password"));
+            nvc.Add(new KeyValuePair<string, string>("username", loginModel.Username));
+            nvc.Add(new KeyValuePair<string, string>("password", loginModel.Password));
+            nvc.Add(new KeyValuePair<string, string>("client_id", "WorkforceManagementAPI"));
+            nvc.Add(new KeyValuePair<string, string>("client_secret", "seasharp_BareM1n1mum"));
+            nvc.Add(new KeyValuePair<string, string>("scope", "users offline_access WorkforceManagementAPI"));
+            
+            using (client)
             {
-                var foundUser = await userManager.FindByNameAsync(model.Email);
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                List<Claim> userClaims = new List<Claim>();
-                
-                List<string> roles = await userManager.GetUserRolesAsync(foundUser);
-
-                userClaims.Add(new Claim(ClaimTypes.Name, foundUser.UserName));
-
-                foreach (var role in roles)
-                {
-                    userClaims.Add(new Claim(ClaimTypes.Role, role));
-                }
-
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("seasharp_B@reM1nimum"));
-                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-                var tokenOptions = new JwtSecurityToken(
-                    issuer: "https://localhost:5001",
-                    audience: "https://localhost:5001/resources",
-                    claims: userClaims,
-                    expires: DateTime.Now.AddMinutes(5),
-                    signingCredentials: signinCredentials
-
-                );
-
-                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-                return Ok(new { Token = tokenString });
+                HttpResponseMessage response = client.PostAsync(url, new FormUrlEncodedContent(nvc)).Result;
+                return response.Content.ReadAsStringAsync().Result;
             }
-
-            return BadRequest();
 
         }
 
