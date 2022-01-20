@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -93,22 +92,11 @@ namespace WorkforceManagementAPI.BLL.Services
         public async Task SetAdministrator(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                throw new Exception($"User with id: {userId} not found");
-            }
-            if (await IsUserInRole(user.Id, "Admin"))
-            {
-                throw new Exception("User is already an admin");
-            }
+            _validationService.EnsureUserExist(user);
+            await _validationService.EnsureUserIsAdminAsync(user);
             await _userManager.AddUserToRoleAsync(user, "Admin");
         }
-
-        public async Task<bool> IsUserInRole(string userId, string roleName)
-        {
-            return await _userManager.IsUserInRole(userId, roleName);
-        }
-
+      
 
     }
 }

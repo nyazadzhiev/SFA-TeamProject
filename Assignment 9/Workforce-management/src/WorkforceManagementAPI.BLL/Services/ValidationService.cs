@@ -170,5 +170,15 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new Exception("Invalid status.");
             }
         }
+
+        public async Task EnsureUserIsAdminAsync(User user)
+        {
+            if (await _userManager.IsUserInRole(user.Id, "Admin"))
+            {
+                throw new UserAlreadyAnAdminException("User is already an admin");
+            }
+        }
+
+
     }
 }

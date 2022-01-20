@@ -20,8 +20,6 @@ namespace WorkforceManagementAPI.BLL.Services
 
         Task<bool> UpdateUser(string userId,EditUserRequest editUserReaqest);
 
-        Task<bool> IsUserInRole(string userId, string roleName);
-
         Task SetAdministrator(string userId);
 
 

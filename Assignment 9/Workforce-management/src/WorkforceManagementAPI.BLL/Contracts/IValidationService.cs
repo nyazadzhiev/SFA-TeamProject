@@ -39,5 +39,6 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void CheckReviewersCount(TimeOff timeOff);
         void EnsureUserIsReviewer(TimeOff timeOff, User user);
         void EnsureResponseIsValid(Status status);
+        Task EnsureUserIsAdminAsync(User user);
     }
 }
