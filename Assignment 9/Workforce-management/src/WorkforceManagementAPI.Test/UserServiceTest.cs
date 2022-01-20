@@ -30,7 +30,7 @@ namespace WorkforceManagementAPI.Test
         public async Task Update_User_ReturnsTrue()
         {
             var userService = SetupMockedDefaultUserServiceWithDefaultUser();
-            var EditUserRequest = new EditUserReauestDTO
+            var EditUserRequest = new EditUserRequest
             {
                 NewEmail = "test@abv.bg",
                 NewFirstName = "test",

@@ -127,7 +127,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (!team.Users.Any(u => u.Id == user.Id))
             {
-                throw new UnautohrizedUserException(Constants.TeamAccess);
+                throw new UnauthorizedUserException(Constants.TeamAccess);
             }
         }
 

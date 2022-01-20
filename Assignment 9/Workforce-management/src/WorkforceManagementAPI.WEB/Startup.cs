@@ -102,6 +102,7 @@ namespace WorkforceManagementAPI.WEB
             services.AddTransient<IUserService, UserService>();
 
             services.AddTransient<ITeamRepository, TeamRepository>();
+            services.AddTransient<ITimeOffRepository, TimeOffRepository>();
 
             //EF Identity
             services.AddIdentityCore<User>(options =>

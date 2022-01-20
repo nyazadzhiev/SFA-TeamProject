@@ -110,7 +110,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<UnautohrizedUserException>(() => validation.CheckAccessToTeam(regularTeam, defaultUser));
+            Assert.Throws<UnauthorizedAccessException>(() => validation.CheckAccessToTeam(regularTeam, defaultUser));
         }
 
         [Fact]
@@ -121,7 +121,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<UnautohrizedUserException>(() => validation.CheckTeamLeader(regularTeam, TeamLeader));
+            Assert.Throws<UnauthorizedAccessException>(() => validation.CheckTeamLeader(regularTeam, TeamLeader));
         }
 
         [Fact]
