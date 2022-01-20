@@ -186,5 +186,13 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new NotEnoughDaysForTimeOffException($"Days requested exceed yearly limit. You have {20 - daysTaken} days remaining from 20.");
             }
         }
+
+        public void EnsureNoDuplicateTimeOff(User user, TimeOff timeOff)
+        {
+            if (user.Requests.Any(r => r.StartDate == timeOff.StartDate && r.EndDate == timeOff.EndDate))
+            {
+                throw new TimeOffAlreadyExistsException("You can't have TimeOff requests with duplicate start and end dates.");
+            }
+        }
     }
 }

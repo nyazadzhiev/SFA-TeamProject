@@ -51,6 +51,8 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.Creator = user;
             timeOff.ModifierId = creatorId;
             timeOff.Modifier = user;
+
+            _validationService.EnsureNoDuplicateTimeOff(user, timeOff);
         
             string subject = timeOff.Type.ToString() + " Time Off";
             string message;
@@ -140,11 +142,14 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.Reviewers.Remove(user);
             user.UnderReviewRequests.Remove(timeOff);
 
+            await _timeOffRepository.SaveChangesAsync();
+
             var message = UpdateRequestStatus(status, timeOff);
 
             bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
             if (allReviersGaveFeedback)
             {
+                CheckAvailableDaysOff(user, (int)(timeOff.EndDate - timeOff.StartDate).TotalDays);
                 await FinalizeRequestFeedback(timeOff, message);
             }
 
