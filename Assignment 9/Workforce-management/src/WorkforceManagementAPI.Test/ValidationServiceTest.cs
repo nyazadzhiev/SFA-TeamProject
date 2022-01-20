@@ -66,7 +66,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<NameExistException>(() => validation.CheckTeamName(regularTeam.Title));
+            Assert.Throws<NameExistException>(() => validation.EnsureTeamNameIsUniquee(regularTeam.Title));
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<InputOutOfBoundsException>(() => validation.ValidateDateRange(new DateTime(2022, 1, 18), new DateTime(2022, 1, 15)));
+            Assert.Throws<InputOutOfBoundsException>(() => validation.EnsureDateRangeIsValid(new DateTime(2022, 1, 18), new DateTime(2022, 1, 15)));
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<UnauthorizedAccessException>(() => validation.CheckAccessToTeam(regularTeam, defaultUser));
+            Assert.Throws<UnauthorizedAccessException>(() => validation.EnsureUserHasAccessToTeam(regularTeam, defaultUser));
         }
 
         [Fact]
@@ -121,7 +121,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<UnauthorizedAccessException>(() => validation.CheckTeamLeader(regularTeam, TeamLeader));
+            Assert.Throws<UnauthorizedAccessException>(() => validation.EnsureUserIsNotAlreadyATeamLeader(regularTeam, TeamLeader));
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<UserAlreadyInTeamException>(() => validation.CanAddToTeam(regularTeam, TeamLeader));
+            Assert.Throws<UserAlreadyInTeamException>(() => validation.EnsureUserIsNotAlreadyPartOfTheTeam(regularTeam, TeamLeader));
         }
     }
 }

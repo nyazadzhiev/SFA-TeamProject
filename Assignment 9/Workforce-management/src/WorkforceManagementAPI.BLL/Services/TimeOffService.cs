@@ -32,7 +32,7 @@ namespace WorkforceManagementAPI.BLL.Services
         public async Task<bool> CreateTimeOffAsync(TimeOffRequestDTO timoffRequest, string creatorId)
         {
             _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.ValidateDateRange(timoffRequest.StartDate, timoffRequest.EndDate);
+            _validationService.EnsureDateRangeIsValid(timoffRequest.StartDate, timoffRequest.EndDate);
 
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
@@ -107,7 +107,7 @@ namespace WorkforceManagementAPI.BLL.Services
         public async Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest)
         {
             _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.ValidateDateRange(timoffRequest.StartDate, timoffRequest.EndDate);
+            _validationService.EnsureDateRangeIsValid(timoffRequest.StartDate, timoffRequest.EndDate);
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
@@ -127,7 +127,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             var timeOff = await GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
-            _validationService.CheckReviewersCount(timeOff);
+            _validationService.EnsureNoReviewersLeft(timeOff);
             _validationService.EnsureUserIsReviewer(timeOff, user);
             _validationService.EnsureResponseIsValid(status);
 

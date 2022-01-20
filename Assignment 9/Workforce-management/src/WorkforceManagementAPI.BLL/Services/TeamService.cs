@@ -45,7 +45,7 @@ namespace WorkforceManagementAPI.BLL.Service
 
         public async Task<bool> CreateTeamAsync(TeamRequestDTO teamRequest, string creatorId)
         {
-            _validationService.CheckTeamName(teamRequest.Title);
+            _validationService.EnsureTeamNameIsUniquee(teamRequest.Title);
 
             var now = DateTime.Now;
             var team = _mapper.Map<Team>(teamRequest);
@@ -64,7 +64,7 @@ namespace WorkforceManagementAPI.BLL.Service
         {
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
-            _validationService.CheckTeamNameForEdit(editTeamRequest.Title, team.Title);
+            _validationService.EnsureTeamNameIsUniqueWhenEdit(editTeamRequest.Title, team.Title);
 
             team.Title = editTeamRequest.Title;
             team.Description = editTeamRequest.Description;
@@ -96,7 +96,7 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.CanAddToTeam(team, user);
+            _validationService.EnsureUserIsNotAlreadyPartOfTheTeam(team, user);
 
             if (team.Users.Count == 0)
             {
@@ -119,8 +119,8 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.CheckTeamLeader(team, user);
-            _validationService.CheckAccessToTeam(team, user);
+            _validationService.EnsureUserIsNotAlreadyATeamLeader(team, user);
+            _validationService.EnsureUserHasAccessToTeam(team, user);
 
             _teamRepository.RemoveTeamUser(team, user);
 
@@ -137,8 +137,8 @@ namespace WorkforceManagementAPI.BLL.Service
             var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.CheckTeamLeader(team, user);
-            _validationService.CheckAccessToTeam(team, user);
+            _validationService.EnsureUserIsNotAlreadyATeamLeader(team, user);
+            _validationService.EnsureUserHasAccessToTeam(team, user);
 
             team.TeamLeaderId = userId;
             _teamRepository.UpdateTeam(team);
