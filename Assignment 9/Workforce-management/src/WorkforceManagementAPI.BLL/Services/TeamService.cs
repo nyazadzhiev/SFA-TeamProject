@@ -125,6 +125,7 @@ namespace WorkforceManagementAPI.BLL.Service
             _validationService.EnsureUserExist(user);
 
             _validationService.CheckTeamLeader(team, user);
+            _validationService.CheckAccessToTeam(team, user);
 
             _teamRepository.RemoveTeamUser(team, user);
 
