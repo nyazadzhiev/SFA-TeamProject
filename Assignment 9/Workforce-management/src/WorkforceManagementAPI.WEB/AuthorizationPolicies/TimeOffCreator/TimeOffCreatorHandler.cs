@@ -5,7 +5,7 @@ using System;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TimeOffCreator

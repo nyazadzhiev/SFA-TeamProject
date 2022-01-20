@@ -16,7 +16,7 @@ using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.DAL.Repositories;
@@ -24,6 +24,7 @@ using WorkforceManagementAPI.WEB.IdentityAuth;
 using System;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
+using System.Text.Json.Serialization;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -42,7 +43,9 @@ namespace WorkforceManagementAPI.WEB
         {
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
 
-            services.AddControllers();
+            services.AddControllers()
+                    .AddJsonOptions(options =>
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddSwaggerGen(c =>
             {
@@ -55,6 +58,8 @@ namespace WorkforceManagementAPI.WEB
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey
                 });
+
+                c.DescribeAllEnumsAsStrings();
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
@@ -85,6 +90,7 @@ namespace WorkforceManagementAPI.WEB
 
             // Register Automapper
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+                
 
             //EF
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));

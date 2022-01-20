@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.Common;
@@ -131,7 +129,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             var timeOff = await GetTimeOffAsync(timeOffId);
             _validationService.EnsureTimeOffExist(timeOff);
-            _validationService.CheckReviewrsCount(timeOff);
+            _validationService.CheckReviewersCount(timeOff);
             _validationService.EnsureUserIsReviewer(timeOff, user);
             _validationService.EnsureResponseIsValid(status);
 
