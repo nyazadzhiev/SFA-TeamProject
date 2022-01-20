@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WorkforceManagementAPI.BLL.Exceptions
 {
-    public class UnautohrizedUserException : Exception
+    public class UserAlreadyTeamLeaderException : Exception
     {
-        public UnautohrizedUserException(string message) : base(message)
+        public UserAlreadyTeamLeaderException(string message) : base(message)
         {
 
         }

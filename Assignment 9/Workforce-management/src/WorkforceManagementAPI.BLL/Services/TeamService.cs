@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
-using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Service
@@ -125,6 +120,7 @@ namespace WorkforceManagementAPI.BLL.Service
             _validationService.EnsureUserExist(user);
 
             _validationService.CheckTeamLeader(team, user);
+            _validationService.CheckAccessToTeam(team, user);
 
             _teamRepository.RemoveTeamUser(team, user);
 

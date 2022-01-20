@@ -19,12 +19,13 @@ using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
+using System.Text.Json.Serialization;
 using WorkforceManagementAPI.WEB.IdentityAuth;
 
 namespace WorkforceManagementAPI.WEB
@@ -44,7 +45,9 @@ namespace WorkforceManagementAPI.WEB
         {
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
 
-            services.AddControllers();
+            services.AddControllers()
+                    .AddJsonOptions(options =>
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddSwaggerGen(c =>
             {
@@ -104,6 +107,7 @@ namespace WorkforceManagementAPI.WEB
             services.AddTransient<IUserService, UserService>();
 
             services.AddTransient<ITeamRepository, TeamRepository>();
+            services.AddTransient<ITimeOffRepository, TimeOffRepository>();
 
             //EF Identity
             services.AddIdentityCore<User>(options =>
