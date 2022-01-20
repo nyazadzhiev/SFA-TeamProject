@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
@@ -14,30 +15,28 @@ namespace WorkforceManagementAPI.BLL.Services
     {
         private readonly IIdentityUserManager _userManager;
         private readonly IValidationService _validationService;
+        private readonly IMapper _mapper;
 
-        public UserService(IIdentityUserManager userManager, IValidationService validationService)
+        public UserService(IIdentityUserManager userManager, IValidationService validationService, IMapper mapper)
         {
             _userManager = userManager;
             _validationService = validationService;
+            _mapper = mapper;
         }
 
-        public async Task<bool> CreateUser(string email, string password, string firstName, string lastName)
+        public async Task<bool> CreateUser(CreateUserRequestDTO userRequest)
         {
-            _validationService.EnsureLenghtIsValid(password, 7, nameof(password));
-            _validationService.EnsureLenghtIsValid(firstName, 2, nameof(firstName));
-            _validationService.EnsureLenghtIsValid(lastName, 2, nameof(lastName));
+            _validationService.EnsureLenghtIsValid(userRequest.Password, 7, nameof(userRequest.Password));
+            _validationService.EnsureLenghtIsValid(userRequest.FirstName, 2, nameof(userRequest.FirstName));
+            _validationService.EnsureLenghtIsValid(userRequest.LastName, 2, nameof(userRequest.LastName));
 
-            _validationService.EnsureEmailIsValid(email);
-            await _validationService.EnsureEmailIsUniqueAsync(email);
+            _validationService.EnsureEmailIsValid(userRequest.Email);
+            await _validationService.EnsureEmailIsUniqueAsync(userRequest.Email);
 
-            User user = new User()
-            {
-                UserName = email,
-                Email = email,
-                FirstName = firstName,
-                LastName = lastName,
-            };
-            await _userManager.CreateUserAsync(user, password);
+            var user = _mapper.Map<User>(userRequest);
+            user.UserName = userRequest.Email;
+            await _userManager.CreateUserAsync(user, userRequest.Password);
+           
             return true;
         }
 
@@ -50,24 +49,24 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> UpdateUser(string userId, string newPassword, string newEmail, string newFirstName, string newLastName)
+        public async Task<bool> UpdateUser(string userId, EditUserRequest editUserReaqest)
         {
-            _validationService.EnsureLenghtIsValid(newPassword, 7, nameof(newPassword));
-            _validationService.EnsureLenghtIsValid(newFirstName, 2, nameof(newFirstName));
-            _validationService.EnsureLenghtIsValid(newLastName, 2, nameof(newLastName));
+            _validationService.EnsureLenghtIsValid(editUserReaqest.NewPassword, 7, nameof(editUserReaqest.NewPassword));
+            _validationService.EnsureLenghtIsValid(editUserReaqest.NewFirstName, 2, nameof(editUserReaqest.NewFirstName));
+            _validationService.EnsureLenghtIsValid(editUserReaqest.NewLastName, 2, nameof(editUserReaqest.NewLastName));
 
             User user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
-            _validationService.EnsureEmailIsValid(newEmail);
-            await _validationService.EnsureUpdateEmailIsUniqueAsync(newEmail,user);
+            _validationService.EnsureEmailIsValid(editUserReaqest.NewEmail);
+            await _validationService.EnsureUpdateEmailIsUniqueAsync(editUserReaqest.NewEmail, user);
 
             PasswordHasher<User> hasher = new PasswordHasher<User>();
-            user.UserName = newEmail;
-            user.FirstName = newFirstName;
-            user.LastName = newLastName;
-            user.PasswordHash = hasher.HashPassword(user, newPassword);
-            user.Email = newEmail;
+            user.UserName = editUserReaqest.NewEmail;
+            user.FirstName = editUserReaqest.NewFirstName;
+            user.LastName = editUserReaqest.NewLastName;
+            user.PasswordHash = hasher.HashPassword(user, editUserReaqest.NewPassword);
+            user.Email = editUserReaqest.NewEmail;
             await _userManager.UpdateUserDataAsync(user);
 
             return true;

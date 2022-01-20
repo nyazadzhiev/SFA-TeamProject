@@ -9,16 +9,23 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using WebApi.Middleware;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Service;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.DAL;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.DAL.Contracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models;
+using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.WEB.IdentityAuth;
+using System;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
+using System.Text.Json.Serialization;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -32,9 +39,15 @@ namespace WorkforceManagementAPI.WEB
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        [System.Obsolete]
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+
+            services.AddControllers()
+                    .AddJsonOptions(options =>
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WorkforceManagementAPI.WEB", Version = "v1" });
@@ -49,6 +62,8 @@ namespace WorkforceManagementAPI.WEB
                     Scheme = "bearer"
 
                 });
+
+                c.DescribeAllEnumsAsStrings();
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
@@ -71,15 +86,27 @@ namespace WorkforceManagementAPI.WEB
                         new List<string>()
                     }
                 });
+
+                c.DescribeAllEnumsAsStrings();
+
+                c.MapType<DateTime>(() => new OpenApiSchema { Type = "string", Format = "date" });
             });
+
+            // Register Automapper
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+                
 
             //EF
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
             services.AddTransient<ITeamService, TeamService>();
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IIdentityUserManager, IdentityUserManager>();
             services.AddTransient<IValidationService, ValidationService>();
             services.AddTransient<ITimeOffService, TimeOffService>();
             services.AddTransient<IUserService, UserService>();
+
+            services.AddTransient<ITeamRepository, TeamRepository>();
+            services.AddTransient<ITimeOffRepository, TimeOffRepository>();
 
             //EF Identity
             services.AddIdentityCore<User>(options =>
@@ -111,13 +138,24 @@ namespace WorkforceManagementAPI.WEB
             services
                 .AddAuthorization(options =>
             {
+
                 options.AddPolicy("Admin", policy =>
                 policy.RequireRole("Admin"));
 
                 options.AddPolicy("User", policy =>
                 policy.RequireRole("User"));
-            }
-            )
+
+                options.AddPolicy("TeamLeader", policy =>
+                policy.Requirements.Add(new TeamLeaderRequirement()));
+
+                options.AddPolicy("TeamMember", policy =>
+                policy.Requirements.Add(new TeamMemberRequirement()));
+
+                options.AddPolicy("TimeOffCreator", policy =>
+                policy.Requirements.Add(new TeamLeaderRequirement()));
+
+            })
+            
                 .AddAuthentication(options =>
                 {
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;

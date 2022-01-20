@@ -1,57 +1,82 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.DAL;
+using WorkforceManagementAPI.Common;
+using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
     public class TimeOffService : ITimeOffService
     {
-        private readonly DatabaseContext _context;
         private readonly IValidationService _validationService;
         private readonly IUserService _userService;
+        private readonly INotificationService _notificationService;
+        private readonly IMapper _mapper;
+        private readonly ITimeOffRepository timeOffRepository;
 
-        public TimeOffService(DatabaseContext context, IValidationService validationService, IUserService userService)
+        public TimeOffService(IValidationService validationService, IUserService userService, INotificationService notificationService, IMapper mapper, ITimeOffRepository timeOffRepository)
         {
-            _context = context;
             _validationService = validationService;
             _userService = userService;
+            _notificationService = notificationService;
+            _mapper = mapper;
+            this.timeOffRepository = timeOffRepository;
         }
 
-        public async Task<bool> CreateTimeOffAsync(string reason, RequestType type, Status status, DateTime startDate, DateTime endDate, string creatorId)
+        public async Task<bool> CreateTimeOffAsync(TimeOffRequestDTO timoffRequest, string creatorId)
         {
+            _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.ValidateDateRange(timoffRequest.StartDate, timoffRequest.EndDate);
+
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
 
-            var timeOff = new TimeOff()
-            {
-                Reason = reason,
-                Type = type,
-                Status = status,
-                StartDate = startDate,
-                EndDate = endDate,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now,
-                CreatorId = creatorId,
-                Creator = user,
-                ModifierId = creatorId,
-                Modifier = user
-            };
+            var timeOff = _mapper.Map<TimeOff>(timoffRequest);
 
-            await _context.Requests.AddAsync(timeOff);
-            await _context.SaveChangesAsync();
+            timeOff.CreatedAt = DateTime.Now;
+            timeOff.ModifiedAt = DateTime.Now;
+            timeOff.CreatorId = creatorId;
+            timeOff.Creator = user;
+            timeOff.ModifierId = creatorId;
+            timeOff.Modifier = user;
+        
+            string subject = timeOff.Type.ToString() + " Time Off";
+            string message;
+
+            timeOff.Reviewers = user.Teams.Select(t => t.TeamLeader).ToList();
+
+            await timeOffRepository.CreateTimeOffAsync(timeOff);
+
+            if (timeOff.Type == RequestType.SickLeave)
+            {
+                message = string.Format(Constants.SickMessage, user.FirstName, user.LastName, timeOff.StartDate, timeOff.EndDate, timeOff.Reason);
+
+                timeOff.Status = Status.Approved;
+
+                await timeOffRepository.SaveChangesAsync();
+            }
+            else
+            {
+                message = string.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+
+                user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
+                await timeOffRepository.SaveChangesAsync();
+            }
+
+            await _notificationService.Send(timeOff.Reviewers, subject, message);
 
             return true;
         }
 
         public async Task<List<TimeOff>> GetAllAsync()
         {
-            return await _context.Requests.ToListAsync();
+            return await timeOffRepository.GetAllAsync();
         }
 
         public async Task<List<TimeOff>> GetMyTimeOffs(string userId)
@@ -59,41 +84,92 @@ namespace WorkforceManagementAPI.BLL.Services
             var user = await _userService.GetUserById(userId);
             _validationService.EnsureUserExist(user);
 
-            return await _context.Requests.Where(r => r.CreatorId.Equals(userId)).ToListAsync();
+            return await timeOffRepository.GetMyTimeOffsAsync(userId);
         }
 
         public async Task<TimeOff> GetTimeOffAsync(Guid id)
         {
-            return await _context.Requests.FirstOrDefaultAsync(r => r.Id == id);
+            return await timeOffRepository.GetTimeOffAsync(id);
         }
 
         public async Task<bool> DeleteTimeOffAsync(Guid id)
         {
             TimeOff timeOff = await GetTimeOffAsync(id);
-
+                    
             _validationService.EnsureTimeOffExist(timeOff);
 
-            _context.Requests.Remove(timeOff);
-            await _context.SaveChangesAsync();
+            timeOffRepository.DeleteTimeOffAsync(timeOff);
+            await timeOffRepository.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<bool> EditTimeOffAsync(Guid id, string newReason, DateTime newStart, DateTime newEnd, RequestType newType, Status newStatus)
+        public async Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest)
         {
+            _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.ValidateDateRange(timoffRequest.StartDate, timoffRequest.EndDate);
+
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
 
-            timeOff.Reason = newReason;
-            timeOff.Status = newStatus;
-            timeOff.Type = newType;
-            timeOff.StartDate = newStart;
-            timeOff.EndDate = newEnd;
+            timeOff.Reason = timoffRequest.Reason;
+            timeOff.Type = timoffRequest.Type;
+            timeOff.StartDate = timoffRequest.StartDate;
+            timeOff.EndDate = timoffRequest.EndDate;
             timeOff.ModifiedAt = DateTime.Now;
 
-            await _context.SaveChangesAsync();
+            await timeOffRepository.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<bool> SubmitFeedbackForTimeOffRequestAsync(User user, Guid timeOffId, Status status)
+        {
+            var timeOff = await GetTimeOffAsync(timeOffId);
+            _validationService.EnsureTimeOffExist(timeOff);
+            _validationService.CheckReviewersCount(timeOff);
+            _validationService.EnsureUserIsReviewer(timeOff, user);
+            _validationService.EnsureResponseIsValid(status);
+
+            timeOff.Reviewers.Remove(user);
+            user.UnderReviewRequests.Remove(timeOff);
+
+            await timeOffRepository.SaveChangesAsync();
+
+            var message = UpdateRequestStatus(status, timeOff);
+
+            bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
+            if (allReviersGaveFeedback)
+            {
+                await FinalizeRequestFeedback(timeOff, message);
+            }
+
+            return true;
+        }
+
+        private string UpdateRequestStatus(Status status, TimeOff timeOff)
+        {
+            if (status == Status.Rejected)
+            {
+                timeOff.Status = Status.Rejected;
+                timeOff.Reviewers.Clear();
+                return "Your time off request has been rejected.";
+            }
+
+            timeOff.Status = Status.Awaiting;
+
+            return string.Empty;
+        }
+
+        private async Task FinalizeRequestFeedback(TimeOff timeOff, string message)
+        {
+            if (timeOff.Status != Status.Rejected)
+            {
+                message = "Your time off request has been approved.";
+                timeOff.Status = Status.Approved;
+            }
+
+            await _notificationService.Send(new List<User>() { timeOff.Creator }, "response", message);
         }
     }
 }

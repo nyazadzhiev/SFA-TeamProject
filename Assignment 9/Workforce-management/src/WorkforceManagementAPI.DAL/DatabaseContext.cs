@@ -7,17 +7,22 @@ namespace WorkforceManagementAPI.DAL
     public class DatabaseContext : IdentityDbContext<User>
     {
 
-        public DbSet<Team> Teams { get; set; }
+        public virtual DbSet<Team> Teams { get; set; }
 
-        public DbSet<TimeOff> Requests { get; set; }    
+        public virtual DbSet<TimeOff> Requests { get; set; }
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base (options)
+        {
+
+        }
+
+        public DatabaseContext() : base()
         {
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLazyLoadingProxies();
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

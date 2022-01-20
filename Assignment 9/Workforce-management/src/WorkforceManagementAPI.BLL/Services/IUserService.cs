@@ -2,12 +2,13 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
     public interface IUserService
     {
-        Task<bool> CreateUser(string email, string password, string firstName, string lastName);
+        Task<bool> CreateUser(CreateUserRequestDTO userRequest);
 
         Task<bool> DeleteUser(string id);
 
@@ -17,7 +18,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         Task<User> GetUserById(string id);
 
-        Task<bool> UpdateUser(string userId, string newPassword, string newEmail, string newFirstName, string newLastName);
+        Task<bool> UpdateUser(string userId,EditUserRequest editUserReaqest);
 
         Task<bool> IsUserInRole(string userId, string roleName);
 
