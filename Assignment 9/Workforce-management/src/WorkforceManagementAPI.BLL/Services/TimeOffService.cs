@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Nager.Date;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,12 +38,12 @@ namespace WorkforceManagementAPI.BLL.Services
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
 
+            var timeOff = _mapper.Map<TimeOff>(timeOffRequest);
+
             if (timeOffRequest.Type == RequestType.Paid)
             {
-                CheckAvailableDaysOff(user, (int)(timeOffRequest.EndDate - timeOffRequest.StartDate).TotalDays);
+                CheckAvailableDaysOff(user, timeOff);
             }
-
-            var timeOff = _mapper.Map<TimeOff>(timeOffRequest);
 
             timeOff.Status = Status.Created;
             timeOff.CreatedAt = DateTime.Now;
@@ -149,7 +150,7 @@ namespace WorkforceManagementAPI.BLL.Services
             bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
             if (allReviersGaveFeedback)
             {
-                CheckAvailableDaysOff(user, (int)(timeOff.EndDate - timeOff.StartDate).TotalDays);
+                CheckAvailableDaysOff(user, timeOff);
                 await FinalizeRequestFeedback(timeOff, message);
             }
 
@@ -183,10 +184,40 @@ namespace WorkforceManagementAPI.BLL.Services
             await _notificationService.Send(new List<User>() { timeOff.Creator }, "response", message);
         }
 
-        private void CheckAvailableDaysOff(User user, int daysRequested)
+        private void CheckAvailableDaysOff(User user, TimeOff timeOff)
         {
-            int daysTaken = _timeOffRepository.GetDaysTaken(user);
-            _validationService.EnsureUserHasEnoughDays(daysTaken, daysRequested);
+            var approvedTimeOffs = _timeOffRepository.GetApprovedTimeOffs(user);
+            int totalDaysTaken = GetDaysTaken(approvedTimeOffs);
+            int daysRequested = ((int)(timeOff.EndDate - timeOff.StartDate).TotalDays + 1) - GetHolidaysFromCurrentRequest(timeOff);
+
+            _validationService.EnsureUserHasEnoughDays(totalDaysTaken, daysRequested);
+        }
+
+        private int GetDaysTaken(List<TimeOff> timeOffs)
+        {
+            int totalDaysTaken = timeOffs.Sum(t => (int)(t.EndDate - t.StartDate).TotalDays + 1);
+
+            foreach (var timeOff in timeOffs)
+            {
+                totalDaysTaken -= GetHolidaysFromCurrentRequest(timeOff);
+            }
+
+            return totalDaysTaken;
+        }
+
+        private int GetHolidaysFromCurrentRequest(TimeOff timeOff)
+        {
+            int countHolidays = 0;
+
+            for (DateTime curr = timeOff.StartDate; curr <= timeOff.EndDate; curr = curr.AddDays(1))
+            {
+                if (DateSystem.IsWeekend(curr, CountryCode.BG) || DateSystem.IsPublicHoliday(curr, CountryCode.BG))
+                {
+                    countHolidays++;
+                }
+            }
+
+            return countHolidays;
         }
     }
 }

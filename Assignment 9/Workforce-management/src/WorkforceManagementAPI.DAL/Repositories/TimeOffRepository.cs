@@ -52,11 +52,11 @@ namespace WorkforceManagementAPI.DAL.Repositories
             _context.Remove(timeOff);
         }
 
-        public int GetDaysTaken(User user)
+        public List<TimeOff> GetApprovedTimeOffs(User user)
         {
             return user.Requests
                 .Where(r => r.Type == RequestType.Paid && r.Status == Status.Approved)
-                .Sum(r => (int)(r.EndDate - r.StartDate).TotalDays);
+                .ToList();
         }
     }
 }
