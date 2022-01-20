@@ -2,10 +2,8 @@
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.BLL.Contracts;
