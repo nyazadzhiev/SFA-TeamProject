@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+       
         public async Task<IEnumerable<TeamResponseDTO>> GetAllTeamsAsync()
         {
             var teams = await _teamService.GetAllTeamsAsync();

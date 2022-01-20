@@ -25,6 +25,8 @@ using System;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
 using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -178,9 +180,16 @@ namespace WorkforceManagementAPI.WEB
 
             if (env.IsDevelopment())
             {
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider( 
+                        Path.Combine(Directory.GetCurrentDirectory())),
+                    RequestPath = "/CustomSwagger"
+                });
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WorkforceManagementAPI.WEB v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/CustomSwagger/openapi.json", "WorkforceManagementAPI.WEB v1"));
+                //"/CustomSwagger/openapi.json"
             }
 
             app.UseHttpsRedirection();

@@ -35,7 +35,7 @@ namespace WebApi.Middleware
                     case NameExistException nameExistException:
                     case EmailAlreadyInUseException emailAlreadyInUse:
                     case UserAlreadyInTeamException userAlreadyInTeamException:
-                        response.StatusCode = (int)HttpStatusCode.Conflict;
+                        response.StatusCode = (int)HttpStatusCode.Forbidden;
                         break;
                     case InputOutOfBoundsException inputException:
                     case InvalidEmailException invalidEmail:
