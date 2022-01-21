@@ -22,6 +22,8 @@ namespace WorkforceManagementAPI.BLL.Services
 
         Task SetAdministrator(string userId);
 
+        Task<bool> Login(string email, string password);
+
 
     }
 }

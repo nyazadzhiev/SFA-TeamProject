@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -55,10 +56,12 @@ namespace WorkforceManagementAPI.WEB
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization:{token}\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
+                    Type = SecuritySchemeType.Http, //SecuritySchemeType.ApiKey
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
                 });
 
                 // using System.Reflection;
@@ -199,7 +202,7 @@ namespace WorkforceManagementAPI.WEB
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            
+
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthentication();
