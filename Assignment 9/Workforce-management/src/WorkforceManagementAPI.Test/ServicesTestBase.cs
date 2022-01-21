@@ -13,6 +13,7 @@ using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.WEB.AutoMapperProfiles;
+using WorkforceManagementAPI.BLL.Service;
 
 namespace WorkforceManagementAPI.Test
 {

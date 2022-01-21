@@ -36,11 +36,6 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
                 context.Succeed(requirement);
                 await Task.CompletedTask;
             }
-            /*else
-            {
-                context.Fail();
-                await Task.CompletedTask;
-            }*/
         }
 
         private async Task<User> ValidateLoggedUserIsTimeOffCreator()
@@ -50,7 +45,6 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
             var timeOff = await timeOffService.GetTimeOffAsync(actualId);
             var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
             return timeOffCreator; 
-
         }
     }
 }

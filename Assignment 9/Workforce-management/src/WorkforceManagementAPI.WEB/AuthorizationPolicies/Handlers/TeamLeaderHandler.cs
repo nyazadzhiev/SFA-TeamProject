@@ -28,24 +28,15 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, TeamLeaderTimeOffCreatorRequirement requirement)
         {
-            
             if (await TeamLeaderValidaition(context))
             {
                 context.Succeed(requirement);
                 await Task.CompletedTask;
             }
-
-         /*   else
-            {
-                context.Fail();
-                await Task.CompletedTask;
-            }*/
-
         }
 
         private async Task<bool> TeamLeaderValidaition(AuthorizationHandlerContext context)
         {
-
             var loggedUser = await userManager.GetUserAsync(context.User);
 
             var timeOffId = httpContextAccessor.HttpContext.GetRouteValue("timeOffId").ToString();
@@ -56,7 +47,6 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
             var isLoggedUserValidTeamLeader = timeOffCreator.Teams.Any(t => t.TeamLeaderId == loggedUser.Id);
 
             return isLoggedUserValidTeamLeader;
-
         }
     }
 }
