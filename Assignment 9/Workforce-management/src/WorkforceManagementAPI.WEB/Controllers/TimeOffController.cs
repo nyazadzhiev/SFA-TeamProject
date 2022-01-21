@@ -64,7 +64,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <returns></returns>
-        [Authorize(Policy = "TimeOffCreator, TeamLeader")]
+        [Authorize(Policy = "TeamLeader/TimeOffCreator")]
         [HttpGet("{timeOffId}")]
         public async Task<TimeOffResponseDTO> GetById(Guid timeOffId)
         {
