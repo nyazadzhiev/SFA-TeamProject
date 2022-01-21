@@ -43,6 +43,7 @@ namespace WebApi.Middleware
                     case InvalidEmailException invalidEmail:
                     case InvalidLengthException invalidLength:
                     case UnauthorizedAccessException unauthorizedAccessException:
+                    case CompletedRequestException completedRequest:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     default:
