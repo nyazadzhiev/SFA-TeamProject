@@ -117,11 +117,7 @@ namespace WorkforceManagementAPI.BLL.Services
             {
                 return true;
             }
-
             return false;
-            
         }
-
-
     }
 }

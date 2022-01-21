@@ -54,13 +54,12 @@ namespace WorkforceManagementAPI.WEB
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization:{token}\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http, //SecuritySchemeType.ApiKey
                     BearerFormat = "JWT",
                     Scheme = "bearer"
-
                 });
 
                 c.DescribeAllEnumsAsStrings();
@@ -170,7 +169,6 @@ namespace WorkforceManagementAPI.WEB
                 {
                     options.Authority = "https://localhost:5001";
                     options.Audience = "https://localhost:5001/resources";
-                    
                 });
 
         }

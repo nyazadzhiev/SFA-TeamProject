@@ -11,17 +11,9 @@ namespace WorkforceManagementAPI.WEB.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private IUserService userService;
-
-        public AuthenticationController(IUserService userService)
-        {
-            this.userService = userService;
-        }
-
         [HttpPost, Route("Login")]
         public string Login(AuthenticationLoginRequestDTO loginModel)
         {
-            
             var client = new HttpClient();
 
             var url = "https://localhost:5001/connect/token";
@@ -41,8 +33,6 @@ namespace WorkforceManagementAPI.WEB.Controllers
                 HttpResponseMessage response = client.PostAsync(url, new FormUrlEncodedContent(nvc)).Result;
                 return response.Content.ReadAsStringAsync().Result;
             }
-
         }
-
     }
 }
