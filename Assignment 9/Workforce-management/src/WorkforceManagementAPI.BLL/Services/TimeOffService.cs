@@ -40,7 +40,6 @@ namespace WorkforceManagementAPI.BLL.Services
 
             var timeOff = _mapper.Map<TimeOff>(timeOffRequest);
 
-            _validationService.EnsureNoDuplicateTimeOff(user, timeOff);
             _validationService.EnsureTimeOfRequestsDoNotOverlap(user, timeOff);
 
             if (timeOffRequest.Type == RequestType.Paid)

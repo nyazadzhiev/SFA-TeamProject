@@ -41,7 +41,6 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void EnsureResponseIsValid(Status status);
         Task EnsureUserIsAdminAsync(User user);
         void EnsureUserHasEnoughDays(int daysTaken, int daysRequested);
-        void EnsureNoDuplicateTimeOff(User user, TimeOff timeOff);
         void EnsureTimeOfRequestsDoNotOverlap(User user, TimeOff timeOff);
     }
 }

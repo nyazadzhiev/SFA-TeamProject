@@ -187,19 +187,11 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void EnsureNoDuplicateTimeOff(User user, TimeOff timeOff)
-        {
-            if (user.Requests.Any(r => r.StartDate == timeOff.StartDate && r.EndDate == timeOff.EndDate))
-            {
-                throw new TimeOffAlreadyExistsException("You can't have TimeOff requests with duplicate start and end dates.");
-            }
-        }
-
         public void EnsureTimeOfRequestsDoNotOverlap(User user, TimeOff timeOff)
         {
             if (user.Requests.Any(r => r.Status != Status.Rejected && (r.StartDate < timeOff.EndDate && timeOff.StartDate < r.EndDate)))
             {
-                throw new TimeOffAlreadyExistsException("You can't have TimeOff requests with overlaping start or end dates.");
+                throw new TimeOffOverlapExzception("You can't have TimeOff requests with overlaping start or end dates.");
             }
         }
     }
