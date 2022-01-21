@@ -107,7 +107,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <param name="timeOffId"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        [Authorize(Policy = "TeamLeader/TimeOffCreator")]
+        [Authorize(Policy = "TeamLeader/TimeOffCreator/Admin")]
         [HttpPut("{timeOffId}")]
         public async Task<ActionResult<TimeOffResponseDTO>> Edit(Guid timeOffId, TimeOffRequestDTO model)
         {
@@ -132,7 +132,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <returns></returns>
-        [Authorize(Policy = "TeamLeader/TimeOffCreator")]
+        [Authorize(Policy = "TeamLeader/TimeOffCreator/Admin")]
         [HttpDelete("{timeOffId}")]
         public async Task<ActionResult> Delete(Guid timeOffId)
         {
