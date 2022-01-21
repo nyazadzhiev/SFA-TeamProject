@@ -32,6 +32,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public async Task<bool> CreateTimeOffAsync(TimeOffRequestDTO timeOffRequest, string creatorId)
         {
+            _validationService.EnsureTodayIsWorkingDay();
             _validationService.EnsureInputFitsBoundaries(((int)timeOffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
             _validationService.ValidateDateRange(timeOffRequest.StartDate, timeOffRequest.EndDate);
 

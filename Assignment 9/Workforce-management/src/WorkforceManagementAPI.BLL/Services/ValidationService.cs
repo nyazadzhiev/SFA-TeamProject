@@ -9,6 +9,7 @@ using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
+using Nager.Date;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
@@ -192,6 +193,15 @@ namespace WorkforceManagementAPI.BLL.Services
             if (user.Requests.Any(r => r.Status != Status.Rejected && (r.StartDate < timeOff.EndDate && timeOff.StartDate < r.EndDate)))
             {
                 throw new TimeOffOverlapExzception("You can't have TimeOff requests with overlaping start or end dates.");
+            }
+        }
+
+        public void EnsureTodayIsWorkingDay()
+        {
+            var currrentDay = DateTime.Now;
+            if (DateSystem.IsWeekend(currrentDay, CountryCode.BG) || DateSystem.IsPublicHoliday(currrentDay, CountryCode.BG))
+            {
+                throw new NotAWorkingDayException("Today is not a working day");
             }
         }
     }

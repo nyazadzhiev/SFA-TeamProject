@@ -40,6 +40,7 @@ namespace WebApi.Middleware
                     case TimeOffOverlapExzception timeOffAlreadyExists:
                         response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
+                    case NotAWorkingDayException notAWorkingDay:
                     case InputOutOfBoundsException inputException:
                     case InvalidEmailException invalidEmail:
                     case InvalidLengthException invalidLength:
