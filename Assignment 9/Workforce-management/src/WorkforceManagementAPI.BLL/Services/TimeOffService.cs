@@ -59,9 +59,22 @@ namespace WorkforceManagementAPI.BLL.Services
             string subject = timeOff.Type.ToString() + " Time Off";
             string message;
 
-            timeOff.Reviewers = user.Teams.Select(t => t.TeamLeader).ToList();
+            var teamLeadersOff = _timeOffRepository.GetTeamLeadersOutOfOffice(user);
+
+            timeOff.Reviewers = user.Teams
+                .Select(t => t.TeamLeader)
+                .Except(teamLeadersOff)
+                .ToList();
 
             await _timeOffRepository.CreateTimeOffAsync(timeOff);
+
+            if (timeOff.Reviewers.Count == 0)
+            {
+                await FinalizeRequestFeedback(timeOff, "Your time off request has been approved.");
+                await _timeOffRepository.SaveChangesAsync();
+
+                return true;
+            }
 
             if (timeOff.Type == RequestType.SickLeave)
             {

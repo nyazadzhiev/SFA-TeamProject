@@ -58,5 +58,13 @@ namespace WorkforceManagementAPI.DAL.Repositories
                 .Where(r => r.Type == RequestType.Paid && r.Status == Status.Approved)
                 .ToList();
         }
+
+        public IEnumerable<User> GetTeamLeadersOutOfOffice(User user)
+        {
+            return user.Teams
+                .Select(t => t.TeamLeader)
+                .Where(tl => tl.Requests
+                    .Any(r => r.Status == Status.Approved && (r.StartDate.Date <= DateTime.Now.Date && DateTime.Now.Date <= r.EndDate.Date)));
+        }
     }
 }

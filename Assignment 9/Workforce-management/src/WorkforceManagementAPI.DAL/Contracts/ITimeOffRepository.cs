@@ -12,6 +12,7 @@ namespace WorkforceManagementAPI.DAL.Contracts
         Task<List<TimeOff>> GetAllAsync();
         List<TimeOff> GetApprovedTimeOffs(User user);
         Task<List<TimeOff>> GetMyTimeOffsAsync(string userId);
+        IEnumerable<User> GetTeamLeadersOutOfOffice(User user);
         Task<TimeOff> GetTimeOffAsync(Guid id);
         Task SaveChangesAsync();
     }

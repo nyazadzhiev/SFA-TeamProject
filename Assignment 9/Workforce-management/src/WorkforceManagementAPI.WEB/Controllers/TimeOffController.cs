@@ -119,7 +119,7 @@ namespace ProjectManagementApp.WEB.Controllers
             return Ok(String.Format(Constants.Deleted, "TimeOff request"));
         }
 
-        //[Authorize(Policy = "TeamLeader")]
+        [Authorize(Policy = "TeamLeader")]
         [HttpPost("SubmitFeedback/{timeOffId}")]
         public async Task<ActionResult> SubmitFeedbackForTimeOffRequest(Guid timeOffId, CreateVoteRequestDTO vote)
         {
