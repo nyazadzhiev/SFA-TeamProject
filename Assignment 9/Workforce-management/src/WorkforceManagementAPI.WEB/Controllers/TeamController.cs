@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
+using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.DTO.Models.Responses;
@@ -81,7 +81,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
             bool isCreated = await _teamService.CreateTeamAsync(team, currentUser.Id);
             if (isCreated && ModelState.IsValid)
             {
-                return Ok("Team created successfully.");
+                return Created(nameof(HttpPostAttribute), String.Format(Constants.Created, "Team"));
             }
 
             return BadRequest();

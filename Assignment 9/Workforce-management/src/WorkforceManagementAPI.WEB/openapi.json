@@ -47,6 +47,22 @@ paths:
           description: OK - Request succeeded.
         '201':
           description: Created - Request resulted in new resource created.
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamResponseDTO'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamResponseDTO'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamResponseDTO'
         '401':
           description: Unauthorized - Please check the provided credentials.
         '403':
@@ -119,6 +135,22 @@ paths:
       responses:
         '200':
           description: OK - Request succeeded.
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamResponseDTO'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamResponseDTO'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamResponseDTO'
         '201':
           description: Created - Request resulted in new resource created.
         '401':
@@ -327,7 +359,7 @@ paths:
     post:
       tags:
         - TimeOff
-      summary: Create a timeOff request. [Request types - NonPaid(0), Paid(1), SickLeave(2)]
+      summary: Create a timeOff request. [Request types (enum) - NonPaid(0), Paid(1), SickLeave(2)]
       requestBody:
         description: ''
         content:
@@ -345,6 +377,22 @@ paths:
           description: OK - Request succeeded.
         '201':
           description: Created - Request resulted in new resource created.
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeOffResponseDTO'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeOffResponseDTO'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeOffResponseDTO'
         '401':
           description: Unauthorized - Please check the provided credentials.
         '403':
@@ -413,7 +461,7 @@ paths:
     put:
       tags:
         - TimeOff
-      summary: Edit a timeoff request. [Request types - NonPaid(0), Paid(1), SickLeave(2)]
+      summary: Edit a timeoff request. [Request types (enum) - NonPaid(0), Paid(1), SickLeave(2)]
       parameters:
         - name: timeOffId
           in: path
@@ -438,6 +486,16 @@ paths:
       responses:
         '200':
           description: OK - Request succeeded.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TimeOffResponseDTO'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeOffResponseDTO'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TimeOffResponseDTO'
         '201':
           description: Created - Request resulted in new resource created.
         '401':
@@ -486,7 +544,7 @@ paths:
     post:
       tags:
         - TimeOff
-      summary: APPROVE or REJECT a timeoff request. [Statuses - Rejected(0), Created(1), Awaiting(2), Approved(3)]
+      summary: APPROVE or REJECT a timeoff request. [Statuses (enum) - Rejected(0), Created(1), Awaiting(2), Approved(3)]
       parameters:
         - name: timeOffId
           in: path
@@ -547,6 +605,22 @@ paths:
           description: OK - Request succeeded.
         '201':
           description: Created - Request resulted in new resource created.
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponseDTO'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponseDTO'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponseDTO'
         '401':
           description: Unauthorized - Please check the provided credentials.
         '403':
@@ -640,6 +714,22 @@ paths:
       responses:
         '200':
           description: OK - Request succeeded.
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponseDTO'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponseDTO'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponseDTO'
         '201':
           description: Created - Request resulted in new resource created.
         '401':

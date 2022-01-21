@@ -61,8 +61,6 @@ namespace WorkforceManagementAPI.WEB
                     Type = SecuritySchemeType.ApiKey
                 });
 
-                c.DescribeAllEnumsAsStrings();
-
                 // using System.Reflection;
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));

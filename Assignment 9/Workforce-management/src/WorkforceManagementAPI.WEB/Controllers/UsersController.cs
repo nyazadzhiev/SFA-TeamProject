@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Services;
+using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.DTO.Models.Responses;
@@ -37,7 +38,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
             bool result = await _userService.CreateUser(user);
             if (result)
             {
-                return Ok("User created successfully");
+                return Created(nameof(HttpPostAttribute), String.Format(Constants.Created, "User"));
             }
             else
             {
