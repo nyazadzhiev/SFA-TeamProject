@@ -54,7 +54,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         [HttpPut("{userId}")]
-        public async Task<IActionResult> EditUserAsync(Guid userId, EditUserReauestDTO user)
+        public async Task<IActionResult> EditUserAsync(Guid userId, EditUserRequest user)
         {
             bool isEdited = await _userService.UpdateUser(userId.ToString(), user);
             if (isEdited && ModelState.IsValid)
