@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Services;
+using WorkforceManagementAPI.Common;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.DTO.Models.Responses;
 
 namespace WorkforceManagementAPI.WEB.Controllers
 {
+   
     [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
     [ApiController]
@@ -25,13 +27,18 @@ namespace WorkforceManagementAPI.WEB.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Create a user.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync(CreateUserRequestDTO user)
         {
             bool result = await _userService.CreateUser(user);
             if (result)
             {
-                return Ok("User created successfully");
+                return Created(nameof(HttpPostAttribute), String.Format(Constants.Created, "User"));
             }
             else
             {
@@ -39,6 +46,10 @@ namespace WorkforceManagementAPI.WEB.Controllers
             }
         }
 
+        /// <summary>
+        /// List all users, existing in the database.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<List<UserResponseDTO>> GetAllUsersAsync()
         {
@@ -46,6 +57,11 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return _mapper.Map<List<UserResponseDTO>>(users);
         }
 
+        /// <summary>
+        /// Find a user by Id.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet("{userId}")]
         public async Task<UserResponseDTO> GetUserByIdAsync(Guid userId)
         {
@@ -53,6 +69,12 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return _mapper.Map<UserResponseDTO>(user);
         }
 
+        /// <summary>
+        /// Edit a user.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPut("{userId}")]
         public async Task<IActionResult> EditUserAsync(Guid userId, EditUserRequest user)
         {
@@ -64,6 +86,12 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+
+        /// <summary>
+        /// REMOVE a user.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUserAsync(Guid userId)
         {
@@ -75,13 +103,16 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// Set user as ADMINISTRATOR.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpPost("SetAdmin/{userId}")]
         public async Task<IActionResult> SetAdministrator(Guid userId)
         {
             await _userService.SetAdministrator(userId.ToString());
             return Ok($"User: {userId} is set as Admin");
         }
-
-
     }
 }
