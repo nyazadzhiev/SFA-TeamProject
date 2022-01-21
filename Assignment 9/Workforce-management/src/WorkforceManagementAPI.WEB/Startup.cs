@@ -23,12 +23,11 @@ using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.DTO.Models;
-using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
-using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers;
 using System.Text.Json.Serialization;
 using WorkforceManagementAPI.WEB.IdentityAuth;
-using WorkforceManagementAPI.WEB.AuthorizationPolicies.TimeOffCreator;
 using Microsoft.AspNetCore.Authorization;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
 
 namespace WorkforceManagementAPI.WEB
 {

@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
 
-namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader
+namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
 {
-    public class TeamLeaderHandler : AuthorizationHandler<TeamLeaderRequirement>
+    public class TeamLeaderHandler : AuthorizationHandler<TeamLeaderTimeOffCreatorRequirement>
     {
         private IIdentityUserManager userManager;
         private ITimeOffService timeOffService;
@@ -25,7 +26,7 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader
             this.userService = userService;
         }
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, TeamLeaderRequirement requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, TeamLeaderTimeOffCreatorRequirement requirement)
         {
             
             if (await TeamLeaderValidaition(context))
@@ -34,11 +35,11 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader
                 await Task.CompletedTask;
             }
 
-            else
+         /*   else
             {
                 context.Fail();
                 await Task.CompletedTask;
-            }
+            }*/
 
         }
 
