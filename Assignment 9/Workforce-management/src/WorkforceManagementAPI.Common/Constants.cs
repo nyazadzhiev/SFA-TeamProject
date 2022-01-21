@@ -33,5 +33,13 @@
         public const string UserAlreadyMember = "User is already a member.";
 
         public const string AnswerToRequest = "Answer to request has been submited.";
+
+        public const string CompletedRequest = "Time off request is already completed.";
+
+        public const string NotReviewer = "User is not a reviewer.";
+
+        public const string InvalidStatus = "Invalid status.";
+
+        public const string UserIsAdmin = "User is already an admin";
     }
 }
