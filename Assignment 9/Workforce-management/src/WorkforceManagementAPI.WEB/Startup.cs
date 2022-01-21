@@ -27,6 +27,8 @@ using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
 using System.Text.Json.Serialization;
 using WorkforceManagementAPI.WEB.IdentityAuth;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.TimeOffCreator;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -107,6 +109,11 @@ namespace WorkforceManagementAPI.WEB
             services.AddTransient<ITeamRepository, TeamRepository>();
             services.AddTransient<ITimeOffRepository, TimeOffRepository>();
 
+            //Authorization handlers
+            services.AddTransient<IAuthorizationHandler, TeamLeaderHandler>();
+            services.AddTransient<IAuthorizationHandler, TeamMemberHandler>();
+            services.AddTransient<IAuthorizationHandler, TimeOffCreatorHandler>();
+
             //EF Identity
             services.AddIdentityCore<User>(options =>
             {
@@ -144,14 +151,11 @@ namespace WorkforceManagementAPI.WEB
                 options.AddPolicy("User", policy =>
                 policy.RequireRole("User"));
 
-                options.AddPolicy("TeamLeader", policy =>
-                policy.Requirements.Add(new TeamLeaderRequirement()));
+                options.AddPolicy("TeamLeader/TimeOffCreator", policy =>
+                policy.Requirements.Add(new TeamLeaderTimeOffCreatorRequirement()));
 
                 options.AddPolicy("TeamMember", policy =>
                 policy.Requirements.Add(new TeamMemberRequirement()));
-
-                options.AddPolicy("TimeOffCreator", policy =>
-                policy.Requirements.Add(new TeamLeaderRequirement()));
 
             })
             
