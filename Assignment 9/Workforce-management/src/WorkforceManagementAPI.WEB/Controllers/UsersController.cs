@@ -26,7 +26,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(CreateUserRequestDTO user)
+        public async Task<IActionResult> CreateUserAsync(CreateUserRequestDTO user)
         {
             bool result = await _userService.CreateUser(user);
             if (result)
@@ -40,21 +40,21 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         [HttpGet]
-        public async Task<List<UserResponseDTO>> GetAll()
+        public async Task<List<UserResponseDTO>> GetAllUsersAsync()
         {
             var users = await _userService.GetAll();
             return _mapper.Map<List<UserResponseDTO>>(users);
         }
 
         [HttpGet("{userId}")]
-        public async Task<UserResponseDTO> GetUserById(Guid userId)
+        public async Task<UserResponseDTO> GetUserByIdAsync(Guid userId)
         {
             User user = await _userService.GetUserById(userId.ToString());
             return _mapper.Map<UserResponseDTO>(user);
         }
 
         [HttpPut("{userId}")]
-        public async Task<IActionResult> UpdateUser(Guid userId, EditUserReauestDTO user)
+        public async Task<IActionResult> EditUserAsync(Guid userId, EditUserReauestDTO user)
         {
             bool isEdited = await _userService.UpdateUser(userId.ToString(), user);
             if (isEdited && ModelState.IsValid)
@@ -65,7 +65,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUser(Guid userId)
+        public async Task<IActionResult> DeleteUserAsync(Guid userId)
         {
             bool isDeleted = await _userService.DeleteUser(userId.ToString());
             if (isDeleted)

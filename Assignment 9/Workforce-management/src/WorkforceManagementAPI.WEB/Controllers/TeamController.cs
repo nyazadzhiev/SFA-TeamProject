@@ -45,7 +45,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return _mapper.Map<TeamResponseDTO>(team);
         }
 
-        [HttpGet("MyTeams/")]
+        [HttpGet("MyTeams")]
         public async Task<IEnumerable<TeamResponseDTO>> GetMyTeamsAsync()
         {
             currentUser = await _userService.GetCurrentUser(User);
