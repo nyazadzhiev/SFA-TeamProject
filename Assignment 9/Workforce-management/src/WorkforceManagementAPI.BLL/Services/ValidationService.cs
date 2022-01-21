@@ -72,7 +72,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void CheckTeamName(string title)
+        public void EnsureTeamNameIsUniquee(string title)
         {
             if (_context.Teams.Any(p => p.Title == title))
             {
@@ -80,7 +80,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void CheckTeamNameForEdit(string newTitle, string oldTitle)
+        public void EnsureTeamNameIsUniqueWhenEdit(string newTitle, string oldTitle)
         {
             if (_context.Teams.Any(p => p.Title == newTitle) && newTitle != oldTitle)
             {
@@ -105,7 +105,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void ValidateDateRange(DateTime startDate, DateTime endDate)
+        public void EnsureDateRangeIsValid(DateTime startDate, DateTime endDate)
         {
             EnsureInputFitsBoundaries(startDate, DateTime.Now, new DateTime(DateTime.Now.Year + 1, 1, 1));
             EnsureInputFitsBoundaries(endDate, DateTime.Now, new DateTime(DateTime.Now.Year + 1, 1, 1));
@@ -124,7 +124,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void CheckAccessToTeam(Team team, User user)
+        public void EnsureUserHasAccessToTeam(Team team, User user)
         {
             if (!team.Users.Any(u => u.Id == user.Id))
             {
@@ -132,7 +132,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void CheckTeamLeader(Team team, User user)
+        public void EnsureUserIsNotAlreadyATeamLeader(Team team, User user)
         {
             if (team.TeamLeaderId == user.Id)
             {
@@ -140,7 +140,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void CanAddToTeam(Team team, User user)
+        public void EnsureUserIsNotAlreadyPartOfTheTeam(Team team, User user)
         {
             if (team.Users.Any(u => u.Id == user.Id))
             {
@@ -148,7 +148,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void CheckReviewersCount(TimeOff timeOff)
+        public void EnsureNoReviewersLeft(TimeOff timeOff)
         {
             if (timeOff.Reviewers.Count == 0)
             {
