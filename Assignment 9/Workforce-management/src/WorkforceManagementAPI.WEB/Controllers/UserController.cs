@@ -16,12 +16,12 @@ namespace WorkforceManagementAPI.WEB.Controllers
     [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public UsersController(IUserService userService,IMapper mapper) : base()
+        public UserController(IUserService userService,IMapper mapper) : base()
         {
             _userService = userService;
             _mapper = mapper;
