@@ -112,6 +112,7 @@ namespace WorkforceManagementAPI.WEB
             services.AddTransient<IAuthorizationHandler, TeamLeaderHandler>();
             services.AddTransient<IAuthorizationHandler, TeamMemberHandler>();
             services.AddTransient<IAuthorizationHandler, TimeOffCreatorHandler>();
+            services.AddTransient<IAuthorizationHandler, AdminRoleHandler>();
 
             //EF Identity
             services.AddIdentityCore<User>(options =>
@@ -150,7 +151,7 @@ namespace WorkforceManagementAPI.WEB
                 options.AddPolicy("User", policy =>
                 policy.RequireRole("User"));
 
-                options.AddPolicy("TeamLeader/TimeOffCreator", policy =>
+                options.AddPolicy("TeamLeader/TimeOffCreator/Admin", policy =>
                 policy.Requirements.Add(new TeamLeaderTimeOffCreatorRequirement()));
 
                 options.AddPolicy("TeamMember", policy =>
