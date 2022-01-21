@@ -192,7 +192,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (user.Requests.Any(r => r.Status != Status.Rejected && (r.StartDate.Date <= timeOff.EndDate.Date && timeOff.StartDate.Date <= r.EndDate.Date)))
             {
-                throw new TimeOffOverlapExzception("You can't have TimeOff requests with overlaping start or end dates.");
+                throw new TimeOffOverlapException("You can't have TimeOff requests with overlaping start or end dates.");
             }
         }
 
