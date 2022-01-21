@@ -8,12 +8,11 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
     {
         protected async override Task HandleRequirementAsync(AuthorizationHandlerContext context, TeamLeaderTimeOffCreatorRequirement requirement)
         {
-            if (context.User.IsInRole("Admin"))
+            if (context.User != null && context.User.IsInRole("Admin"))
             {
                 context.Succeed(requirement);
                 await Task.CompletedTask;
             }
-
         }
     }
 }

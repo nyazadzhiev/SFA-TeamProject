@@ -19,17 +19,11 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
         {
             var loggedUser = await userManager.GetUserAsync(context.User);
             
-            if (loggedUser.Teams.Count != 0)
+            if (loggedUser != null && loggedUser.Teams.Count != 0)
             {
                 context.Succeed(requirement);
                 await Task.CompletedTask;
             }
-            else
-            {
-                context.Fail();
-                await Task.CompletedTask;
-            }
-
         }
     }
 }

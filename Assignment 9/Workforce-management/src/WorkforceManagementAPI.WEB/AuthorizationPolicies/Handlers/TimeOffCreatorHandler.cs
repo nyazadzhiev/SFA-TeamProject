@@ -31,7 +31,7 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
             var loggedUser = await userManager.GetUserAsync(context.User);
             var timeOffCreator = await ValidateLoggedUserIsTimeOffCreator();
 
-            if (loggedUser.Id == timeOffCreator.Id)
+            if (loggedUser != null && loggedUser.Id == timeOffCreator.Id)
             {
                 context.Succeed(requirement);
                 await Task.CompletedTask;
