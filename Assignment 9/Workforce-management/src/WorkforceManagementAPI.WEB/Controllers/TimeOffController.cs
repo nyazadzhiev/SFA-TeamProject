@@ -30,6 +30,10 @@ namespace ProjectManagementApp.WEB.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// List all the existing timeOff requests in the database.
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         [HttpGet()]
         public async Task<List<TimeOffResponseDTO>> GetAll()
@@ -38,7 +42,11 @@ namespace ProjectManagementApp.WEB.Controllers
 
             return _mapper.Map<List<TimeOffResponseDTO>>(requests);
         }
-
+        
+        /// <summary>
+        /// List all timeOff requests, for the logged user.
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         [HttpGet("MyRequests")]
         public async Task<List<TimeOffResponseDTO>> GetMyRequests()
@@ -51,6 +59,11 @@ namespace ProjectManagementApp.WEB.Controllers
             return _mapper.Map<List<TimeOffResponseDTO>>(requests);
         }
 
+        /// <summary>
+        /// Find a timeOff request by its Id.
+        /// </summary>
+        /// <param name="timeOffId"></param>
+        /// <returns></returns>
         [Authorize(Policy = "TimeOffCreator, TeamLeader")]
         [HttpGet("{timeOffId}")]
         public async Task<TimeOffResponseDTO> GetById(Guid timeOffId)
@@ -64,6 +77,11 @@ namespace ProjectManagementApp.WEB.Controllers
             return _mapper.Map<TimeOffResponseDTO>(timeOff);
         }
 
+        /// <summary>
+        /// Create a timeOff request.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> CreateTimeOff(TimeOffRequestDTO model)
@@ -83,6 +101,12 @@ namespace ProjectManagementApp.WEB.Controllers
             }
         }
 
+        /// <summary>
+        /// Edit a timeoff request.
+        /// </summary>
+        /// <param name="timeOffId"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Authorize(Policy = "TimeOffCreator")]
         [HttpPut("{timeOffId}")]
         public async Task<ActionResult<TimeOffResponseDTO>> Edit(Guid timeOffId, TimeOffRequestDTO model)
@@ -103,6 +127,11 @@ namespace ProjectManagementApp.WEB.Controllers
             return _mapper.Map<TimeOffResponseDTO>(timeOff);
         }
 
+        /// <summary>
+        /// REMOVE a timeoff request.
+        /// </summary>
+        /// <param name="timeOffId"></param>
+        /// <returns></returns>
         [Authorize(Policy = "TimeOffCreator")]
         [HttpDelete("{timeOffId}")]
         public async Task<ActionResult> Delete(Guid timeOffId)
@@ -119,6 +148,12 @@ namespace ProjectManagementApp.WEB.Controllers
             return Ok(String.Format(Constants.Deleted, "TimeOff request"));
         }
 
+        /// <summary>
+        /// APPROVE or REJECT a timeoff request.
+        /// </summary>
+        /// <param name="timeOffId"></param>
+        /// <param name="vote"></param>
+        /// <returns></returns>
         [Authorize(Policy = "TeamLeader")]
         [HttpPost("SubmitFeedback/{timeOffId}")]
         public async Task<ActionResult> SubmitFeedbackForTimeOffRequest(Guid timeOffId, CreateVoteRequestDTO vote)

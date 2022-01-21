@@ -5,10 +5,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using WebApi.Middleware;
 using WorkforceManagementAPI.BLL.Contracts;
@@ -19,13 +22,12 @@ using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
-using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.DAL.Repositories;
-using WorkforceManagementAPI.WEB.IdentityAuth;
-using System;
+using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
 using System.Text.Json.Serialization;
+using WorkforceManagementAPI.WEB.IdentityAuth;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -62,7 +64,9 @@ namespace WorkforceManagementAPI.WEB
                     Scheme = "bearer"
                 });
 
-                c.DescribeAllEnumsAsStrings();
+                // using System.Reflection;
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
@@ -93,7 +97,6 @@ namespace WorkforceManagementAPI.WEB
 
             // Register Automapper
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-                
 
             //EF
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Default"]));
@@ -183,9 +186,17 @@ namespace WorkforceManagementAPI.WEB
 
             if (env.IsDevelopment())
             {
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider( 
+                        Path.Combine(Directory.GetCurrentDirectory())),
+                    RequestPath = "/CustomSwagger"
+                });
+
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WorkforceManagementAPI.WEB v1"));
+
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/CustomSwagger/openapi.json", "WorkforceManagementAPI.WEB v1"));
             }
 
             app.UseHttpsRedirection();
