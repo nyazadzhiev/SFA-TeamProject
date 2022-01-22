@@ -51,7 +51,7 @@ namespace WorkforceManagementAPI.Test
         [Fact]
         public async Task AssignUserToTeam_ReturnsTrue()
         {
-            var teamService = SetupMockedDefaultTeamService();
+            var teamService = SetupMockedDefaultTeamServiceEmpthyTeam();
 
             var result = await teamService.AssignUserToTeamAsync(regularTeam.Id, defaultUser.Id);
 
