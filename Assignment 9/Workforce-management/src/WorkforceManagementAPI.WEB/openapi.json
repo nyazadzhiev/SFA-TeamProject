@@ -76,13 +76,13 @@ paths:
         '500' :
           description: InternalServerError - Generic error occured in the server.
           
-  /api/Team/{id}:
+  /api/Team/{teamId}:
     get:
       tags:
         - Team
       summary: Find a team by its Id.
       parameters:
-        - name: id
+        - name: teamId
           in: path
           description: ''
           required: true
@@ -112,7 +112,7 @@ paths:
         - Team
       summary: Edit a team.
       parameters:
-        - name: id
+        - name: teamId
           in: path
           description: ''
           required: true
@@ -170,7 +170,7 @@ paths:
         - Team
       summary: REMOVE a team.
       parameters:
-        - name: id
+        - name: teamId
           in: path
           description: ''
           required: true
@@ -195,7 +195,7 @@ paths:
           description: BadRequest - Request could not be understood by the server.
         '500' :
           description: InternalServerError - Generic error occured in the server.
-  /api/Team/My:
+  /api/Team/MyTeams:
     get:
       tags:
         - Team
@@ -583,10 +583,10 @@ paths:
           description: BadRequest - Request could not be understood by the server.
         '500' :
           description: InternalServerError - Generic error occured in the server.
-  /api/Users:
+  /api/User:
     post:
       tags:
-        - Users
+        - User
       summary: Create a user.
       requestBody:
         description: ''
@@ -633,10 +633,9 @@ paths:
           description: BadRequest - Request could not be understood by the server.
         '500' :
           description: InternalServerError - Generic error occured in the server.
-  /api/Users/All:
     get:
       tags:
-        - Users
+        - User
       summary: List all users, existing in the database.
       responses:
         '200':
@@ -655,13 +654,13 @@ paths:
           description: BadRequest - Request could not be understood by the server.
         '500' :
           description: InternalServerError - Generic error occured in the server.
-  /api/Users/{id}:
+  /api/User/{userId}:
     get:
       tags:
-        - Users
+        - User
       summary: Find a user by Id.
       parameters:
-        - name: id
+        - name: userId
           in: path
           description: ''
           required: true
@@ -688,10 +687,10 @@ paths:
           description: InternalServerError - Generic error occured in the server.
     put:
       tags:
-        - Users
+        - User
       summary: Edit a user.
       parameters:
-        - name: id
+        - name: userId
           in: path
           description: ''
           required: true
@@ -746,10 +745,10 @@ paths:
           description: InternalServerError - Generic error occured in the server.
     delete:
       tags:
-        - Users
+        - User
       summary: REMOVE a user.
       parameters:
-        - name: id
+        - name: userId
           in: path
           description: ''
           required: true
@@ -774,13 +773,13 @@ paths:
           description: BadRequest - Request could not be understood by the server.
         '500' :
           description: InternalServerError - Generic error occured in the server.
-  /api/Users/SetAdministrator/{id}:
+  /api/User/SetAdmin/{userId}:
     post:
       tags:
-        - Users
+        - User
       summary: Set user as ADMINISTRATOR.
       parameters:
-        - name: id
+        - name: userId
           in: path
           description: ''
           required: true

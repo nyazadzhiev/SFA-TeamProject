@@ -152,7 +152,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (timeOff.Reviewers.Count == 0)
             {
-                throw new Exception("Time off request is already completed.");
+                throw new CompletedRequestException(Constants.CompletedRequest);
             }
         }
 
@@ -160,7 +160,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (!timeOff.Reviewers.Any(u => u.Id == user.Id))
             {
-                throw new Exception("User is not a reviewer.");
+                throw new UnauthorizedUserException(Constants.NotReviewer);
             }
         }
 
@@ -168,7 +168,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (status != Status.Rejected && status != Status.Approved)
             {
-                throw new Exception("Invalid status.");
+                throw new InputOutOfBoundsException(Constants.InvalidStatus);
             }
         }
 
@@ -176,7 +176,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (await _userManager.IsUserInRole(user.Id, "Admin"))
             {
-                throw new UserAlreadyAnAdminException("User is already an admin");
+                throw new UserAlreadyAnAdminException(Constants.UserIsAdmin);
             }
         }
 
@@ -204,5 +204,15 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new NotAWorkingDayException("Today is not a working day");
             }
         }
+
+        public void EnsureUserIsNotInTeam(User user)
+        {
+            if (user.Teams.Count >= 1)
+            {
+                throw new UserIsInTeamException("User is part of a team and can't be deleted");
+            }
+        }
+
+
     }
 }

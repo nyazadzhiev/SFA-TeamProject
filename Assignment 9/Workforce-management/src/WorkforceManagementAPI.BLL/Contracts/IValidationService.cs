@@ -43,5 +43,6 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void EnsureUserHasEnoughDays(int daysTaken, int daysRequested);
         void EnsureTimeOfRequestsDoNotOverlap(User user, TimeOff timeOff);
         void EnsureTodayIsWorkingDay();
+        void EnsureUserIsNotInTeam(User user);
     }
 }

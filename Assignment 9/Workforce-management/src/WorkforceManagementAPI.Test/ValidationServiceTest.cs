@@ -5,6 +5,8 @@ using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using Xunit;
+using WorkforceManagementAPI.DAL.Entities.Enums;
+using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.Test
 {
@@ -110,7 +112,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<UnauthorizedAccessException>(() => validation.EnsureUserHasAccessToTeam(regularTeam, defaultUser));
+            Assert.Throws<UnauthorizedUserException>(() => validation.EnsureUserHasAccessToTeam(regularTeam, defaultUser));
         }
 
         [Fact]
@@ -121,7 +123,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<UnauthorizedAccessException>(() => validation.EnsureUserIsNotAlreadyATeamLeader(regularTeam, TeamLeader));
+            Assert.Throws<UserAlreadyTeamLeaderException>(() => validation.EnsureUserIsNotAlreadyATeamLeader(regularTeam, TeamLeader));
         }
 
         [Fact]
@@ -133,6 +135,39 @@ namespace WorkforceManagementAPI.Test
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
             Assert.Throws<UserAlreadyInTeamException>(() => validation.EnsureUserIsNotAlreadyPartOfTheTeam(regularTeam, TeamLeader));
+        }
+
+        [Fact]
+        public void EnsureNoReviewersLeft_Must_Throw_Exception_When_TimeOff_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<CompletedRequestException>(() => validation.EnsureNoReviewersLeft(testTimeOff));
+        }
+
+        [Fact]
+        public void EnsureUserIsReviewer_Must_Throw_Exception_When_User_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<UnauthorizedUserException>(() => validation.EnsureUserIsReviewer(testTimeOff, defaultUser));
+        }
+
+        [Fact]
+        public void EnsureResponseIsValid_Must_Throw_Exception_When_Input_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<InputOutOfBoundsException>(() => validation.EnsureResponseIsValid(Status.Awaiting));
         }
     }
 }
