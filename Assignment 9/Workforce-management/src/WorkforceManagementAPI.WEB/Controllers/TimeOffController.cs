@@ -35,8 +35,8 @@ namespace ProjectManagementApp.WEB.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        [HttpGet()]
-        public async Task<List<TimeOffResponseDTO>> GetAll()
+        [HttpGet]
+        public async Task<List<TimeOffResponseDTO>> GetAllRequestsAsync()
         {
             var requests = await _timeOffService.GetAllAsync();
 
@@ -49,7 +49,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet("MyRequests")]
-        public async Task<List<TimeOffResponseDTO>> GetMyRequests()
+        public async Task<List<TimeOffResponseDTO>> GetMyRequestsAsync()
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
@@ -66,7 +66,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <returns></returns>
         [Authorize(Policy = "TimeOffCreator, TeamLeader")]
         [HttpGet("{timeOffId}")]
-        public async Task<TimeOffResponseDTO> GetById(Guid timeOffId)
+        public async Task<TimeOffResponseDTO> GetRequestByIdAsync(Guid timeOffId)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
@@ -84,7 +84,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult> CreateTimeOff(TimeOffRequestDTO model)
+        public async Task<ActionResult> CreateTimeOffAsync(TimeOffRequestDTO model)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
@@ -109,7 +109,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <returns></returns>
         [Authorize(Policy = "TimeOffCreator")]
         [HttpPut("{timeOffId}")]
-        public async Task<ActionResult<TimeOffResponseDTO>> Edit(Guid timeOffId, TimeOffRequestDTO model)
+        public async Task<ActionResult<TimeOffResponseDTO>> EditTimeOffAsync(Guid timeOffId, TimeOffRequestDTO model)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
@@ -134,7 +134,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <returns></returns>
         [Authorize(Policy = "TimeOffCreator")]
         [HttpDelete("{timeOffId}")]
-        public async Task<ActionResult> Delete(Guid timeOffId)
+        public async Task<ActionResult> DeleteTimeOffAsync(Guid timeOffId)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);
@@ -156,7 +156,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <returns></returns>
         [Authorize(Policy = "TeamLeader")]
         [HttpPost("SubmitFeedback/{timeOffId}")]
-        public async Task<ActionResult> SubmitFeedbackForTimeOffRequest(Guid timeOffId, CreateVoteRequestDTO vote)
+        public async Task<ActionResult> SubmitFeedbackForTimeOffRequestAsync(Guid timeOffId, CreateVoteRequestDTO vote)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);

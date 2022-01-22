@@ -45,12 +45,12 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <summary>
         /// Find a team by its Id.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="teamId"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public async Task<TeamResponseDTO> GetTeamByIdAsync(Guid id)
+        [HttpGet("{teamId}")]
+        public async Task<TeamResponseDTO> GetTeamByIdAsync(Guid teamId)
         {
-            var team = await _teamService.GetTeamByIdAsync(id);
+            var team = await _teamService.GetTeamByIdAsync(teamId);
 
             return _mapper.Map<TeamResponseDTO>(team);
         }
@@ -59,7 +59,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// List all teams, the logged user is member of.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("My/")]
+        [HttpGet("MyTeams")]
         public async Task<IEnumerable<TeamResponseDTO>> GetMyTeamsAsync()
         {
             currentUser = await _userService.GetCurrentUser(User);
@@ -90,15 +90,15 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <summary>
         /// Edit a team.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="teamId"></param>
         /// <param name="teamEdit"></param>
         /// <returns></returns>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditTeamAsync(Guid id, TeamRequestDTO teamEdit)
+        [HttpPut("{teamId}")]
+        public async Task<IActionResult> EditTeamAsync(Guid teamId, TeamRequestDTO teamEdit)
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isEdited = await _teamService.EditTeamAsync(id, currentUser.Id, teamEdit);
+            bool isEdited = await _teamService.EditTeamAsync(teamId, currentUser.Id, teamEdit);
             if (isEdited)
             {
                 return Ok("Team edited successfully.");
@@ -110,14 +110,14 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <summary>
         /// REMOVE a team.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="teamId"></param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTeamAsync(Guid id)
+        [HttpDelete("{teamId}")]
+        public async Task<IActionResult> DeleteTeamAsync(Guid teamId)
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isDeleted = await _teamService.DeleteTeamAsync(id);
+            bool isDeleted = await _teamService.DeleteTeamAsync(teamId);
             if (isDeleted)
             {
                 return Ok("Team deleted successfully.");

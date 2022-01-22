@@ -8,7 +8,7 @@ using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 
-namespace WorkforceManagementAPI.BLL.Service
+namespace WorkforceManagementAPI.BLL.Services
 {
     public class TeamService : ITeamService
     {
