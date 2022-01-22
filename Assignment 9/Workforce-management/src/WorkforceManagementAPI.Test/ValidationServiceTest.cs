@@ -360,6 +360,29 @@ namespace WorkforceManagementAPI.Test
             Assert.Null(ex);
         }
 
+        [Fact]
+        public void EnsureUserIsAdminAsync_Must_Throw_Exception_When_Input_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.ThrowsAsync<UserAlreadyAnAdminException>(() => validation.EnsureUserIsAdminAsync(defaultUser));
+        }
+
+        [Fact]
+        public void EnsureUserIsAdminAsync_Must_Throw_NoException_When_Input_IsValid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+            mockedManager.Object.AddUserToRoleAsync(defaultUser, "Adming");
+            var ex = Record.ExceptionAsync(() => validation.EnsureUserIsAdminAsync(defaultUser)).AsyncState;
+
+            Assert.Null(ex);
+        }
 
     }
 }
