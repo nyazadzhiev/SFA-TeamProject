@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader
+namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements
 {
     public class TeamLeaderRequirement : IAuthorizationRequirement
     {

@@ -42,7 +42,7 @@ namespace ProjectManagementApp.WEB.Controllers
 
             return _mapper.Map<List<TimeOffResponseDTO>>(requests);
         }
-        
+
         /// <summary>
         /// List all timeOff requests, for the logged user.
         /// </summary>
@@ -64,7 +64,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <returns></returns>
-        [Authorize(Policy = "TimeOffCreator, TeamLeader")]
+        [Authorize]
         [HttpGet("{timeOffId}")]
         public async Task<TimeOffResponseDTO> GetRequestByIdAsync(Guid timeOffId)
         {
@@ -82,7 +82,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [Authorize]
+        [Authorize(Policy = "TeamMember")]
         [HttpPost]
         public async Task<ActionResult> CreateTimeOffAsync(TimeOffRequestDTO model)
         {
@@ -107,7 +107,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <param name="timeOffId"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        [Authorize(Policy = "TimeOffCreator")]
+        [Authorize(Policy = "TimeOffCreatorOrAdmin")]
         [HttpPut("{timeOffId}")]
         public async Task<ActionResult<TimeOffResponseDTO>> EditTimeOffAsync(Guid timeOffId, TimeOffRequestDTO model)
         {
@@ -132,7 +132,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <returns></returns>
-        [Authorize(Policy = "TimeOffCreator")]
+        [Authorize(Policy = "TimeOffCreatorOrAdmin")]
         [HttpDelete("{timeOffId}")]
         public async Task<ActionResult> DeleteTimeOffAsync(Guid timeOffId)
         {

@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text.Json.Serialization;
 using WebApi.Middleware;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
@@ -23,9 +22,10 @@ using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.DTO.Models;
-using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
-using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers;
 using WorkforceManagementAPI.WEB.IdentityAuth;
+using Microsoft.AspNetCore.Authorization;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
 
 namespace WorkforceManagementAPI.WEB
 {
@@ -44,9 +44,7 @@ namespace WorkforceManagementAPI.WEB
         {
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
 
-            services.AddControllers()
-                    .AddJsonOptions(options =>
-                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
@@ -54,7 +52,7 @@ namespace WorkforceManagementAPI.WEB
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization:{token}\"",
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http, //SecuritySchemeType.ApiKey
@@ -88,8 +86,6 @@ namespace WorkforceManagementAPI.WEB
                     }
                 });
 
-                c.DescribeAllEnumsAsStrings();
-
                 c.MapType<DateTime>(() => new OpenApiSchema { Type = "string", Format = "date" });
             });
 
@@ -107,6 +103,12 @@ namespace WorkforceManagementAPI.WEB
 
             services.AddTransient<ITeamRepository, TeamRepository>();
             services.AddTransient<ITimeOffRepository, TimeOffRepository>();
+
+            //Authorization handlers
+            services.AddTransient<IAuthorizationHandler, TeamLeaderHandler>();
+            services.AddTransient<IAuthorizationHandler, TeamMemberHandler>();
+            services.AddTransient<IAuthorizationHandler, TimeOffCreatorHandler>();
+            services.AddTransient<IAuthorizationHandler, AdminRoleHandler>();
 
             //EF Identity
             services.AddIdentityCore<User>(options =>
@@ -145,13 +147,13 @@ namespace WorkforceManagementAPI.WEB
                 options.AddPolicy("User", policy =>
                 policy.RequireRole("User"));
 
-                options.AddPolicy("TeamLeader", policy =>
-                policy.Requirements.Add(new TeamLeaderRequirement()));
+                options.AddPolicy("TimeOffCreatorOrAdmin", policy =>
+                policy.Requirements.Add(new TimeOffCreatorOrAdminRequirement()));
 
                 options.AddPolicy("TeamMember", policy =>
                 policy.Requirements.Add(new TeamMemberRequirement()));
 
-                options.AddPolicy("TimeOffCreator", policy =>
+                options.AddPolicy("TeamLeader", policy =>
                 policy.Requirements.Add(new TeamLeaderRequirement()));
 
             })
@@ -200,7 +202,7 @@ namespace WorkforceManagementAPI.WEB
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthentication();

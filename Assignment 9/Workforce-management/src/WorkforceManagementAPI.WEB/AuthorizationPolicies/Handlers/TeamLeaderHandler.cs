@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
 
-namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader
+namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
 {
     public class TeamLeaderHandler : AuthorizationHandler<TeamLeaderRequirement>
     {
@@ -27,35 +28,34 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, TeamLeaderRequirement requirement)
         {
-            
             if (await TeamLeaderValidaition(context))
             {
                 context.Succeed(requirement);
                 await Task.CompletedTask;
             }
-
             else
             {
                 context.Fail();
                 await Task.CompletedTask;
             }
-
         }
 
         private async Task<bool> TeamLeaderValidaition(AuthorizationHandlerContext context)
         {
-
             var loggedUser = await userManager.GetUserAsync(context.User);
 
-            var timeOffId = httpContextAccessor.HttpContext.GetRouteValue("timeOffId").ToString();
-            Guid actualId = new Guid(timeOffId);
-            var timeOff = await timeOffService.GetTimeOffAsync(actualId);
-            var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
+            if (loggedUser != null)
+            {
+                var timeOffId = httpContextAccessor.HttpContext.GetRouteValue("timeOffId").ToString();
+                Guid actualId = new Guid(timeOffId);
+                var timeOff = await timeOffService.GetTimeOffAsync(actualId);
+                var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
 
-            var isLoggedUserValidTeamLeader = timeOffCreator.Teams.Any(t => t.TeamLeaderId == loggedUser.Id);
+                var isLoggedUserValidTeamLeader = timeOffCreator.Teams.Any(t => t.TeamLeaderId == loggedUser.Id);
 
-            return isLoggedUserValidTeamLeader;
-
+                return isLoggedUserValidTeamLeader;
+            }
+            return false;
         }
     }
 }

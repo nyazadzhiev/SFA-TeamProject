@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
 
-namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember
+namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
 {
     public class TeamMemberHandler : AuthorizationHandler<TeamMemberRequirement>
     {
-        
         private IIdentityUserManager userManager;
 
         public TeamMemberHandler(IIdentityUserManager userManager)
@@ -18,7 +18,7 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember
         {
             var loggedUser = await userManager.GetUserAsync(context.User);
             
-            if (loggedUser.Teams.Count != 0)
+            if (loggedUser != null && loggedUser.Teams.Count != 0)
             {
                 context.Succeed(requirement);
                 await Task.CompletedTask;
@@ -28,7 +28,6 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember
                 context.Fail();
                 await Task.CompletedTask;
             }
-
         }
     }
 }
