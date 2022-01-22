@@ -384,5 +384,29 @@ namespace WorkforceManagementAPI.Test
             Assert.Null(ex);
         }
 
+        [Fact]
+        public void EnsureUpdateEmailIsUniqueAsync_Must_Throw_Exception_When_Input_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.ThrowsAsync<EmailAlreadyInUseException>(() => validation.EnsureUpdateEmailIsUniqueAsync("mail",defaultUser));
+        }
+
+        [Fact]
+        public void EnsureUpdateEmailIsUniqueAsync_Must_Throw_NoException_When_Input_IsValid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            var ex = Record.ExceptionAsync(() => validation.EnsureUpdateEmailIsUniqueAsync("testing@abv.bg",defaultUser)).AsyncState;
+
+            Assert.Null(ex);
+        }
+
     }
 }
