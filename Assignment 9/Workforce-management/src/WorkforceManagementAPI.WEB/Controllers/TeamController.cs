@@ -143,7 +143,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isAssigned = await _teamService.AssignUserToTeamAsync(teamId, userId);
+            bool isAssigned = await _teamService.AssignUserToTeamAsync(teamId, userId, currentUser.Id);
             if (isAssigned)
             {
                 return Ok("User assigned to team successfully.");
@@ -164,7 +164,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isUnassigned = await _teamService.UnassignUserFromTeamAsync(teamId, userId);
+            bool isUnassigned = await _teamService.UnassignUserFromTeamAsync(teamId, userId, currentUser.Id);
             if (isUnassigned)
             {
                 return Ok("User unassigned from team successfully.");
@@ -185,7 +185,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isAssigned = await _teamService.AssignTeamLeaderAsync(teamId, userId);
+            bool isAssigned = await _teamService.AssignTeamLeaderAsync(teamId, userId , currentUser.Id);
             if (isAssigned)
             {
                 return Ok("Team leader assigned to team successfully.");

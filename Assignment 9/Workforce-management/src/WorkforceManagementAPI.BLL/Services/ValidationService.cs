@@ -132,6 +132,14 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
+        public void EnsureUnassignUserHasAccessToTeam(Team team, User user)
+        {
+            if (!team.Users.Any(u => u.Id == user.Id))
+            {
+                throw new UnauthorizedUserException("User is not part of the team");
+            }
+        }
+
         public void EnsureUserIsNotAlreadyATeamLeader(Team team, User user)
         {
             if (team.TeamLeaderId == user.Id)
