@@ -8,9 +8,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
-using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 
-namespace WorkforceManagementAPI.BLL.Services.IdentityServices
+namespace WorkforceManagementAPI.DAL.Repositories.IdentityRepositories
 {
     public class IdentityUserManager : UserManager<User>, IIdentityUserManager
     {
