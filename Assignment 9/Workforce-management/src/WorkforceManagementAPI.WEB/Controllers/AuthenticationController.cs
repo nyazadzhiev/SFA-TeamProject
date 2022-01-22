@@ -17,8 +17,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <param name="loginModel"></param>
         /// 
         /// <returns></returns>
-        /// <response code="201">Created - Request resulted in new resource created.</response>
-        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="200">OK - Request succeeded.</response>
         [HttpPost, Route("Login")]
         public string Login(AuthenticationLoginRequestDTO loginModel)
         {

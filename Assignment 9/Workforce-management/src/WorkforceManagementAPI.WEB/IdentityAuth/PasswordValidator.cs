@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.WEB.IdentityAuth
@@ -41,13 +42,12 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
                 }
                 else
                 {
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid credentials");
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid login credentials");
                 }
 
                 return;
             }
-            context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid credentials");
-
+            context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid login credentials");
         }
     }
 }
