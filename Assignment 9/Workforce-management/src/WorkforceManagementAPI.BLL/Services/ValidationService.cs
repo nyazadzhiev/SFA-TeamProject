@@ -204,5 +204,15 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new NotAWorkingDayException("Today is not a working day");
             }
         }
+
+        public void EnsureUserIsNotInTeam(User user)
+        {
+            if (user.Teams.Count >= 1)
+            {
+                throw new UserIsInTeamException("User is part of a team and can't be deleted");
+            }
+        }
+
+
     }
 }
