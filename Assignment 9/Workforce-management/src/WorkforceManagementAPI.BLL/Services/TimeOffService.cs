@@ -160,6 +160,7 @@ namespace WorkforceManagementAPI.BLL.Services
             await _timeOffRepository.SaveChangesAsync();
 
             var message = UpdateRequestStatus(status, timeOff);
+            await _timeOffRepository.SaveChangesAsync();
 
             bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
             if (allReviersGaveFeedback)
