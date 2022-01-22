@@ -34,7 +34,10 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// List all teams, existing in the database.
         /// </summary>
         /// <returns></returns>
-        [Authorize]
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
         [HttpGet]
         public async Task<IEnumerable<TeamResponseDTO>> GetAllTeamsAsync()
         {
@@ -43,10 +46,18 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         /// <summary>
-        /// Find a team by its Id.
+        /// Find a team by team Id.
         /// </summary>
         /// <param name="teamId"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize]
         [HttpGet("{teamId}")]
         public async Task<TeamResponseDTO> GetTeamByIdAsync(Guid teamId)
@@ -60,6 +71,10 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// List all teams, the logged user is member of.
         /// </summary>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
         [Authorize]
         [HttpGet("MyTeams")]
         public async Task<IEnumerable<TeamResponseDTO>> GetMyTeamsAsync()
@@ -75,6 +90,15 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// </summary>
         /// <param name="team"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="201">Created - Request resulted in new resource created.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult> CreateTeamAsync(TeamRequestDTO team)
@@ -91,11 +115,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         /// <summary>
-        /// Edit a team.
+        /// Edit a team by team Id.
         /// </summary>
         /// <param name="teamId"></param>
         /// <param name="teamEdit"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="201">Created - Request resulted in new resource created.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Roles = "Admin")]
         [HttpPut("{teamId}")]
         public async Task<IActionResult> EditTeamAsync(Guid teamId, TeamRequestDTO teamEdit)
@@ -112,10 +145,19 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         /// <summary>
-        /// REMOVE a team.
+        /// REMOVE a team by team Id.
         /// </summary>
         /// <param name="teamId"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="201">Created - Request resulted in new resource created.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Roles = "Admin")]
         [HttpDelete("{teamId}")]
         public async Task<IActionResult> DeleteTeamAsync(Guid teamId)
@@ -132,11 +174,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         /// <summary>
-        /// Assign user to a team.
+        /// Assign user to a team, using user Id and team Id.
         /// </summary>
         /// <param name="teamId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="201">Created - Request resulted in new resource created.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Roles = "Admin")]
         [HttpPost("{teamId}/Assign/{userId}")]
         public async Task<IActionResult> AssignUserToTeamAsync(Guid teamId, string userId)
@@ -153,11 +204,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         /// <summary>
-        /// REMOVE user from a team.
+        /// REMOVE user from a team, using user Id and team Id.
         /// </summary>
         /// <param name="teamId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="201">Created - Request resulted in new resource created.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Roles = "Admin")]
         [HttpDelete("{teamId}/Unassign/{userId}")]
         public async Task<IActionResult> UnassignUserFromTeamAsync(Guid teamId, string userId)
@@ -174,11 +234,20 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         /// <summary>
-        /// Assign user as a TEAM LEADER.
+        /// Assign user as a TEAM LEADER, using user Id and team Id.
         /// </summary>
         /// <param name="teamId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="201">Created - Request resulted in new resource created.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Roles = "Admin")]
         [HttpPut("{teamId}/AssignLeader/{userId}")]
         public async Task<IActionResult> AssignTeamLeaderAsync(Guid teamId, string userId)

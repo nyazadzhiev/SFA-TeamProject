@@ -11,6 +11,15 @@ namespace WorkforceManagementAPI.WEB.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+        /// <summary>
+        /// Create a TOKEN for AUTHENTICATION using existing username and password.
+        /// </summary>
+        /// <param name="loginModel"></param>
+        /// 
+        /// <returns></returns>
+        ///<response code="201">Created - Request resulted in new resource created.</response>
+        ///<response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
         [HttpPost, Route("Login")]
         public string Login(AuthenticationLoginRequestDTO loginModel)
         {
