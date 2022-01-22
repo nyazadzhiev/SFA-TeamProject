@@ -151,7 +151,7 @@ namespace WorkforceManagementAPI.WEB
                 options.AddPolicy("User", policy =>
                 policy.RequireRole("User"));
 
-                options.AddPolicy("TimeOffCreator/Admin", policy =>
+                options.AddPolicy("TimeOffCreatorOrAdmin", policy =>
                 policy.Requirements.Add(new TimeOffCreatorOrAdminRequirement()));
 
                 options.AddPolicy("TeamMember", policy =>

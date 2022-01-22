@@ -14,7 +14,6 @@ using WorkforceManagementAPI.DTO.Models.Responses;
 namespace ProjectManagementApp.WEB.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class TimeOffCOntroller : ControllerBase
     {
@@ -35,6 +34,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// List all the existing timeOff requests in the database.
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpGet()]
         public async Task<List<TimeOffResponseDTO>> GetAll()
         {
@@ -42,11 +42,12 @@ namespace ProjectManagementApp.WEB.Controllers
 
             return _mapper.Map<List<TimeOffResponseDTO>>(requests);
         }
-        
+
         /// <summary>
         /// List all timeOff requests, for the logged user.
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("MyRequests")]
         public async Task<List<TimeOffResponseDTO>> GetMyRequests()
         {
@@ -63,7 +64,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <returns></returns>
-        [Authorize(Policy = "TeamLeader/TimeOffCreator/Admin")]
+        [Authorize]
         [HttpGet("{timeOffId}")]
         public async Task<TimeOffResponseDTO> GetById(Guid timeOffId)
         {
@@ -106,7 +107,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <param name="timeOffId"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        [Authorize(Policy = "TimeOffCreator/Admin")]
+        [Authorize(Policy = "TimeOffCreatorOrAdmin")]
         [HttpPut("{timeOffId}")]
         public async Task<ActionResult<TimeOffResponseDTO>> Edit(Guid timeOffId, TimeOffRequestDTO model)
         {
@@ -131,7 +132,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <returns></returns>
-        [Authorize(Policy = "TimeOffCreator/Admin")]
+        [Authorize(Policy = "TimeOffCreatorOrAdmin")]
         [HttpDelete("{timeOffId}")]
         public async Task<ActionResult> Delete(Guid timeOffId)
         {

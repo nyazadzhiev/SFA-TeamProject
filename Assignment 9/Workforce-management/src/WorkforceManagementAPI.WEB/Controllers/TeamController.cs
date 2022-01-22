@@ -14,7 +14,6 @@ using WorkforceManagementAPI.DTO.Models.Responses;
 namespace WorkforceManagementAPI.WEB.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
     [ApiController]
     
     public class TeamController : ControllerBase
@@ -35,6 +34,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// List all teams, existing in the database.
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<TeamResponseDTO>> GetAllTeamsAsync()
         {
@@ -47,6 +47,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<TeamResponseDTO> GetTeamByIdAsync(Guid id)
         {
@@ -59,6 +60,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// List all teams, the logged user is member of.
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpGet("My/")]
         public async Task<IEnumerable<TeamResponseDTO>> GetMyTeamsAsync()
         {
@@ -73,6 +75,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// </summary>
         /// <param name="team"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult> CreateTeamAsync(TeamRequestDTO team)
         {
@@ -93,6 +96,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <param name="id"></param>
         /// <param name="teamEdit"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditTeamAsync(Guid id, TeamRequestDTO teamEdit)
         {
@@ -112,6 +116,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeamAsync(Guid id)
         {
@@ -132,6 +137,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <param name="teamId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost("{teamId}/Assign/{userId}")]
         public async Task<IActionResult> AssignUserToTeamAsync(Guid teamId, string userId)
         {
@@ -152,6 +158,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <param name="teamId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{teamId}/Unassign/{userId}")]
         public async Task<IActionResult> UnassignUserFromTeamAsync(Guid teamId, string userId)
         {
@@ -172,6 +179,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <param name="teamId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{teamId}/AssignLeader/{userId}")]
         public async Task<IActionResult> AssignTeamLeaderAsync(Guid teamId, string userId)
         {
