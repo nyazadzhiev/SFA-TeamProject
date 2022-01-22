@@ -9,7 +9,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
     public interface ITeamService
     {
         Task<bool> AssignTeamLeaderAsync(Guid teamId, string userId);
-        Task<bool> AssignUserToTeamAsync(Guid teamId, string userId);
+        Task<bool> AssignUserToTeamAsync(Guid teamId, string userId,string currentUserId);
         Task<bool> CreateTeamAsync(TeamRequestDTO teamRequest, string creatorId);
         Task<bool> DeleteTeamAsync(Guid teamId);
         Task<bool> EditTeamAsync(Guid teamId, string modifierId, TeamRequestDTO editTeamRequest);

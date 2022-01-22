@@ -137,7 +137,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isAssigned = await _teamService.AssignUserToTeamAsync(teamId, userId);
+            bool isAssigned = await _teamService.AssignUserToTeamAsync(teamId, userId, currentUser.Id);
             if (isAssigned)
             {
                 return Ok("User assigned to team successfully.");
