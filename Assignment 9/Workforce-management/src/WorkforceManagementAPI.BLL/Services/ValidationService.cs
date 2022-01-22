@@ -209,7 +209,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (user.Teams.Count >= 1)
             {
-                throw new Exception("User is part of a team and can't be deleted");
+                throw new UserIsInTeamException("User is part of a team and can't be deleted");
             }
         }
 
