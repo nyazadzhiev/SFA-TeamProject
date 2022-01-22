@@ -432,5 +432,31 @@ namespace WorkforceManagementAPI.Test
 
             Assert.Null(ex);
         }
+
+        [Fact]
+        public void EnsureTeamNameIsUniqueWhenEdit_Must_Throw_Exception_When_Input_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<NameExistException>(() => validation.EnsureTeamNameIsUniqueWhenEdit(regularTeam.Title,"newTitle"));
+        }
+
+        [Fact]
+        public void EnsureTeamNameIsUniqueWhenEdit_Must_Throw_NoException_When_Input_IsValid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+            var team = new Team{
+                Title = "new" };
+
+            var ex = Record.Exception(() => validation.EnsureTeamNameIsUniqueWhenEdit(team.Title,"new"));
+
+            Assert.Null(ex);
+        }
     }
 }
