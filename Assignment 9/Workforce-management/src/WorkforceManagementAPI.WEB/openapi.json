@@ -112,7 +112,7 @@ paths:
         - Team
       summary: Edit a team.
       parameters:
-        - name: teamId
+        - name: id
           in: path
           description: ''
           required: true
@@ -170,7 +170,7 @@ paths:
         - Team
       summary: REMOVE a team.
       parameters:
-        - name: teamId
+        - name: id
           in: path
           description: ''
           required: true
@@ -433,7 +433,7 @@ paths:
         - TimeOff
       summary: Find a timeOff request by its Id.
       parameters:
-        - name: timeOffId
+        - name: id
           in: path
           description: ''
           required: true
@@ -463,7 +463,7 @@ paths:
         - TimeOff
       summary: Edit a timeoff request. [Request types (enum) - NonPaid(0), Paid(1), SickLeave(2)]
       parameters:
-        - name: timeOffId
+        - name: id
           in: path
           description: ''
           required: true
@@ -515,7 +515,7 @@ paths:
         - TimeOff
       summary: REMOVE a timeoff request.
       parameters:
-        - name: timeOffId
+        - name: id
           in: path
           description: ''
           required: true
@@ -546,7 +546,7 @@ paths:
         - TimeOff
       summary: APPROVE or REJECT a timeoff request. [Statuses (enum) - Rejected(0), Created(1), Awaiting(2), Approved(3)]
       parameters:
-        - name: timeOffId
+        - name: id
           in: path
           description: ''
           required: true
@@ -691,7 +691,7 @@ paths:
         - User
       summary: Edit a user.
       parameters:
-        - name: userId
+        - name: id
           in: path
           description: ''
           required: true
@@ -749,7 +749,7 @@ paths:
         - User
       summary: REMOVE a user.
       parameters:
-        - name: userId
+        - name: id
           in: path
           description: ''
           required: true
