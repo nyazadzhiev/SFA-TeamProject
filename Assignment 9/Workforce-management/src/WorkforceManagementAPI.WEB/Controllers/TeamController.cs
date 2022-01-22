@@ -90,7 +90,6 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// </summary>
         /// <param name="team"></param>
         /// <returns></returns>
-        /// <response code="200">OK - Request succeeded.</response>
         /// <response code="201">Created - Request resulted in new resource created.</response>
         /// <response code="400">BadRequest - Request could not be understood by the server.</response>
         /// <response code="401">Unauthorized - Please check the provided credentials.</response>
@@ -121,7 +120,6 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <param name="teamEdit"></param>
         /// <returns></returns>
         /// <response code="200">OK - Request succeeded.</response>
-        /// <response code="201">Created - Request resulted in new resource created.</response>
         /// <response code="400">BadRequest - Request could not be understood by the server.</response>
         /// <response code="401">Unauthorized - Please check the provided credentials.</response>
         /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
