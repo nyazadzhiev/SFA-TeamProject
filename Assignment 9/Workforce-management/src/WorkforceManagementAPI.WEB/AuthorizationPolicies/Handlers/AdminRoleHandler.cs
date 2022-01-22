@@ -4,9 +4,9 @@ using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
 
 namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
 {
-    public class AdminRoleHandler : AuthorizationHandler<TeamLeaderTimeOffCreatorRequirement>
+    public class AdminRoleHandler : AuthorizationHandler<TimeOffCreatorOrAdminRequirement>
     {
-        protected async override Task HandleRequirementAsync(AuthorizationHandlerContext context, TeamLeaderTimeOffCreatorRequirement requirement)
+        protected async override Task HandleRequirementAsync(AuthorizationHandlerContext context, TimeOffCreatorOrAdminRequirement requirement)
         {
             if (context.User != null && context.User.IsInRole("Admin"))
             {
