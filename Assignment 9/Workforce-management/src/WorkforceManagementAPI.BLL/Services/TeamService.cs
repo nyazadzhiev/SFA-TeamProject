@@ -135,7 +135,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> AssignTeamLeaderAsync(Guid teamId, string userId)
+        public async Task<bool> AssignTeamLeaderAsync(Guid teamId, string userId ,string modifierId)
         {
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
@@ -147,6 +147,8 @@ namespace WorkforceManagementAPI.BLL.Services
             _validationService.EnsureUserHasAccessToTeam(team, user);
 
             team.TeamLeaderId = userId;
+            team.ModifiedAt = DateTime.Now;
+            team.ModifierId = modifierId;
             _teamRepository.UpdateTeam(team);
             await _teamRepository.SaveChangesAsync();
 
