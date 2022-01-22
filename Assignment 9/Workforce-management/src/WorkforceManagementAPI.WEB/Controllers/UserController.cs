@@ -70,7 +70,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         /// <summary>
-        /// Find a user by Id.
+        /// Find a user by user Id.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
@@ -89,7 +89,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         /// <summary>
-        /// Edit a user.
+        /// Edit a user by user Id.
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="user"></param>
@@ -114,7 +114,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         /// <summary>
-        /// REMOVE a user.
+        /// REMOVE a user by user Id.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
@@ -138,7 +138,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         }
 
         /// <summary>
-        /// Set user as ADMINISTRATOR.
+        /// Set user as ADMINISTRATOR, using user Id.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
