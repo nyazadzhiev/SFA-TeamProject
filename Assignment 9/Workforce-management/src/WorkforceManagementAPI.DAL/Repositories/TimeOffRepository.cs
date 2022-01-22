@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Contracts;
+using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.DAL.Repositories
 {
@@ -51,5 +52,19 @@ namespace WorkforceManagementAPI.DAL.Repositories
             _context.Remove(timeOff);
         }
 
+        public List<TimeOff> GetApprovedTimeOffs(User user)
+        {
+            return user.Requests
+                .Where(r => r.Type == RequestType.Paid && r.Status == Status.Approved)
+                .ToList();
+        }
+
+        public IEnumerable<User> GetTeamLeadersOutOfOffice(User user)
+        {
+            return user.Teams
+                .Select(t => t.TeamLeader)
+                .Where(tl => tl.Requests
+                    .Any(r => r.Status == Status.Approved && (r.StartDate.Date <= DateTime.Now.Date && DateTime.Now.Date <= r.EndDate.Date)));
+        }
     }
 }

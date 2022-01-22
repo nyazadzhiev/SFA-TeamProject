@@ -46,9 +46,7 @@ namespace WorkforceManagementAPI.WEB
         {
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
 
-            services.AddControllers()
-                    .AddJsonOptions(options =>
-                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
@@ -87,8 +85,6 @@ namespace WorkforceManagementAPI.WEB
                         new List<string>()
                     }
                 });
-
-                c.DescribeAllEnumsAsStrings();
 
                 c.MapType<DateTime>(() => new OpenApiSchema { Type = "string", Format = "date" });
             });
