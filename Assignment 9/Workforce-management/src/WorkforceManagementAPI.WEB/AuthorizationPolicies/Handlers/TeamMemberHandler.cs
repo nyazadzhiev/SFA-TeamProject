@@ -7,7 +7,6 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
 {
     public class TeamMemberHandler : AuthorizationHandler<TeamMemberRequirement>
     {
-        
         private IIdentityUserManager userManager;
 
         public TeamMemberHandler(IIdentityUserManager userManager)
@@ -22,6 +21,11 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
             if (loggedUser != null && loggedUser.Teams.Count != 0)
             {
                 context.Succeed(requirement);
+                await Task.CompletedTask;
+            }
+            else
+            {
+                context.Fail();
                 await Task.CompletedTask;
             }
         }

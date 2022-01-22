@@ -33,6 +33,11 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
                 context.Succeed(requirement);
                 await Task.CompletedTask;
             }
+            else
+            {
+                context.Fail();
+                await Task.CompletedTask;
+            }
         }
 
         private async Task<bool> TeamLeaderValidaition(AuthorizationHandlerContext context)
