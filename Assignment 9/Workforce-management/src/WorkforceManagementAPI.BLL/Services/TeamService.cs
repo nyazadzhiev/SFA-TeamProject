@@ -113,7 +113,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> UnassignUserFromTeamAsync(Guid teamId, string userId)
+        public async Task<bool> UnassignUserFromTeamAsync(Guid teamId, string userId, string modifierId)
         {
             var team = await _teamRepository.GetTeamByIdAsync(teamId);
             _validationService.EnsureTeamExist(team);
@@ -123,6 +123,10 @@ namespace WorkforceManagementAPI.BLL.Services
 
             _validationService.EnsureUserIsNotAlreadyATeamLeader(team, user);
             _validationService.EnsureUserHasAccessToTeam(team, user);
+
+            team.ModifierId = modifierId;
+            team.ModifiedAt = DateTime.Now;
+            _teamRepository.UpdateTeam(team);
 
             _teamRepository.RemoveTeamUser(team, user);
 

@@ -157,7 +157,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         {
             currentUser = await _userService.GetCurrentUser(User);
 
-            bool isUnassigned = await _teamService.UnassignUserFromTeamAsync(teamId, userId);
+            bool isUnassigned = await _teamService.UnassignUserFromTeamAsync(teamId, userId, currentUser.Id);
             if (isUnassigned)
             {
                 return Ok("User unassigned from team successfully.");
