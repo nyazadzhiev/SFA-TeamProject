@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Moq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
@@ -82,6 +86,22 @@ namespace WorkforceManagementAPI.Test
             var result = await userService.GetAll();
 
             Assert.Equal(typeof(List<User>), result.GetType());
+        }
+
+        [Fact]
+        public void GetCurrent_User_ReturnsNotNull()
+        {
+            var userService = SetupMockedDefaultUserServiceWithDefaultUser();
+            var fackClaimPrinciple = new Mock<ClaimsPrincipal>();
+            IEnumerable<Claim> claims = new List<Claim>() {
+            new Claim(ClaimTypes.Name, "user@abv.bg")
+            }.AsEnumerable();
+            fackClaimPrinciple.Setup(e => e.Claims).Returns(claims);
+            Thread.CurrentPrincipal = fackClaimPrinciple.Object;
+
+            var result = userService.GetCurrentUser(fackClaimPrinciple.Object);
+
+            Assert.NotNull(result);
         }
 
 

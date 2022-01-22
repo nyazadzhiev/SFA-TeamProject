@@ -13,7 +13,6 @@ using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.WEB.AutoMapperProfiles;
-using WorkforceManagementAPI.BLL.Service;
 
 namespace WorkforceManagementAPI.Test
 {
@@ -236,5 +235,25 @@ namespace WorkforceManagementAPI.Test
 
             return mockTeamService;
         }
+        protected TeamService SetupMockedDefaultTeamServiceEmpthyTeam()
+        {
+            var mockValidationService = new Mock<IValidationService>();
+            var mockTeamRepository = new Mock<ITeamRepository>();
+            mockTeamRepository.Setup(t => t.GetTeamByIdAsync(It.IsAny<Guid>())).ReturnsAsync(regularTeam);
+            mockTeamRepository.Setup(t => t.GetAllTeamsAsync()).ReturnsAsync(new List<Team>());
+            mockTeamRepository.Setup(t => t.GetMyTeamsAsync(It.IsAny<string>())).ReturnsAsync(new List<Team>());
+
+            var mockMapper = new Mock<IMapper>();
+            mockMapper.Setup(m => m.Map<Team>(It.IsAny<TeamRequestDTO>())).Returns(new Team());
+
+            var mockUserManager = new Mock<IIdentityUserManager>();
+            mockUserManager.Setup(u => u.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(defaultUser);
+
+            var mockTeamService = new TeamService(mockValidationService.Object, mockTeamRepository.Object, mockUserManager.Object, mockMapper.Object);
+
+            return mockTeamService;
+        }
+
+
     }
 }
