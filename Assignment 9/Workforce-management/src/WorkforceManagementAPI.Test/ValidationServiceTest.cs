@@ -458,5 +458,15 @@ namespace WorkforceManagementAPI.Test
 
             Assert.Null(ex);
         }
+        public void EnsureResponseIsValid_Must_Throw_Exception_When_Input_Invalid_SecondCase()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<InputOutOfBoundsException>(() => validation.EnsureResponseIsValid(Status.Rejected));
+        }
+
     }
 }
