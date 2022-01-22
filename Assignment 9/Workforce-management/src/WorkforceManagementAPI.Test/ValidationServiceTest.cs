@@ -468,5 +468,12 @@ namespace WorkforceManagementAPI.Test
             Assert.Throws<InputOutOfBoundsException>(() => validation.EnsureResponseIsValid(Status.Rejected));
         }
 
+        [Fact]
+        public void EnsureMailIsValid_Must_Throw_Exception_When_Mail_Invalid_SecondCase()
+        {
+            var validation = SetupMockedDefaultValidationService();
+
+            Assert.Throws<InvalidEmailException>(() => validation.EnsureEmailIsValid("mail@@.abv"));
+        }
     }
 }
