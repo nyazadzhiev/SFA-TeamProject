@@ -165,7 +165,10 @@ namespace WorkforceManagementAPI.BLL.Services
             bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
             if (allReviersGaveFeedback)
             {
-                CheckAvailableDaysOff(user, timeOff);
+                if (timeOff.Type == RequestType.Paid)
+                {
+                    CheckAvailableDaysOff(user, timeOff);
+                }
                 await FinalizeRequestFeedback(timeOff, message);
             }
 
