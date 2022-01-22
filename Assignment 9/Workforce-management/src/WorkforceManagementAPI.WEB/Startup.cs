@@ -52,7 +52,7 @@ namespace WorkforceManagementAPI.WEB
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Description = "JWT Authorization header (NO NEED for the word Bearer). Example: \"Authorization: {token}\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http, //SecuritySchemeType.ApiKey
