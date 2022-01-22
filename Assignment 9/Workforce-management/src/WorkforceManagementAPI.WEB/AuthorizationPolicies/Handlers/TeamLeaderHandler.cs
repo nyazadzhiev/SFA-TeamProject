@@ -11,7 +11,7 @@ using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
 
 namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
 {
-    public class TeamLeaderHandler : AuthorizationHandler<TeamLeaderTimeOffCreatorRequirement>
+    public class TeamLeaderHandler : AuthorizationHandler<TeamLeaderRequirement>
     {
         private IIdentityUserManager userManager;
         private ITimeOffService timeOffService;
@@ -26,7 +26,7 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
             this.userService = userService;
         }
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, TeamLeaderTimeOffCreatorRequirement requirement)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, TeamLeaderRequirement requirement)
         {
             if (await TeamLeaderValidaition(context))
             {

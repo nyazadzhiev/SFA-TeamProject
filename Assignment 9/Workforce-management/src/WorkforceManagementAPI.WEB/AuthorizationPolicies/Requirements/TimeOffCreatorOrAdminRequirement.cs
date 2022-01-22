@@ -2,7 +2,7 @@
 
 namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements
 {
-    public class TeamLeaderTimeOffCreatorRequirement : IAuthorizationRequirement
+    public class TimeOffCreatorOrAdminRequirement : IAuthorizationRequirement
     {
     }
 }
