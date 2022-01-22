@@ -122,7 +122,7 @@ namespace WorkforceManagementAPI.BLL.Services
             _validationService.EnsureUserExist(user);
 
             _validationService.EnsureUserIsNotAlreadyATeamLeader(team, user);
-            _validationService.EnsureUserHasAccessToTeam(team, user);
+            _validationService.EnsureUnassignUserHasAccessToTeam(team, user);
 
             team.ModifierId = modifierId;
             team.ModifiedAt = DateTime.Now;
