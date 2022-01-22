@@ -12,19 +12,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using WebApi.Middleware;
 using WorkforceManagementAPI.BLL.Contracts;
+using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.BLL.Services.IdentityServices;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
-using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
 using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamLeader;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.TeamMember;
-using System.Text.Json.Serialization;
 using WorkforceManagementAPI.WEB.IdentityAuth;
 
 namespace WorkforceManagementAPI.WEB
@@ -54,10 +54,12 @@ namespace WorkforceManagementAPI.WEB
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization:{token}\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
+                    Type = SecuritySchemeType.Http, //SecuritySchemeType.ApiKey
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
                 });
 
                 // using System.Reflection;
@@ -198,7 +200,7 @@ namespace WorkforceManagementAPI.WEB
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            
+
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthentication();

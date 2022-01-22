@@ -21,7 +21,5 @@ namespace WorkforceManagementAPI.BLL.Services
         Task<bool> UpdateUser(string userId,EditUserRequest editUserReaqest);
 
         Task SetAdministrator(string userId);
-
-
     }
 }

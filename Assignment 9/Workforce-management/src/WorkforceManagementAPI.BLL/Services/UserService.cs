@@ -96,7 +96,5 @@ namespace WorkforceManagementAPI.BLL.Services
             await _validationService.EnsureUserIsAdminAsync(user);
             await _userManager.AddUserToRoleAsync(user, "Admin");
         }
-      
-
     }
 }
