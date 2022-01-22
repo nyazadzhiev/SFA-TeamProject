@@ -38,6 +38,7 @@ namespace WebApi.Middleware
                     case UserAlreadyAnAdminException userAlreadyAnAdmin:
                     case UserAlreadyTeamLeaderException userAlreadyTeamLeaderException:
                     case TimeOffOverlapException timeOffAlreadyExists:
+                    case UserIsInTeamException userIsInTeamException:
                         response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
                     case NotAWorkingDayException notAWorkingDay:
