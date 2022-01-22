@@ -48,8 +48,8 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <param name="teamId"></param>
         /// <returns></returns>
         [Authorize]
-        [HttpGet("{id}")]
-        public async Task<TeamResponseDTO> GetTeamByIdAsync(Guid id)
+        [HttpGet("{teamId}")]
+        public async Task<TeamResponseDTO> GetTeamByIdAsync(Guid teamId)
         {
             var team = await _teamService.GetTeamByIdAsync(teamId);
 
