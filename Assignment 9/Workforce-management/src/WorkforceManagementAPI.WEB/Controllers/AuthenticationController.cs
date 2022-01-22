@@ -12,7 +12,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
     public class AuthenticationController : ControllerBase
     {
         /// <summary>
-        /// Create a TOKEN for AUTHENTICATION using existing username and password.
+        /// Create a TOKEN for AUTHENTICATION, using existing username and password.
         /// </summary>
         /// <param name="loginModel"></param>
         /// 
