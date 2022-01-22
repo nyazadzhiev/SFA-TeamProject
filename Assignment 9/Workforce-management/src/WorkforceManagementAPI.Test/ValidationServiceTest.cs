@@ -30,7 +30,7 @@ namespace WorkforceManagementAPI.Test
             Assert.Null(ex);
         }
 
-            [Fact]
+        [Fact]
         public void EnsureUserExist_Must_Throw_Exception_When_User_Null()
         {
             var validation = SetupMockedDefaultValidationService();
@@ -79,7 +79,7 @@ namespace WorkforceManagementAPI.Test
         {
             var validation = SetupMockedDefaultValidationService();
 
-            var ex = Record.Exception(() => validation.EnsureLenghtIsValid("testing",5,"testing"));
+            var ex = Record.Exception(() => validation.EnsureLenghtIsValid("testing", 5, "testing"));
 
             Assert.Null(ex);
         }
@@ -215,7 +215,7 @@ namespace WorkforceManagementAPI.Test
             Assert.Null(ex);
         }
 
-            [Fact]
+        [Fact]
         public void CheckAccessToTeam_Must_Throw_Exception_When_User_Invalid()
         {
             var mockContext = SetupMockedDBValidationServiceAsync();
@@ -392,7 +392,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.ThrowsAsync<EmailAlreadyInUseException>(() => validation.EnsureUpdateEmailIsUniqueAsync("mail",defaultUser));
+            Assert.ThrowsAsync<EmailAlreadyInUseException>(() => validation.EnsureUpdateEmailIsUniqueAsync("mail", defaultUser));
         }
 
         [Fact]
@@ -403,7 +403,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            var ex = Record.ExceptionAsync(() => validation.EnsureUpdateEmailIsUniqueAsync("testing@abv.bg",defaultUser)).AsyncState;
+            var ex = Record.ExceptionAsync(() => validation.EnsureUpdateEmailIsUniqueAsync("testing@abv.bg", defaultUser)).AsyncState;
 
             Assert.Null(ex);
         }
@@ -441,7 +441,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<NameExistException>(() => validation.EnsureTeamNameIsUniqueWhenEdit(regularTeam.Title,"newTitle"));
+            Assert.Throws<NameExistException>(() => validation.EnsureTeamNameIsUniqueWhenEdit(regularTeam.Title, "newTitle"));
         }
 
         [Fact]
@@ -451,10 +451,10 @@ namespace WorkforceManagementAPI.Test
 
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
-            var team = new Team{
+            var team = new Team {
                 Title = "new" };
 
-            var ex = Record.Exception(() => validation.EnsureTeamNameIsUniqueWhenEdit(team.Title,"new"));
+            var ex = Record.Exception(() => validation.EnsureTeamNameIsUniqueWhenEdit(team.Title, "new"));
 
             Assert.Null(ex);
         }
@@ -474,6 +474,28 @@ namespace WorkforceManagementAPI.Test
             var validation = SetupMockedDefaultValidationService();
 
             Assert.Throws<InvalidEmailException>(() => validation.EnsureEmailIsValid("mail@@.abv"));
+        }
+
+        [Fact]
+        public void EnsureInputFitsBoundaries_Must_Throw_Exception_When_Input_Invalid_SecondCase()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<InputOutOfBoundsException>(() => validation.EnsureInputFitsBoundaries(1, 2, 5));
+        }
+
+        [Fact]
+        public void EnsureInputFitsBoundaries_Must_Throw_Exception_When_Date_Invalid_SecondCase()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            Assert.Throws<InputOutOfBoundsException>(() => validation.EnsureInputFitsBoundaries(new DateTime(2022, 1, 14), new DateTime(2022, 1, 10), new DateTime(2022, 1, 13)));
         }
     }
 }
