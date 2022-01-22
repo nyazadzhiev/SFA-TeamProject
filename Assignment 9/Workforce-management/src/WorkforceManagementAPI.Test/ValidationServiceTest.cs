@@ -408,5 +408,29 @@ namespace WorkforceManagementAPI.Test
             Assert.Null(ex);
         }
 
+        [Fact]
+        public void EnsureUserIsNotInTeam_Must_Throw_Exception_When_Input_Invalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+            defaultUser.Teams.Add(new Team());
+
+            Assert.Throws<UserIsInTeamException>(() => validation.EnsureUserIsNotInTeam(defaultUser));
+        }
+
+        [Fact]
+        public void EnsureUserIsNotInTeam_Must_Throw_NoException_When_Input_IsValid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new ValidationService(mockContext, mockedManager.Object);
+
+            var ex = Record.Exception(() => validation.EnsureUserIsNotInTeam(defaultUser));
+
+            Assert.Null(ex);
+        }
     }
 }
