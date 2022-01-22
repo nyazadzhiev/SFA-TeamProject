@@ -109,7 +109,7 @@ namespace WorkforceManagementAPI.Test
             };
 
             var timeOffService = SetupMockedTimeOffService();
-            var result = await timeOffService.EditTimeOffAsync(testTimeOff.Id, editTimeOff);
+            var result = await timeOffService.EditTimeOffAsync(testTimeOff.Id, editTimeOff,defaultUser);
 
             Assert.True(result);
         }
