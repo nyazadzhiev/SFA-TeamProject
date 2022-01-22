@@ -32,6 +32,14 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
+        /// <response code="201">Created - Request resulted in new resource created.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync(CreateUserRequestDTO user)
         {
@@ -50,6 +58,10 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// List all users, existing in the database.
         /// </summary>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
         [HttpGet]
         public async Task<List<UserResponseDTO>> GetAllUsersAsync()
         {
@@ -62,6 +74,13 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [HttpGet("{userId}")]
         public async Task<UserResponseDTO> GetUserByIdAsync(Guid userId)
         {
@@ -75,6 +94,14 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <param name="userId"></param>
         /// <param name="user"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [HttpPut("{userId}")]
         public async Task<IActionResult> EditUserAsync(Guid userId, EditUserRequest user)
         {
@@ -86,12 +113,19 @@ namespace WorkforceManagementAPI.WEB.Controllers
             return BadRequest();
         }
 
-
         /// <summary>
         /// REMOVE a user.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUserAsync(Guid userId)
         {
@@ -108,6 +142,14 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [HttpPost("SetAdmin/{userId}")]
         public async Task<IActionResult> SetAdministrator(Guid userId)
         {

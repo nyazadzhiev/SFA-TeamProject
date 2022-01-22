@@ -48,7 +48,7 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         /// <summary>
-        /// List all timeOff requests, for the logged user.
+        /// List all timeoff requests, created by the  logged user.
         /// </summary>
         /// <returns></returns>
         /// <response code="200">OK - Request succeeded.</response>
@@ -78,7 +78,6 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
         ///Please, contact your administrator to get desired permissions.</response>
         /// <response code="404">NotFound - Requested information does not exist in the server.</response>
-        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
         /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize]
         [HttpGet("{timeOffId}")]

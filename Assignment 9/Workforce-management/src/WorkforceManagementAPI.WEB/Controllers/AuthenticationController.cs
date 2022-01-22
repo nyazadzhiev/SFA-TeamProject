@@ -17,9 +17,8 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <param name="loginModel"></param>
         /// 
         /// <returns></returns>
-        ///<response code="201">Created - Request resulted in new resource created.</response>
-        ///<response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
-        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="201">Created - Request resulted in new resource created.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
         [HttpPost, Route("Login")]
         public string Login(AuthenticationLoginRequestDTO loginModel)
         {
