@@ -55,7 +55,7 @@ namespace WorkforceManagementAPI.WEB
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
+                    Type = SecuritySchemeType.Http, //SecuritySchemeType.ApiKey
                     BearerFormat = "JWT",
                     Scheme = "bearer"
                 });
