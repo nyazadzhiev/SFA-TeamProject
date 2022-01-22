@@ -37,12 +37,16 @@ namespace WebApi.Middleware
                     case UserAlreadyInTeamException userAlreadyInTeamException:
                     case UserAlreadyAnAdminException userAlreadyAnAdmin:
                     case UserAlreadyTeamLeaderException userAlreadyTeamLeaderException:
+                    case TimeOffOverlapException timeOffAlreadyExists:
+                    case UserIsInTeamException userIsInTeamException:
                         response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
+                    case NotAWorkingDayException notAWorkingDay:
                     case InputOutOfBoundsException inputException:
                     case InvalidEmailException invalidEmail:
                     case InvalidLengthException invalidLength:
                     case UnauthorizedAccessException unauthorizedAccessException:
+                    case NotEnoughDaysForTimeOffException notEnoughDaysException:
                     case CompletedRequestException completedRequest:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;

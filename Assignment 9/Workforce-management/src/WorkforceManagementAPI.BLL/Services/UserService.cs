@@ -43,7 +43,8 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             var checkUser = await _userManager.FindByIdAsync(id);
             _validationService.EnsureUserExist(checkUser);
-
+            _validationService.EnsureUserIsNotInTeam(checkUser);
+            
             await _userManager.DeleteUserAsync(checkUser);
             return true;
         }
@@ -96,7 +97,5 @@ namespace WorkforceManagementAPI.BLL.Services
             await _validationService.EnsureUserIsAdminAsync(user);
             await _userManager.AddUserToRoleAsync(user, "Admin");
         }
-      
-
     }
 }
