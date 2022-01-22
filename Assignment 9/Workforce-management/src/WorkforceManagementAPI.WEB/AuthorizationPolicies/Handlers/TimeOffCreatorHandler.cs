@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;

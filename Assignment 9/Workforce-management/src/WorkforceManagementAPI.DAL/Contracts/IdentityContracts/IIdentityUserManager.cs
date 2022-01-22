@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
 
-namespace WorkforceManagementAPI.BLL.Contracts.IdentityContracts
+namespace WorkforceManagementAPI.DAL.Contracts.IdentityContracts
 {
     public interface IIdentityUserManager
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
 
 namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
