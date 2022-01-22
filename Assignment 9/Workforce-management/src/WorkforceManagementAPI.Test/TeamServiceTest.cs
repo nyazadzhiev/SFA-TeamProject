@@ -53,7 +53,7 @@ namespace WorkforceManagementAPI.Test
         {
             var teamService = SetupMockedDefaultTeamServiceEmpthyTeam();
 
-            var result = await teamService.AssignUserToTeamAsync(regularTeam.Id, defaultUser.Id);
+            var result = await teamService.AssignUserToTeamAsync(regularTeam.Id, defaultUser.Id, defaultUser.Id);
 
             Assert.True(result);
         }
