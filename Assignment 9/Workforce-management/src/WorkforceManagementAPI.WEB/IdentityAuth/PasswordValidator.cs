@@ -3,8 +3,7 @@ using IdentityServer4.Validation;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
-using WorkforceManagementAPI.BLL.Exceptions;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.WEB.IdentityAuth

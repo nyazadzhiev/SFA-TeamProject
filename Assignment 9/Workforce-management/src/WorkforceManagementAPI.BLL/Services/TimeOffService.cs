@@ -127,7 +127,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest)
+        public async Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest ,User modifier)
         {
             _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
             _validationService.EnsureDateRangeIsValid(timoffRequest.StartDate, timoffRequest.EndDate);
@@ -140,6 +140,8 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.StartDate = timoffRequest.StartDate;
             timeOff.EndDate = timoffRequest.EndDate;
             timeOff.ModifiedAt = DateTime.Now;
+            timeOff.ModifierId = modifier.Id;
+            timeOff.Modifier = modifier;
 
             await _timeOffRepository.SaveChangesAsync();
 

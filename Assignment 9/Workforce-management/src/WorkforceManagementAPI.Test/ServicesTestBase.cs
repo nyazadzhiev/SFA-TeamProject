@@ -8,11 +8,11 @@ using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
-using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using WorkforceManagementAPI.WEB.AutoMapperProfiles;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 
 namespace WorkforceManagementAPI.Test
 {
@@ -30,6 +30,10 @@ namespace WorkforceManagementAPI.Test
         public Team regularTeam { get; set; }
 
         public TimeOff testTimeOff { get; set; }
+
+        public TimeOff testTimeOffSubmitNonPaid { get; set; }
+
+        public TimeOff testTimeOffSubmitPaid { get; set; }
 
         public List<TimeOff> TestTimeOffList { get; set; }
 
@@ -67,6 +71,30 @@ namespace WorkforceManagementAPI.Test
                 StartDate = DateTime.Now,
                 EndDate = testDate,
                 Type = RequestType.Paid,
+            };
+
+            this.testTimeOffSubmitNonPaid = new TimeOff()
+            {
+                Reason = "Test",
+                CreatedAt = new DateTime(2022,10,10),
+                CreatorId = TeamLeader.Id,
+                ModifiedAt = DateTime.Now,
+                StartDate = new DateTime(2022, 10, 11),
+                EndDate = new DateTime(2022, 10, 21),
+                Type = RequestType.NonPaid,
+                Reviewers = { TeamLeader},
+            };
+
+            this.testTimeOffSubmitPaid = new TimeOff()
+            {
+                Reason = "Test",
+                CreatedAt = new DateTime(2022, 10, 10),
+                CreatorId = TeamLeader.Id,
+                ModifiedAt = DateTime.Now,
+                StartDate = new DateTime(2022, 10, 11),
+                EndDate = new DateTime(2022, 10, 21),
+                Type = RequestType.Paid,
+                Reviewers = { TeamLeader },
             };
 
             inputUser = new CreateUserRequestDTO
@@ -254,6 +282,43 @@ namespace WorkforceManagementAPI.Test
             return mockTeamService;
         }
 
+        protected TimeOffService SetupMockedTimeOffService_For_NonPaid()
+        {
+
+            var mockedTimeOffMapper = SetupMockedTimeOff();
+            var validationServiceMock = new Mock<IValidationService>();
+            var userServiceMock = SetupMockedDefaultUserServiceForTimeOffs();
+            var notificationServiceMock = new Mock<INotificationService>();
+            var timeOffRepositoryMock = new Mock<ITimeOffRepository>();
+
+            timeOffRepositoryMock.Setup(to => to.GetAllAsync()).ReturnsAsync(TestTimeOffList);
+            timeOffRepositoryMock.Setup(tr => tr.GetTimeOffAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(testTimeOffSubmitNonPaid);
+
+            var timeOffService = new TimeOffService(validationServiceMock.Object, userServiceMock
+                , notificationServiceMock.Object, mockedTimeOffMapper, timeOffRepositoryMock.Object);
+
+            return timeOffService;
+        }
+
+        protected TimeOffService SetupMockedTimeOffService_For_Paid()
+        {
+
+            var mockedTimeOffMapper = SetupMockedTimeOff();
+            var validationServiceMock = new Mock<IValidationService>();
+            var userServiceMock = SetupMockedDefaultUserServiceForTimeOffs();
+            var notificationServiceMock = new Mock<INotificationService>();
+            var timeOffRepositoryMock = new Mock<ITimeOffRepository>();
+
+            timeOffRepositoryMock.Setup(to => to.GetAllAsync()).ReturnsAsync(TestTimeOffList);
+            timeOffRepositoryMock.Setup(tr => tr.GetTimeOffAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(testTimeOffSubmitNonPaid);
+
+            var timeOffService = new TimeOffService(validationServiceMock.Object, userServiceMock
+                , notificationServiceMock.Object, mockedTimeOffMapper, timeOffRepositoryMock.Object);
+
+            return timeOffService;
+        }
 
     }
 }

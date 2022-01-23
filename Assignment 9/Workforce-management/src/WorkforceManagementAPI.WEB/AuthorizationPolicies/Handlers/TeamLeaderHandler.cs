@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
 
 namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
