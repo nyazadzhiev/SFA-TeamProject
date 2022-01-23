@@ -86,7 +86,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
             else
             {
-                message = string.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+                message = string.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason, timeOff.Id);
 
                 user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
                 await _timeOffRepository.SaveChangesAsync();
