@@ -160,7 +160,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (timeOff.Reviewers.Count == 0)
             {
-                throw new CompletedRequestException(Constants.CompletedRequest);
+                throw new RequestAlreadyCompletedException(Constants.CompletedRequest);
             }
         }
 
@@ -225,7 +225,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if(timeOff.Status != Status.Approved)
             {
-                throw new RequestCompletedException(Constants.EditRestrictionMessage);
+                throw new RequestAlreadyCompletedException(Constants.EditRestrictionMessage);
             }
         }
     }

@@ -144,7 +144,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<CompletedRequestException>(() => validation.EnsureNoReviewersLeft(noReviewersTimeOff));
+            Assert.Throws<RequestAlreadyCompletedException>(() => validation.EnsureNoReviewersLeft(noReviewersTimeOff));
         }
 
         [Fact]
