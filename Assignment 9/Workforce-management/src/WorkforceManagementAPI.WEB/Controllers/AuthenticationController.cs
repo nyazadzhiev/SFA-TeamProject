@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using WorkforceManagementAPI.DTO.Models.Requests;
 
 namespace WorkforceManagementAPI.WEB.Controllers
@@ -37,8 +36,6 @@ namespace WorkforceManagementAPI.WEB.Controllers
             
             using (client)
             {
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
                 HttpResponseMessage response = client.PostAsync(url, new FormUrlEncodedContent(IdentityServerParameters)).Result;
                 return response.Content.ReadAsStringAsync().Result;
             }

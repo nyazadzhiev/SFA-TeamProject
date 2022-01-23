@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
@@ -14,18 +14,17 @@ using System.IO;
 using System.Reflection;
 using WebApi.Middleware;
 using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.DAL.Repositories.IdentityRepositories;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Repositories;
+using WorkforceManagementAPI.DAL.Repositories.IdentityRepositories;
 using WorkforceManagementAPI.DTO.Models;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers;
-using WorkforceManagementAPI.WEB.IdentityAuth;
-using Microsoft.AspNetCore.Authorization;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
+using WorkforceManagementAPI.WEB.IdentityAuth;
 
 namespace WorkforceManagementAPI.WEB
 {
