@@ -27,19 +27,19 @@ namespace WorkforceManagementAPI.WEB.Controllers
 
             var url = "https://localhost:5001/connect/token";
 
-            var nvc = new List<KeyValuePair<string, string>>();
-            nvc.Add(new KeyValuePair<string, string>("grant_type", "password"));
-            nvc.Add(new KeyValuePair<string, string>("username", loginModel.Username));
-            nvc.Add(new KeyValuePair<string, string>("password", loginModel.Password));
-            nvc.Add(new KeyValuePair<string, string>("client_id", "WorkforceManagementAPI"));
-            nvc.Add(new KeyValuePair<string, string>("client_secret", "seasharp_BareM1n1mum"));
-            nvc.Add(new KeyValuePair<string, string>("scope", "users offline_access WorkforceManagementAPI"));
+            var IdentityServerParameters = new List<KeyValuePair<string, string>>();
+            IdentityServerParameters.Add(new KeyValuePair<string, string>("grant_type", "password"));
+            IdentityServerParameters.Add(new KeyValuePair<string, string>("username", loginModel.Username));
+            IdentityServerParameters.Add(new KeyValuePair<string, string>("password", loginModel.Password));
+            IdentityServerParameters.Add(new KeyValuePair<string, string>("client_id", "WorkforceManagementAPI"));
+            IdentityServerParameters.Add(new KeyValuePair<string, string>("client_secret", "seasharp_BareM1n1mum"));
+            IdentityServerParameters.Add(new KeyValuePair<string, string>("scope", "users offline_access WorkforceManagementAPI"));
             
             using (client)
             {
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = client.PostAsync(url, new FormUrlEncodedContent(nvc)).Result;
+                HttpResponseMessage response = client.PostAsync(url, new FormUrlEncodedContent(IdentityServerParameters)).Result;
                 return response.Content.ReadAsStringAsync().Result;
             }
         }
