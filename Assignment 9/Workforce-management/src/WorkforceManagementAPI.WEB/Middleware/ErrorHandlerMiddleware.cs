@@ -49,6 +49,7 @@ namespace WebApi.Middleware
                     case UnauthorizedAccessException unauthorizedAccessException:
                     case NotEnoughDaysForTimeOffException notEnoughDaysException:
                     case CompletedRequestException completedRequest:
+                    case RequestCompletedException requestCompleted:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     default:

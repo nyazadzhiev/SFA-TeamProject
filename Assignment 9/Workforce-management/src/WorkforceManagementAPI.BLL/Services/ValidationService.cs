@@ -221,6 +221,12 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-
+        public void CheckTimeOffStatus(TimeOff timeOff)
+        {
+            if(timeOff.Status != Status.Approved)
+            {
+                throw new RequestCompletedException(Constants.EditRestrictionMessage);
+            }
+        }
     }
 }

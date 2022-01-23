@@ -34,6 +34,8 @@
 
         public const string AnswerToRequest = "Answer to request has been submited.";
 
+        public const string EditRestrictionMessage = "You can't edit request that is not approved";
+
         public const string CompletedRequest = "Time off request is already completed.";
 
         public const string NotReviewer = "User is not a reviewer.";
