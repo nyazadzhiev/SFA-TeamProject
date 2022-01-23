@@ -8,7 +8,7 @@ using WorkforceManagementAPI.BLL.Contracts;
 using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL;
 using WorkforceManagementAPI.DAL.Contracts;
-using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.DTO.Models.Requests;
@@ -30,6 +30,8 @@ namespace WorkforceManagementAPI.Test
         public Team regularTeam { get; set; }
 
         public TimeOff testTimeOff { get; set; }
+
+        public TimeOff noReviewersTimeOff { get; set; }
 
         public List<TimeOff> TestTimeOffList { get; set; }
 
@@ -63,10 +65,12 @@ namespace WorkforceManagementAPI.Test
                 Reason = "Test",
                 CreatedAt = DateTime.Now,
                 CreatorId = defaultUser.Id,
+                Creator = defaultUser,
                 ModifiedAt = DateTime.Now,
                 StartDate = DateTime.Now,
                 EndDate = testDate,
                 Type = RequestType.Paid,
+                Reviewers = new List<User>() { TeamLeader }
             };
 
             inputUser = new CreateUserRequestDTO
@@ -79,6 +83,8 @@ namespace WorkforceManagementAPI.Test
             };
 
             TestTimeOffList = new List<TimeOff>();
+
+            noReviewersTimeOff = new TimeOff();
         }
 
         protected ValidationService SetupMockedDefaultValidationService()

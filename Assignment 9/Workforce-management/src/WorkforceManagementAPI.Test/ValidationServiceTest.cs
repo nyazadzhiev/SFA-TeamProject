@@ -3,10 +3,9 @@ using System;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using Xunit;
 using WorkforceManagementAPI.DAL.Entities.Enums;
-using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 
 namespace WorkforceManagementAPI.Test
 {
@@ -145,7 +144,7 @@ namespace WorkforceManagementAPI.Test
             var mockedManager = new Mock<IIdentityUserManager>();
             var validation = new ValidationService(mockContext, mockedManager.Object);
 
-            Assert.Throws<CompletedRequestException>(() => validation.EnsureNoReviewersLeft(testTimeOff));
+            Assert.Throws<CompletedRequestException>(() => validation.EnsureNoReviewersLeft(noReviewersTimeOff));
         }
 
         [Fact]
