@@ -3,10 +3,9 @@ using System;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.BLL.Exceptions;
 using WorkforceManagementAPI.BLL.Services;
-using WorkforceManagementAPI.BLL.Contracts.IdentityContracts;
 using Xunit;
 using WorkforceManagementAPI.DAL.Entities.Enums;
-using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 
 namespace WorkforceManagementAPI.Test
 {

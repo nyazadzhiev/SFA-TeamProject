@@ -13,6 +13,8 @@ namespace WorkforceManagementAPI.Test
 {
     public class TimeOffServiceTest : ServicesTestBase
     {
+        //This test won't cover the full code if its not a working day because of a validation that forbids sending a time off request
+        //when it's a weekend or a holliday in Bulgaria
         [Fact]
         public async Task Create_TimeOff_Successfully_ReturnsTrue()
         {
@@ -25,7 +27,7 @@ namespace WorkforceManagementAPI.Test
                 StartDate = DateTime.Now,
                 EndDate = testDate
             };
-            var result = await timeOffService.CreateTimeOffAsync(newTimeOff, defaultUser.Id);
+            var result = await timeOffService.CreateTimeOffAsync(newTimeOff, TeamLeader.Id);
             Assert.True(result);
 
         }
@@ -122,5 +124,25 @@ namespace WorkforceManagementAPI.Test
 
             Assert.True(result);
         }
+
+        //This test won't cover the full code if its not a working day because of a validation that forbids sending a time off request
+        //when it's a weekend or a holliday in Bulgaria
+        [Fact]
+        public async Task Create_TimeOff_SickLeave_Successfully_ReturnsTrue()
+        {
+            var timeOffService = SetupMockedTimeOffService();
+            TimeOffRequestDTO newTimeOff = new TimeOffRequestDTO
+            {
+                Reason = "test",
+                Type = RequestType.SickLeave,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(+4),
+            };
+            var result = await timeOffService.CreateTimeOffAsync(newTimeOff, TeamLeader.Id);
+            Assert.True(result);
+
+        }
+
+
     }
 }
