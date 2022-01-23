@@ -117,10 +117,28 @@ namespace WorkforceManagementAPI.Test
         }
 
         [Fact]
-        public async Task SubmitFeedbackForTimeOffRequest_IsSuccessful()
+        public async Task SubmitFeedbackForTimeOffRequest_IsSuccessful_For_NonPaid()
         {
-            var timeOffService = SetupMockedTimeOffService();
-            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(defaultUser, testTimeOff.Id, (Status)3);
+            var timeOffService = SetupMockedTimeOffService_For_NonPaid();
+            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(TeamLeader, testTimeOffSubmitNonPaid.Id, (Status)3);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task SubmitFeedbackForTimeOffRequest_IsSuccessful_For_Paid()
+        {
+            var timeOffService = SetupMockedTimeOffService_For_Paid();
+            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(TeamLeader, testTimeOffSubmitNonPaid.Id, (Status)3);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task SubmitFeedbackForTimeOffRequest_IsSuccessful_For_Paid_Status_Rejected()
+        {
+            var timeOffService = SetupMockedTimeOffService_For_Paid();
+            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(TeamLeader, testTimeOffSubmitNonPaid.Id, Status.Rejected);
 
             Assert.True(result);
         }
