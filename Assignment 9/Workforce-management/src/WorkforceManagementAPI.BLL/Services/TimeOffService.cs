@@ -214,7 +214,7 @@ namespace WorkforceManagementAPI.BLL.Services
             _validationService.EnsureUserHasEnoughDays(totalDaysTaken, daysRequested);
         }
 
-        private int GetDaysTaken(List<TimeOff> timeOffs)
+        public int GetDaysTaken(List<TimeOff> timeOffs)
         {
             int totalDaysTaken = timeOffs.Sum(t => (int)(t.EndDate - t.StartDate).TotalDays + 1);
 
@@ -226,7 +226,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return totalDaysTaken;
         }
 
-        private int GetHolidaysFromCurrentRequest(TimeOff timeOff)
+        public int GetHolidaysFromCurrentRequest(TimeOff timeOff)
         {
             int countHolidays = 0;
 
