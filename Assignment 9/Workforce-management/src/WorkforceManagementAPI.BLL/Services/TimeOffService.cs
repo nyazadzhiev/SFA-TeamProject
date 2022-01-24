@@ -35,7 +35,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             _validationService.EnsureInputFitsBoundaries(((int)timeOffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
             _validationService.EnsureDateRangeIsValid(timeOffRequest.StartDate, timeOffRequest.EndDate);
-            _validationService.EnsureTodayIsWorkingDay();
+            _validationService.EnsureTodayIsWorkingDay(DateTime.Now);
 
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);

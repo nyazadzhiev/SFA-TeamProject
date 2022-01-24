@@ -204,9 +204,8 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void EnsureTodayIsWorkingDay()
+        public void EnsureTodayIsWorkingDay(DateTime currrentDay)
         {
-            var currrentDay = DateTime.Now;
             if (DateSystem.IsWeekend(currrentDay, CountryCode.BG) || DateSystem.IsPublicHoliday(currrentDay, CountryCode.BG))
             {
                 throw new NotAWorkingDayException("Today is not a working day");
