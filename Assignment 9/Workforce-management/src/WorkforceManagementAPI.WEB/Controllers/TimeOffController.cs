@@ -216,6 +216,15 @@ namespace ProjectManagementApp.WEB.Controllers
 
             return Ok(Constants.AnswerToRequest);
         }
+
+        [Authorize]
+        [HttpGet("OffDays")]
+        public async Task<OffDaysDTO> GetOffDays()
+        {
+            User user = await _userService.GetCurrentUser(User);
+
+            return _mapper.Map<OffDaysDTO>(_timeOffService.GetOffDays(user));
+        }
     }
 }
 

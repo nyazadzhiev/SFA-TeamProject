@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.DTO.Models.Requests;
+using WorkforceManagementAPI.DTO.Models.Responses;
 
 namespace WorkforceManagementAPI.BLL.Contracts
 {
@@ -22,5 +23,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
         Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest,User modifier);
 
         Task<bool> SubmitFeedbackForTimeOffRequestAsync(User user, Guid timeOffId, Status status);
+
+        OffDaysDTO GetOffDays(User user);
     }
 }
