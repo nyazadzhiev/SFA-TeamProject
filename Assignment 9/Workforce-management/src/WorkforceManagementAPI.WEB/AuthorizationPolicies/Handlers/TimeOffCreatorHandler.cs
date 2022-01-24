@@ -31,7 +31,7 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
             var loggedUser = await userManager.GetUserAsync(context.User);
             var timeOffCreator = await ValidateLoggedUserIsTimeOffCreator();
 
-            if (loggedUser != null && loggedUser.Id == timeOffCreator.Id)
+            if (loggedUser != null && timeOffCreator != null && loggedUser.Id == timeOffCreator.Id)
             {
                 context.Succeed(requirement);
                 await Task.CompletedTask;
@@ -41,10 +41,18 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
         private async Task<User> ValidateLoggedUserIsTimeOffCreator()
         {
             var timeOffId = httpContextAccessor.HttpContext.GetRouteValue("timeOffId").ToString();
-            Guid actualId = new Guid(timeOffId);
-            var timeOff = await timeOffService.GetTimeOffAsync(actualId);
-            var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
-            return timeOffCreator; 
+
+            if (timeOffId != null)
+            {
+                Guid actualId = new Guid(timeOffId);
+                var timeOff = await timeOffService.GetTimeOffAsync(actualId);
+                var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
+                return timeOffCreator;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
