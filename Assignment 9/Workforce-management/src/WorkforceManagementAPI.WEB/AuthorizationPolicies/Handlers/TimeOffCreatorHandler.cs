@@ -41,11 +41,11 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
         private async Task<User> ValidateLoggedUserIsTimeOffCreator()
         {
             var timeOffId = httpContextAccessor.HttpContext.GetRouteValue("timeOffId").ToString();
+            Guid actualId = new Guid(timeOffId);
+            var timeOff = await timeOffService.GetTimeOffAsync(actualId);
 
-            if (timeOffId != null)
+            if (timeOff != null)
             {
-                Guid actualId = new Guid(timeOffId);
-                var timeOff = await timeOffService.GetTimeOffAsync(actualId);
                 var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
                 return timeOffCreator;
             }

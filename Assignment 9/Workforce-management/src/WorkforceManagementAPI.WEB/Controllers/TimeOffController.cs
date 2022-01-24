@@ -147,7 +147,7 @@ namespace ProjectManagementApp.WEB.Controllers
 
             bool isEdited = await _timeOffService.EditTimeOffAsync(timeOffId, model, currentUser);
 
-            if (!isEdited)
+            if (!isEdited && ModelState.IsValid)
             {
                 return BadRequest(Constants.OperationFailed);
             }
