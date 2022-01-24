@@ -13,7 +13,6 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// Create a TOKEN for AUTHENTICATION, using existing username and password.
         /// </summary>
         /// <param name="loginModel"></param>
-        /// 
         /// <returns></returns>
         /// <response code="200">OK - Request succeeded.</response>
         /// <response code="401">Unauthorized - Please check the provided credentials.</response>
