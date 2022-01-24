@@ -10,6 +10,7 @@ using WorkforceManagementAPI.DAL.Contracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.DTO.Models.Requests;
+using WorkforceManagementAPI.DTO.Models.Responses;
 
 namespace WorkforceManagementAPI.BLL.Services
 {
@@ -239,6 +240,18 @@ namespace WorkforceManagementAPI.BLL.Services
             }
 
             return countHolidays;
+        }
+
+        public OffDaysDTO GetOffDays(User user)
+        {
+            var timeOffs = _timeOffRepository.GetApprovedTimeOffs(user);
+
+            return new OffDaysDTO()
+            {
+                AllDays = 20,
+                Remaining = 20 - GetDaysTaken(timeOffs),
+                UsedDays = GetDaysTaken(timeOffs)
+            };
         }
     }
 }

@@ -34,6 +34,10 @@ namespace ProjectManagementApp.WEB.Controllers
         /// List all the existing timeOff requests in the database.
         /// </summary>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
         [Authorize]
         [HttpGet]
         public async Task<List<TimeOffResponseDTO>> GetAllRequestsAsync()
@@ -44,9 +48,13 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         /// <summary>
-        /// List all timeOff requests, for the logged user.
+        /// List all timeoff requests, created by the  logged user.
         /// </summary>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
         [Authorize]
         [HttpGet("MyRequests")]
         public async Task<List<TimeOffResponseDTO>> GetMyRequestsAsync()
@@ -60,10 +68,17 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         /// <summary>
-        /// Find a timeOff request by its Id.
+        /// Find a timeoff request by timeoff Id.
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize]
         [HttpGet("{timeOffId}")]
         public async Task<TimeOffResponseDTO> GetRequestByIdAsync(Guid timeOffId)
@@ -78,10 +93,18 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         /// <summary>
-        /// Create a timeOff request.
+        /// Create a timeOff request [Request types (enum) - NonPaid(0), Paid(1), SickLeave(2)].
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        /// <response code="201">Created - Request resulted in new resource created.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Policy = "TeamMember")]
         [HttpPost]
         public async Task<ActionResult> CreateTimeOffAsync(TimeOffRequestDTO model)
@@ -102,11 +125,19 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         /// <summary>
-        /// Edit a timeoff request.
+        /// Edit a timeoff request by timeoff Id [Request types - NonPaid(0), Paid(1), SickLeave(2)].
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <param name="model"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Policy = "TimeOffCreatorOrAdmin")]
         [HttpPut("{timeOffId}")]
         public async Task<ActionResult<TimeOffResponseDTO>> EditTimeOffAsync(Guid timeOffId, TimeOffRequestDTO model)
@@ -128,10 +159,18 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         /// <summary>
-        /// REMOVE a timeoff request.
+        /// REMOVE a timeoff request by timeoff Id.
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Policy = "TimeOffCreatorOrAdmin")]
         [HttpDelete("{timeOffId}")]
         public async Task<ActionResult> DeleteTimeOffAsync(Guid timeOffId)
@@ -149,11 +188,19 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         /// <summary>
-        /// APPROVE or REJECT a timeoff request.
+        /// APPROVE or REJECT a timeoff request using timeoff Id [Status values (enum) - Rejected(0), Approved(3)].
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <param name="vote"></param>
         /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
+        /// <response code="404">NotFound - Requested information does not exist in the server.</response>
+        /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
+        /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Policy = "TeamLeader")]
         [HttpPost("SubmitFeedback/{timeOffId}")]
         public async Task<ActionResult> SubmitFeedbackForTimeOffRequestAsync(Guid timeOffId, CreateVoteRequestDTO vote)
@@ -168,6 +215,15 @@ namespace ProjectManagementApp.WEB.Controllers
             }
 
             return Ok(Constants.AnswerToRequest);
+        }
+
+        [Authorize]
+        [HttpGet("OffDays")]
+        public async Task<OffDaysDTO> GetOffDays()
+        {
+            User user = await _userService.GetCurrentUser(User);
+
+            return _mapper.Map<OffDaysDTO>(_timeOffService.GetOffDays(user));
         }
     }
 }
