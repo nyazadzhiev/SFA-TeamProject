@@ -87,7 +87,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
             else
             {
-                message = string.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+                message = string.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason, timeOff.Id);
 
                 user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
                 await _timeOffRepository.SaveChangesAsync();
@@ -135,6 +135,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
+            _validationService.EnsureTimeOfRequestsDoNotOverlap(modifier, timeOff);
 
             timeOff.Reason = timoffRequest.Reason;
             timeOff.Type = timoffRequest.Type;
@@ -145,6 +146,10 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.Modifier = modifier;
 
             await _timeOffRepository.SaveChangesAsync();
+
+            string message = string.Format(Constants.RequestMessage, modifier.FirstName, modifier.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason, timeOff.Id);
+
+            await _notificationService.Send(timeOff.Reviewers, "Edited", message);
 
             return true;
         }

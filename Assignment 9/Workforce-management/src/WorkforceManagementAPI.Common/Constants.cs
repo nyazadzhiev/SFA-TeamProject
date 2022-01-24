@@ -20,7 +20,7 @@
 
         public const string InvalidInput = "Invalid input";
 
-        public const string RequestMessage = "Dear Team Lead\n I ({0} {1}) want to leave from {2} to {3} for a {4} vacation because of {5}";
+        public const string RequestMessage = "Dear Team Lead\n I ({0} {1}) want to leave from {2} to {3} for a {4} vacation because of {5}\n Use the following URL as POST request to submit feedback for time off: https://localhost:5001/api/TimeOff/SubmitFeedback/{6}";
 
         public const string SickMessage = "Dear Team Lead\n I ({0} {1}) am writing this letter to inform you that I need to take sick leave from work. I will need to remain off work from {2} to {3} because of {4}";
 
@@ -33,6 +33,8 @@
         public const string UserAlreadyMember = "User is already a member.";
 
         public const string AnswerToRequest = "Answer to request has been submited.";
+
+        public const string EditRestrictionMessage = "You can't edit request that is not approved";
 
         public const string CompletedRequest = "Time off request is already completed.";
 

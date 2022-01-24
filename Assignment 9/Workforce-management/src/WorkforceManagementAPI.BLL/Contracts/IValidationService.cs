@@ -39,6 +39,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void EnsureNoReviewersLeft(TimeOff timeOff);
         void EnsureUserIsReviewer(TimeOff timeOff, User user);
         void EnsureResponseIsValid(Status status);
+        void CheckTimeOffStatus(TimeOff timeOff);
         Task EnsureUserIsAdminAsync(User user);
         void EnsureUserHasEnoughDays(int daysTaken, int daysRequested);
         void EnsureTimeOfRequestsDoNotOverlap(User user, TimeOff timeOff);
