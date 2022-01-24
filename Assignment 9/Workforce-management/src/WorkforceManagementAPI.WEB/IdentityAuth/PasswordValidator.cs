@@ -41,13 +41,12 @@ namespace WorkforceManagementAPI.WEB.IdentityAuth
                 }
                 else
                 {
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid credentials");
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid login credentials");
                 }
 
                 return;
             }
-            context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid credentials");
-
+            context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid login credentials");
         }
     }
 }
