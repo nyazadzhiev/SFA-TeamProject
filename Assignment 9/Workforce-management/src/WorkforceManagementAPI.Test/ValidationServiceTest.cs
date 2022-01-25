@@ -6,6 +6,7 @@ using WorkforceManagementAPI.BLL.Services;
 using Xunit;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
+using WorkforceManagementAPI.DAL.Entities;
 
 namespace WorkforceManagementAPI.Test
 {
