@@ -140,7 +140,7 @@ namespace ProjectManagementApp.WEB.Controllers
         /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [Authorize(Policy = "TimeOffCreatorOrAdmin")]
         [HttpPut("{timeOffId}")]
-        public async Task<ActionResult<TimeOffResponseDTO>> EditTimeOffAsync(Guid timeOffId, TimeOffRequestDTO model)
+        public async Task<ActionResult<TimeOffResponseDTO>> EditTimeOffAsync(Guid timeOffId, EditTimeOffRequestDTO model)
         {
             User currentUser = await _userService.GetCurrentUser(User);
             _validationService.EnsureUserExist(currentUser);

@@ -12,6 +12,9 @@ namespace WorkforceManagementAPI.WEB.AutoMapperProfiles
             CreateMap<TimeOff, TimeOffRequestDTO>()
                 .ReverseMap();
 
+            CreateMap<TimeOff, EditTimeOffRequestDTO>()
+                .ReverseMap();
+
             CreateMap<TimeOff, TimeOffResponseDTO>()
                 .ForMember(t => t.CreatorName , act => act.MapFrom(src => src.Creator.FirstName+" "+src.Creator.LastName))
                 .ForMember(t => t.ModifierName, act => act.MapFrom(src => src.Modifier.FirstName+" "+src.Modifier.LastName))

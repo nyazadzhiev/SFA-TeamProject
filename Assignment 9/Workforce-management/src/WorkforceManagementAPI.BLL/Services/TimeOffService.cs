@@ -35,14 +35,14 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             _validationService.EnsureInputFitsBoundaries(((int)timeOffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
             _validationService.EnsureDateRangeIsValid(timeOffRequest.StartDate, timeOffRequest.EndDate);
-            _validationService.EnsureTodayIsWorkingDay();
+            _validationService.EnsureTodayIsWorkingDay(DateTime.Now);
 
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
 
             var timeOff = _mapper.Map<TimeOff>(timeOffRequest);
 
-            _validationService.EnsureTimeOfRequestsDoNotOverlap(user, timeOff);
+            _validationService.EnsureTimeOffRequestsDoNotOverlap(user, timeOff);
 
             if (timeOffRequest.Type == RequestType.Paid)
             {
@@ -87,7 +87,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
             else
             {
-                message = string.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason);
+                message = string.Format(Constants.RequestMessage, user.FirstName, user.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason, timeOff.Id);
 
                 user.Teams.ForEach(t => t.TeamLeader.UnderReviewRequests.Add(timeOff));
                 await _timeOffRepository.SaveChangesAsync();
@@ -121,6 +121,7 @@ namespace WorkforceManagementAPI.BLL.Services
             TimeOff timeOff = await GetTimeOffAsync(id);
                     
             _validationService.EnsureTimeOffExist(timeOff);
+            _validationService.EnsureTimeOffRequestIsNotCompleted(timeOff);
 
             _timeOffRepository.DeleteTimeOffAsync(timeOff);
             await _timeOffRepository.SaveChangesAsync();
@@ -128,23 +129,32 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest ,User modifier)
+        public async Task<bool> EditTimeOffAsync(Guid id, EditTimeOffRequestDTO timeoffRequest ,User modifier)
         {
-            _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.EnsureDateRangeIsValid(timoffRequest.StartDate, timoffRequest.EndDate);
+            
+            _validationService.EnsureDateRangeIsValid(timeoffRequest.StartDate, timeoffRequest.EndDate);
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
+            var checkForDublicate = _mapper.Map<TimeOff>(timeoffRequest);
+            _validationService.EnsureInputFitsBoundaries(((int)timeOff.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.EnsureTimeOffRequestsDoNotOverlap(modifier, checkForDublicate);
+            _validationService.EnsureTimeOffRequestIsNotCompleted(timeOff);
 
-            timeOff.Reason = timoffRequest.Reason;
-            timeOff.Type = timoffRequest.Type;
-            timeOff.StartDate = timoffRequest.StartDate;
-            timeOff.EndDate = timoffRequest.EndDate;
+            timeOff.Reason = timeoffRequest.Reason;
+            timeOff.Type = timeOff.Type;
+            timeOff.StartDate = timeoffRequest.StartDate;
+            timeOff.EndDate = timeoffRequest.EndDate;
             timeOff.ModifiedAt = DateTime.Now;
             timeOff.ModifierId = modifier.Id;
             timeOff.Modifier = modifier;
 
+           
             await _timeOffRepository.SaveChangesAsync();
+
+            string message = string.Format(Constants.RequestMessage, modifier.FirstName, modifier.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason, timeOff.Id);
+
+            await _notificationService.Send(timeOff.Reviewers, "Edited", message);
 
             return true;
         }
@@ -165,8 +175,8 @@ namespace WorkforceManagementAPI.BLL.Services
             var message = UpdateRequestStatus(status, timeOff);
             await _timeOffRepository.SaveChangesAsync();
 
-            bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
-            if (allReviersGaveFeedback)
+            bool allReviewersGaveFeedback = timeOff.Reviewers.Count == 0;
+            if (allReviewersGaveFeedback)
             {
                 if (timeOff.Type == RequestType.Paid)
                 {
@@ -214,7 +224,7 @@ namespace WorkforceManagementAPI.BLL.Services
             _validationService.EnsureUserHasEnoughDays(totalDaysTaken, daysRequested);
         }
 
-        private int GetDaysTaken(List<TimeOff> timeOffs)
+        public int GetDaysTaken(List<TimeOff> timeOffs)
         {
             int totalDaysTaken = timeOffs.Sum(t => (int)(t.EndDate - t.StartDate).TotalDays + 1);
 
@@ -226,7 +236,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return totalDaysTaken;
         }
 
-        private int GetHolidaysFromCurrentRequest(TimeOff timeOff)
+        public int GetHolidaysFromCurrentRequest(TimeOff timeOff)
         {
             int countHolidays = 0;
 

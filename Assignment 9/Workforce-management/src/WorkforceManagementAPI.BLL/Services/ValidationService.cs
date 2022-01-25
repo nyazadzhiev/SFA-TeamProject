@@ -160,7 +160,7 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             if (timeOff.Reviewers.Count == 0)
             {
-                throw new CompletedRequestException(Constants.CompletedRequest);
+                throw new RequestAlreadyCompletedException(Constants.CompletedRequest);
             }
         }
 
@@ -196,7 +196,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void EnsureTimeOfRequestsDoNotOverlap(User user, TimeOff timeOff)
+        public void EnsureTimeOffRequestsDoNotOverlap(User user, TimeOff timeOff)
         {
             if (user.Requests.Any(r => r.Status != Status.Rejected && (r.StartDate.Date <= timeOff.EndDate.Date && timeOff.StartDate.Date <= r.EndDate.Date)))
             {
@@ -204,9 +204,8 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void EnsureTodayIsWorkingDay()
+        public void EnsureTodayIsWorkingDay(DateTime currrentDay)
         {
-            var currrentDay = DateTime.Now;
             if (DateSystem.IsWeekend(currrentDay, CountryCode.BG) || DateSystem.IsPublicHoliday(currrentDay, CountryCode.BG))
             {
                 throw new NotAWorkingDayException("Today is not a working day");
@@ -218,6 +217,22 @@ namespace WorkforceManagementAPI.BLL.Services
             if (user.Teams.Count >= 1)
             {
                 throw new UserIsInTeamException("User is part of a team and can't be deleted");
+            }
+        }
+
+        public void CheckTimeOffStatus(TimeOff timeOff)
+        {
+            if(timeOff.Status != Status.Approved)
+            {
+                throw new RequestAlreadyCompletedException(Constants.EditRestrictionMessage);
+            }
+        }
+
+        public void EnsureTimeOffRequestIsNotCompleted(TimeOff timeOff)
+        {
+            if(timeOff.Status == Status.Approved || timeOff.Status== Status.Rejected)
+            {
+                throw new TimeOffCompletedException("Time off request is already completed");
             }
         }
 

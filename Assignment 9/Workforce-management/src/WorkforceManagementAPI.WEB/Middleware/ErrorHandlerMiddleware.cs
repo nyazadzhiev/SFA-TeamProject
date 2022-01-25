@@ -40,6 +40,7 @@ namespace WebApi.Middleware
                     case TimeOffOverlapException timeOffAlreadyExists:
                     case UserIsInTeamException userIsInTeamException:
                     case UnauthorizedUserException unauthorizedUserException:
+                    case TimeOffCompletedException timeOffCompletedException:
                         response.StatusCode = (int)HttpStatusCode.Conflict;
                         break;
                     case NotAWorkingDayException notAWorkingDay:
@@ -48,7 +49,8 @@ namespace WebApi.Middleware
                     case InvalidLengthException invalidLength:
                     case UnauthorizedAccessException unauthorizedAccessException:
                     case NotEnoughDaysForTimeOffException notEnoughDaysException:
-                    case CompletedRequestException completedRequest:
+                    case RequestAlreadyCompletedException requestCompleted:
+                    case ArgumentException argumentException:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     default:
