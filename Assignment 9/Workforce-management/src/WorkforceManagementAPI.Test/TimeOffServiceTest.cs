@@ -9,6 +9,7 @@ using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using Xunit;
 using System.Collections.Generic;
+using WorkforceManagementAPI.DTO.Models.Responses;
 
 namespace WorkforceManagementAPI.Test
 {
@@ -256,6 +257,16 @@ namespace WorkforceManagementAPI.Test
 
             int result = timeOffService.GetHolidaysFromCurrentRequest(firstTimeOff);
             Assert.IsType<int>(result);
+        }
+
+        [Fact]
+        public void GetOffDays_Returns_OffDaysDTO()
+        {
+            var timeOffService = SetupMockedTimeOffService();
+
+            var result = timeOffService.GetOffDays(defaultUser);
+
+            Assert.IsType<OffDaysDTO>(result);
         }
     }
 }

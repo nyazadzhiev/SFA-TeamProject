@@ -270,7 +270,7 @@ namespace WorkforceManagementAPI.Test
 
             return mockTeamService;
         }
-        protected TeamService SetupMockedDefaultTeamServiceEmpthyTeam()
+        protected TeamService SetupMockedDefaultTeamServiceEmptyTeam()
         {
             var mockValidationService = new Mock<IValidationService>();
             var mockTeamRepository = new Mock<ITeamRepository>();

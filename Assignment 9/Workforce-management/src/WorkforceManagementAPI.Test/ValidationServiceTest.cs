@@ -7,6 +7,7 @@ using Xunit;
 using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.BLL.Contracts;
 
 namespace WorkforceManagementAPI.Test
 {
@@ -213,6 +214,17 @@ namespace WorkforceManagementAPI.Test
             var ex = Record.Exception(() => validation.EnsureDateRangeIsValid(new DateTime(2022, 3, 30), new DateTime(2022, 3, 31)));
 
             Assert.Null(ex);
+        }
+
+        [Fact]
+        public void ValidateDateRange_Must_Throw_Exception_When_Date_IsInvalid()
+        {
+            var mockContext = SetupMockedDBValidationServiceAsync();
+
+            var mockedManager = new Mock<IIdentityUserManager>();
+            var validation = new Mock<IValidationService>();
+            validation.Setup(m => m.EnsureDateRangeIsValid(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Throws<ArgumentException>();
+            Assert.Throws<ArgumentException>(() => validation.Object.EnsureDateRangeIsValid(new DateTime(2022, 1, 18), new DateTime(2022, 1, 15)));
         }
 
         [Fact]
@@ -679,6 +691,28 @@ namespace WorkforceManagementAPI.Test
             testTimeOff.Status = Status.Created;
 
             var ex = Record.Exception(() => validation.EnsureTimeOffRequestIsNotCompleted(testTimeOff));
+
+            Assert.Null(ex);
+        }
+
+        [Fact]
+        public void CheckTimeOffStatus_Throws_Exception()
+        {
+            var validation = SetupMockedDefaultValidationService();
+
+            testTimeOff.Status = Status.Awaiting;
+
+            Assert.Throws<RequestAlreadyCompletedException>(() => validation.CheckTimeOffStatus(testTimeOff));
+        }
+
+        [Fact]
+        public void CheckTimeOffStatus_Is_Valid()
+        {
+            var validation = SetupMockedDefaultValidationService();
+
+            testTimeOff.Status = Status.Approved;
+
+            var ex = Record.Exception(() => validation.CheckTimeOffStatus(testTimeOff));
 
             Assert.Null(ex);
         }
