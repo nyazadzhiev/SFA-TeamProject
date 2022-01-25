@@ -221,6 +221,13 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
+        public void EnsureUserDoesntHaveRequests(User user)
+        {
+            if (user.Requests.Count() > 0)
+            {
+                throw new UserHasExistingRequestsException("The user has existing timeoff requests");
+            }
+        }
 
     }
 }
