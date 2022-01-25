@@ -38,6 +38,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <response code="401">Unauthorized - Please check the provided credentials.</response>
         /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
         ///Please, contact your administrator to get desired permissions.</response>
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<TeamResponseDTO>> GetAllTeamsAsync()
         {
