@@ -20,7 +20,7 @@
 
         public const string InvalidInput = "Invalid input";
 
-        public const string RequestMessage = "Dear Team Lead\n I ({0} {1}) want to leave from {2} to {3} for a {4} vacation because of {5}\n Response: https://localhost:5001/api/TimeOff/SubmitFeedback/'{6}'";
+        public const string RequestMessage = "Dear Team Lead\n I ({0} {1}) want to leave from {2} to {3} for a {4} vacation because of {5}\n Use the following URL as POST request to submit feedback for time off: https://localhost:5001/api/TimeOff/SubmitFeedback/{6}";
 
         public const string SickMessage = "Dear Team Lead\n I ({0} {1}) am writing this letter to inform you that I need to take sick leave from work. I will need to remain off work from {2} to {3} because of {4}";
 
