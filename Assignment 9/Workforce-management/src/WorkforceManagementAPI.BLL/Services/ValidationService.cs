@@ -228,5 +228,15 @@ namespace WorkforceManagementAPI.BLL.Services
                 throw new RequestAlreadyCompletedException(Constants.EditRestrictionMessage);
             }
         }
+
+        public void EnsureTimeOfRequestIsNotCompleted(TimeOff timeOff)
+        {
+            if(timeOff.Status == Status.Approved || timeOff.Status== Status.Rejected)
+            {
+                throw new TimeOffCompletedException("Time off request is already completed");
+            }
+        }
+
+
     }
 }
