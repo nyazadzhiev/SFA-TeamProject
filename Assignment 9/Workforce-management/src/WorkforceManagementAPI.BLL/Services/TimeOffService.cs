@@ -129,14 +129,15 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timeoffRequest ,User modifier)
+        public async Task<bool> EditTimeOffAsync(Guid id, EditTimeOffRequestDTO timeoffRequest ,User modifier)
         {
-            _validationService.EnsureInputFitsBoundaries(((int)timeoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            
             _validationService.EnsureDateRangeIsValid(timeoffRequest.StartDate, timeoffRequest.EndDate);
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
             var checkForDublicate = _mapper.Map<TimeOff>(timeoffRequest);
+            _validationService.EnsureInputFitsBoundaries(((int)timeOff.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
             _validationService.EnsureTimeOfRequestsDoNotOverlap(modifier, checkForDublicate);
             _validationService.EnsureTimeOfRequestIsNotCompleted(timeOff);
 

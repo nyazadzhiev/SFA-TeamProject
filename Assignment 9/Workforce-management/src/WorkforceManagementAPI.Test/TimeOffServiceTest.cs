@@ -100,10 +100,9 @@ namespace WorkforceManagementAPI.Test
         [Fact]
         public async Task UpdateTimeOff_IsSuccessful()
         {
-            TimeOffRequestDTO editTimeOff = new TimeOffRequestDTO
+            EditTimeOffRequestDTO editTimeOff = new EditTimeOffRequestDTO
             {
                 Reason = "test",
-                Type = RequestType.NonPaid,
                 StartDate = DateTime.Now,
                 EndDate = testDate
             };
