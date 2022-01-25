@@ -497,5 +497,40 @@ namespace WorkforceManagementAPI.Test
 
             Assert.Throws<InputOutOfBoundsException>(() => validation.EnsureInputFitsBoundaries(new DateTime(2022, 1, 14), new DateTime(2022, 1, 10), new DateTime(2022, 1, 13)));
         }
+
+        [Fact]
+        public void EnsureUserHasEnoughDays_Throws_Exception()
+        {
+            var validation = SetupMockedDefaultValidationService();
+
+            Assert.Throws<NotEnoughDaysForTimeOffException>(() => validation.EnsureUserHasEnoughDays(19, 3));
+        }
+
+        [Fact]
+        public void EnsureTodayIsWorkingDay_Throws_Exception()
+        {
+            var validation = SetupMockedDefaultValidationService();
+
+            Assert.Throws<NotAWorkingDayException>(() => validation.EnsureTodayIsWorkingDay(new DateTime(2022, 03, 03)));
+        }
+
+        [Fact]
+        public void EnsureTimeOffRequestsDoNotOverlap_Throws_Exception()
+        {
+            var validation = SetupMockedDefaultValidationService();
+
+            defaultUser.Requests.Add(new TimeOff
+            {
+                Status = Status.Awaiting,
+                StartDate = new DateTime(2022, 01, 01),
+                EndDate = new DateTime(2022, 01, 10)
+            });
+
+            testTimeOff.Status = Status.Created;
+            testTimeOff.StartDate = new DateTime(2022, 01, 02);
+            testTimeOff.EndDate = new DateTime(2022, 01, 11);
+
+            Assert.Throws<TimeOffOverlapException>(() => validation.EnsureTimeOffRequestsDoNotOverlap(defaultUser, testTimeOff));
+        }
     }
 }

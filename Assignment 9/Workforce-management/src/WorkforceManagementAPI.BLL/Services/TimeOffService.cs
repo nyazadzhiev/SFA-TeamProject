@@ -35,14 +35,14 @@ namespace WorkforceManagementAPI.BLL.Services
         {
             _validationService.EnsureInputFitsBoundaries(((int)timeOffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
             _validationService.EnsureDateRangeIsValid(timeOffRequest.StartDate, timeOffRequest.EndDate);
-            _validationService.EnsureTodayIsWorkingDay();
+            _validationService.EnsureTodayIsWorkingDay(DateTime.Now);
 
             var user = await _userService.GetUserById(creatorId);
             _validationService.EnsureUserExist(user);
 
             var timeOff = _mapper.Map<TimeOff>(timeOffRequest);
 
-            _validationService.EnsureTimeOfRequestsDoNotOverlap(user, timeOff);
+            _validationService.EnsureTimeOffRequestsDoNotOverlap(user, timeOff);
 
             if (timeOffRequest.Type == RequestType.Paid)
             {
@@ -170,8 +170,8 @@ namespace WorkforceManagementAPI.BLL.Services
             var message = UpdateRequestStatus(status, timeOff);
             await _timeOffRepository.SaveChangesAsync();
 
-            bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
-            if (allReviersGaveFeedback)
+            bool allReviewersGaveFeedback = timeOff.Reviewers.Count == 0;
+            if (allReviewersGaveFeedback)
             {
                 if (timeOff.Type == RequestType.Paid)
                 {
@@ -219,7 +219,7 @@ namespace WorkforceManagementAPI.BLL.Services
             _validationService.EnsureUserHasEnoughDays(totalDaysTaken, daysRequested);
         }
 
-        private int GetDaysTaken(List<TimeOff> timeOffs)
+        public int GetDaysTaken(List<TimeOff> timeOffs)
         {
             int totalDaysTaken = timeOffs.Sum(t => (int)(t.EndDate - t.StartDate).TotalDays + 1);
 
@@ -231,7 +231,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return totalDaysTaken;
         }
 
-        private int GetHolidaysFromCurrentRequest(TimeOff timeOff)
+        public int GetHolidaysFromCurrentRequest(TimeOff timeOff)
         {
             int countHolidays = 0;
 

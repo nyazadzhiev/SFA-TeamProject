@@ -42,9 +42,9 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void CheckTimeOffStatus(TimeOff timeOff);
         Task EnsureUserIsAdminAsync(User user);
         void EnsureUserHasEnoughDays(int daysTaken, int daysRequested);
-        void EnsureTimeOfRequestsDoNotOverlap(User user, TimeOff timeOff);
-        void EnsureTodayIsWorkingDay();
+        void EnsureTimeOffRequestsDoNotOverlap(User user, TimeOff timeOff);
         void EnsureUserIsNotInTeam(User user);
         void EnsureUnassignUserHasAccessToTeam(Team team, User user);
+        void EnsureTodayIsWorkingDay(DateTime currrentDay);
     }
 }
