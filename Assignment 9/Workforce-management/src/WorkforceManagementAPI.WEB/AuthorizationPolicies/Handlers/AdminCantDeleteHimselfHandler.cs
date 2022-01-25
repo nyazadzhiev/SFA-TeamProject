@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System.Threading.Tasks;
-using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL.Contracts.IdentityContracts;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.WEB.AuthorizationPolicies.Requirements;
