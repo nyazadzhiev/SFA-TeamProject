@@ -590,6 +590,16 @@ namespace WorkforceManagementAPI.Test
         }
 
         [Fact]
+        public void EnsureUserHasEnoughDays_Throws_No_Exception()
+        {
+            var validation = SetupMockedDefaultValidationService();
+
+            var exception = Record.Exception(() => validation.EnsureUserHasEnoughDays(3, 3));
+
+            Assert.Null(exception);
+        }
+
+        [Fact]
         public void EnsureTodayIsWorkingDay_Throws_Exception()
         {
             var validation = SetupMockedDefaultValidationService();
