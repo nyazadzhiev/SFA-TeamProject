@@ -46,5 +46,6 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void EnsureUserIsNotInTeam(User user);
         void EnsureUnassignUserHasAccessToTeam(Team team, User user);
         void EnsureTodayIsWorkingDay(DateTime currrentDay);
+        void EnsureTimeOffRequestIsNotCompleted(TimeOff timeOff);
     }
 }

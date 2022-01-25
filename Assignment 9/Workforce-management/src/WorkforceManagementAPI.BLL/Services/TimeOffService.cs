@@ -121,6 +121,7 @@ namespace WorkforceManagementAPI.BLL.Services
             TimeOff timeOff = await GetTimeOffAsync(id);
                     
             _validationService.EnsureTimeOffExist(timeOff);
+            _validationService.EnsureTimeOffRequestIsNotCompleted(timeOff);
 
             _timeOffRepository.DeleteTimeOffAsync(timeOff);
             await _timeOffRepository.SaveChangesAsync();
@@ -128,23 +129,27 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> EditTimeOffAsync(Guid id, TimeOffRequestDTO timoffRequest ,User modifier)
+        public async Task<bool> EditTimeOffAsync(Guid id, EditTimeOffRequestDTO timeoffRequest ,User modifier)
         {
-            _validationService.EnsureInputFitsBoundaries(((int)timoffRequest.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.EnsureDateRangeIsValid(timoffRequest.StartDate, timoffRequest.EndDate);
+            
+            _validationService.EnsureDateRangeIsValid(timeoffRequest.StartDate, timeoffRequest.EndDate);
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
-            _validationService.EnsureTimeOfRequestsDoNotOverlap(modifier, timeOff);
+            var checkForDublicate = _mapper.Map<TimeOff>(timeoffRequest);
+            _validationService.EnsureInputFitsBoundaries(((int)timeOff.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
+            _validationService.EnsureTimeOffRequestsDoNotOverlap(modifier, checkForDublicate);
+            _validationService.EnsureTimeOffRequestIsNotCompleted(timeOff);
 
-            timeOff.Reason = timoffRequest.Reason;
-            timeOff.Type = timoffRequest.Type;
-            timeOff.StartDate = timoffRequest.StartDate;
-            timeOff.EndDate = timoffRequest.EndDate;
+            timeOff.Reason = timeoffRequest.Reason;
+            timeOff.Type = timeOff.Type;
+            timeOff.StartDate = timeoffRequest.StartDate;
+            timeOff.EndDate = timeoffRequest.EndDate;
             timeOff.ModifiedAt = DateTime.Now;
             timeOff.ModifierId = modifier.Id;
             timeOff.Modifier = modifier;
 
+           
             await _timeOffRepository.SaveChangesAsync();
 
             string message = string.Format(Constants.RequestMessage, modifier.FirstName, modifier.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason, timeOff.Id);
