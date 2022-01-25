@@ -8,6 +8,7 @@ using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using Xunit;
+using System.Collections.Generic;
 
 namespace WorkforceManagementAPI.Test
 {
@@ -156,6 +157,43 @@ namespace WorkforceManagementAPI.Test
 
         }
 
+        [Fact]
+        public void GetDaysTaken_Returns_Int()
+        {
+            var timeOffService = SetupMockedTimeOffService();
 
+            var firstTimeOff = new TimeOff() 
+            { 
+                Status = Status.Approved,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(+4)
+            };
+
+            var secondTimeOff = new TimeOff()
+            {
+                Status = Status.Approved,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(+4)
+            };
+
+            int result = timeOffService.GetDaysTaken(new List<TimeOff>() { firstTimeOff, secondTimeOff });
+            Assert.IsType<int>(result);
+        }
+
+        [Fact]
+        public void GetHolidaysFromCurrentRequest_Returns_Int()
+        {
+            var timeOffService = SetupMockedTimeOffService();
+
+            var firstTimeOff = new TimeOff()
+            {
+                Status = Status.Approved,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(+4)
+            };
+
+            int result = timeOffService.GetHolidaysFromCurrentRequest(firstTimeOff);
+            Assert.IsType<int>(result);
+        }
     }
 }
