@@ -42,7 +42,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
             var timeOff = _mapper.Map<TimeOff>(timeOffRequest);
 
-            _validationService.EnsureTimeOfRequestsDoNotOverlap(user, timeOff);
+            _validationService.EnsureTimeOffRequestsDoNotOverlap(user, timeOff);
 
             if (timeOffRequest.Type == RequestType.Paid)
             {
@@ -165,8 +165,8 @@ namespace WorkforceManagementAPI.BLL.Services
             var message = UpdateRequestStatus(status, timeOff);
             await _timeOffRepository.SaveChangesAsync();
 
-            bool allReviersGaveFeedback = timeOff.Reviewers.Count == 0;
-            if (allReviersGaveFeedback)
+            bool allReviewersGaveFeedback = timeOff.Reviewers.Count == 0;
+            if (allReviewersGaveFeedback)
             {
                 if (timeOff.Type == RequestType.Paid)
                 {

@@ -530,7 +530,7 @@ namespace WorkforceManagementAPI.Test
             testTimeOff.StartDate = new DateTime(2022, 01, 02);
             testTimeOff.EndDate = new DateTime(2022, 01, 11);
 
-            Assert.Throws<TimeOffOverlapException>(() => validation.EnsureTimeOfRequestsDoNotOverlap(defaultUser, testTimeOff));
+            Assert.Throws<TimeOffOverlapException>(() => validation.EnsureTimeOffRequestsDoNotOverlap(defaultUser, testTimeOff));
         }
     }
 }
