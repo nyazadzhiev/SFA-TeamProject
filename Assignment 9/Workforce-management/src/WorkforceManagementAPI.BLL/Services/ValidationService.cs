@@ -228,7 +228,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void EnsureTimeOfRequestIsNotCompleted(TimeOff timeOff)
+        public void EnsureTimeOffRequestIsNotCompleted(TimeOff timeOff)
         {
             if(timeOff.Status == Status.Approved || timeOff.Status== Status.Rejected)
             {

@@ -121,7 +121,7 @@ namespace WorkforceManagementAPI.BLL.Services
             TimeOff timeOff = await GetTimeOffAsync(id);
                     
             _validationService.EnsureTimeOffExist(timeOff);
-            _validationService.EnsureTimeOfRequestIsNotCompleted(timeOff);
+            _validationService.EnsureTimeOffRequestIsNotCompleted(timeOff);
 
             _timeOffRepository.DeleteTimeOffAsync(timeOff);
             await _timeOffRepository.SaveChangesAsync();
@@ -138,8 +138,8 @@ namespace WorkforceManagementAPI.BLL.Services
             _validationService.EnsureTimeOffExist(timeOff);
             var checkForDublicate = _mapper.Map<TimeOff>(timeoffRequest);
             _validationService.EnsureInputFitsBoundaries(((int)timeOff.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.EnsureTimeOfRequestsDoNotOverlap(modifier, checkForDublicate);
-            _validationService.EnsureTimeOfRequestIsNotCompleted(timeOff);
+            _validationService.EnsureTimeOffRequestsDoNotOverlap(modifier, checkForDublicate);
+            _validationService.EnsureTimeOffRequestIsNotCompleted(timeOff);
 
             timeOff.Reason = timeoffRequest.Reason;
             timeOff.Type = timeOff.Type;
