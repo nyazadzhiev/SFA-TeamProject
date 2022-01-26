@@ -43,7 +43,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUserAsync(CreateUserRequestDTO user)
         {
-            bool result = await _userService.CreateUser(user);
+            bool result = await _userService.CreateUserAsync(user);
             if (result)
             {
                 return Created(nameof(HttpPostAttribute), String.Format(Constants.Created, "User"));
@@ -65,7 +65,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpGet]
         public async Task<List<UserResponseDTO>> GetAllUsersAsync()
         {
-            var users = await _userService.GetAll();
+            var users = await _userService.GetAllUsersAsync();
             return _mapper.Map<List<UserResponseDTO>>(users);
         }
 
@@ -84,7 +84,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpGet("{userId}")]
         public async Task<UserResponseDTO> GetUserByIdAsync(Guid userId)
         {
-            User user = await _userService.GetUserById(userId.ToString());
+            User user = await _userService.GetUserByIdAsync(userId.ToString());
             return _mapper.Map<UserResponseDTO>(user);
         }
 
@@ -105,7 +105,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> EditUserAsync(Guid userId, EditUserRequest user)
         {
-            bool isEdited = await _userService.UpdateUser(userId.ToString(), user);
+            bool isEdited = await _userService.UpdateUserAsync(userId.ToString(), user);
             if (isEdited && ModelState.IsValid)
             {
                 return Ok("User edited successfully");
@@ -129,7 +129,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUserAsync(Guid userId)
         {
-            bool isDeleted = await _userService.DeleteUser(userId.ToString());
+            bool isDeleted = await _userService.DeleteUserAsync(userId.ToString());
             if (isDeleted)
             {
                 return Ok("User deleted successfully");
@@ -153,7 +153,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         [HttpPost("SetAdmin/{userId}")]
         public async Task<IActionResult> SetAdministrator(Guid userId)
         {
-            await _userService.SetAdministrator(userId.ToString());
+            await _userService.SetAdministratorAsync(userId.ToString());
             return Ok($"User: {userId} is set as Admin");
         }
     }

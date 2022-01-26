@@ -37,7 +37,7 @@ namespace WorkforceManagementAPI.BLL.Services
             _validationService.EnsureDateRangeIsValid(timeOffRequest.StartDate, timeOffRequest.EndDate);
             _validationService.EnsureTodayIsWorkingDay(DateTime.Now);
 
-            var user = await _userService.GetUserById(creatorId);
+            var user = await _userService.GetUserByIdAsync(creatorId);
             _validationService.EnsureUserExist(user);
 
             var timeOff = _mapper.Map<TimeOff>(timeOffRequest);
@@ -105,7 +105,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public async Task<List<TimeOff>> GetMyTimeOffs(string userId)
         {
-            var user = await _userService.GetUserById(userId);
+            var user = await _userService.GetUserByIdAsync(userId);
             _validationService.EnsureUserExist(user);
 
             return await _timeOffRepository.GetMyTimeOffsAsync(userId);
