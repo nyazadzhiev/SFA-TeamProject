@@ -38,10 +38,16 @@ namespace WorkforceManagementAPI.WEB.Controllers
             {
                 HttpResponseMessage response = await client.PostAsync(url, new FormUrlEncodedContent(identityServerParameters));
                 var content = await response.Content.ReadAsStringAsync();
-                var jsonObject = JsonConvert.DeserializeObject<object>(content);
+                var json = GetFormattedJson(content);
 
-                return StatusCode((int)response.StatusCode, JsonConvert.SerializeObject(jsonObject, Formatting.Indented));
+                return StatusCode((int)response.StatusCode, json);
             }
+        }
+        
+        private string GetFormattedJson(string content)
+        {
+            var jsonObject = JsonConvert.DeserializeObject<object>(content);
+            return JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
         }
     }
 }
