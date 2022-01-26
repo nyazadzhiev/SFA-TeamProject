@@ -25,7 +25,7 @@ namespace WorkforceManagementAPI.Test
                 RepeatPassword = "123456789"
             };
 
-            var result = await userService.CreateUser(userRequest);
+            var result = await userService.CreateUserAsync(userRequest);
 
             Assert.True(result);
         }
@@ -43,7 +43,7 @@ namespace WorkforceManagementAPI.Test
                 RepeatPassword = "123456789"
             };
 
-            var result = await userService.UpdateUser(this.defaultUser.Id, EditUserRequest);
+            var result = await userService.UpdateUserAsync(this.defaultUser.Id, EditUserRequest);
 
             Assert.True(result);
         }
@@ -53,7 +53,7 @@ namespace WorkforceManagementAPI.Test
         {
             var userService = SetupMockedDefaultUserServiceWithDefaultUser();
 
-            var result = await userService.DeleteUser(this.defaultUser.Id);
+            var result = await userService.DeleteUserAsync(this.defaultUser.Id);
 
             Assert.True(result);
         }
@@ -63,7 +63,7 @@ namespace WorkforceManagementAPI.Test
         {
             var userService = SetupMockedDefaultUserServiceWithDefaultUser();
 
-            var result = await Record.ExceptionAsync(() => userService.SetAdministrator(this.defaultUser.Id));
+            var result = await Record.ExceptionAsync(() => userService.SetAdministratorAsync(this.defaultUser.Id));
 
             Assert.Null(result);
         }
@@ -73,7 +73,7 @@ namespace WorkforceManagementAPI.Test
         {
             var userService = SetupMockedDefaultUserServiceWithDefaultUser();
 
-            var result = await userService.GetUserById(this.defaultUser.Id);
+            var result = await userService.GetUserByIdAsync(this.defaultUser.Id);
 
             Assert.Equal(typeof(User), result.GetType());
         }
@@ -83,7 +83,7 @@ namespace WorkforceManagementAPI.Test
         {
             var userService = SetupMockedDefaultUserServiceWithDefaultUsers();
 
-            var result = await userService.GetAll();
+            var result = await userService.GetAllUsersAsync();
 
             Assert.Equal(typeof(List<User>), result.GetType());
         }

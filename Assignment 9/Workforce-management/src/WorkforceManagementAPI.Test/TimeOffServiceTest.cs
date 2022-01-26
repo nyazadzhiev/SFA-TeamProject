@@ -1,14 +1,11 @@
 ﻿using System;
-using AutoMapper;
-using Moq;
 using System.Threading.Tasks;
 using WorkforceManagementAPI.DAL.Entities.Enums;
-using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL.Entities;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using Xunit;
 using System.Collections.Generic;
+using WorkforceManagementAPI.DTO.Models.Responses;
 
 namespace WorkforceManagementAPI.Test
 {
@@ -124,10 +121,30 @@ namespace WorkforceManagementAPI.Test
         }
 
         [Fact]
+        public async Task SubmitFeedbackForTimeOffRequest_For_NonPaid_Rejected()
+        {
+            var timeOffService = SetupMockedTimeOffService_For_NonPaid();
+            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(TeamLeader, testTimeOffSubmitNonPaid.Id, Status.Rejected);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task SubmitFeedbackForTimeOffRequest_IsSuccessful_For_NonPaid_WithReviewers()
+        {
+            var timeOffService = SetupMockedTimeOffService_For_Paid();
+            testTimeOff.Reviewers.Add(defaultUser);
+
+            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(TeamLeader, testTimeOffSubmitNonPaid.Id, Status.Awaiting);
+
+            Assert.True(result);
+        }
+
+        [Fact]
         public async Task SubmitFeedbackForTimeOffRequest_IsSuccessful_For_Paid()
         {
             var timeOffService = SetupMockedTimeOffService_For_Paid();
-            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(TeamLeader, testTimeOffSubmitNonPaid.Id, (Status)3);
+            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(TeamLeader, testTimeOffSubmitPaid.Id, (Status)3);
 
             Assert.True(result);
         }
@@ -136,8 +153,18 @@ namespace WorkforceManagementAPI.Test
         public async Task SubmitFeedbackForTimeOffRequest_IsSuccessful_For_Paid_Status_Rejected()
         {
             var timeOffService = SetupMockedTimeOffService_For_Paid();
-            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(TeamLeader, testTimeOffSubmitNonPaid.Id, Status.Rejected);
+            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(TeamLeader, testTimeOffSubmitPaid.Id, Status.Rejected);
 
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task SubmitFeedbackForTimeOffRequest_IsSuccessful_For_Paid_WithReviewers()
+        {
+            var timeOffService = SetupMockedTimeOffService_For_Paid();
+            testTimeOff.Reviewers.Add(defaultUser);
+
+            var result = await timeOffService.SubmitFeedbackForTimeOffRequestAsync(TeamLeader, testTimeOffSubmitPaid.Id, Status.Awaiting);
             Assert.True(result);
         }
 
@@ -152,9 +179,41 @@ namespace WorkforceManagementAPI.Test
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now.AddDays(+4),
             };
+
             var result = await timeOffService.CreateTimeOffAsync(newTimeOff, TeamLeader.Id);
             Assert.True(result);
+        }
 
+        [Fact]
+        public async Task Create_TimeOff_NonPaid_Successfully_ReturnsTrue()
+        {
+            var timeOffService = SetupMockedTimeOffService();
+            TimeOffRequestDTO newTimeOff = new TimeOffRequestDTO
+            {
+                Reason = "test",
+                Type = RequestType.NonPaid,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(+4),
+            };
+
+            var result = await timeOffService.CreateTimeOffAsync(newTimeOff, TeamLeader.Id);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task Create_TimeOff_Paid_Successfully_ReturnsTrue()
+        {
+            var timeOffService = SetupMockedTimeOffService();
+            TimeOffRequestDTO newTimeOff = new TimeOffRequestDTO
+            {
+                Reason = "test",
+                Type = RequestType.Paid,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(+4),
+            };
+
+            var result = await timeOffService.CreateTimeOffAsync(newTimeOff, defaultUser.Id);
+            Assert.True(result);
         }
 
         [Fact]
@@ -194,6 +253,16 @@ namespace WorkforceManagementAPI.Test
 
             int result = timeOffService.GetHolidaysFromCurrentRequest(firstTimeOff);
             Assert.IsType<int>(result);
+        }
+
+        [Fact]
+        public void GetOffDays_Returns_OffDaysDTO()
+        {
+            var timeOffService = SetupMockedTimeOffService();
+
+            var result = timeOffService.GetOffDays(defaultUser);
+
+            Assert.IsType<OffDaysDTO>(result);
         }
     }
 }

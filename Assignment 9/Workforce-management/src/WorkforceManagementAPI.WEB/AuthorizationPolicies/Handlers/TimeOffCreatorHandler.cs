@@ -46,7 +46,7 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
 
             if (timeOff != null)
             {
-                var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
+                var timeOffCreator = await userService.GetUserByIdAsync(timeOff.CreatorId);
                 return timeOffCreator;
             }
             else
