@@ -126,6 +126,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <response code="404">NotFound - Requested information does not exist in the server.</response>
         /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
         /// <response code="500">InternalServerError - Generic error occured in the server.</response>
+        [Authorize(Policy = "AdminCantDeleteHimself")]  
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUserAsync(Guid userId)
         {

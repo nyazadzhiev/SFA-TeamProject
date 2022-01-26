@@ -44,6 +44,7 @@ namespace WorkforceManagementAPI.BLL.Services
             var checkUser = await _userManager.FindByIdAsync(id);
             _validationService.EnsureUserExist(checkUser);
             _validationService.EnsureUserIsNotInTeam(checkUser);
+            _validationService.EnsureUserDoesntHaveRequests(checkUser);
             
             await _userManager.DeleteUserAsync(checkUser);
             return true;

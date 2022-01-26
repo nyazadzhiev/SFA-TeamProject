@@ -125,7 +125,7 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         /// <summary>
-        /// Edit a timeoff request by timeoff Id [Request types - NonPaid(0), Paid(1), SickLeave(2)].
+        /// Edit a timeoff request by timeoff Id.
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <param name="model"></param>
@@ -147,7 +147,7 @@ namespace ProjectManagementApp.WEB.Controllers
 
             bool isEdited = await _timeOffService.EditTimeOffAsync(timeOffId, model, currentUser);
 
-            if (!isEdited)
+            if (!isEdited && ModelState.IsValid)
             {
                 return BadRequest(Constants.OperationFailed);
             }
@@ -217,6 +217,14 @@ namespace ProjectManagementApp.WEB.Controllers
             return Ok(Constants.AnswerToRequest);
         }
 
+        /// <summary>
+        /// Calculate how many days of PAID LEAVE the logged user has left with.
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">OK - Request succeeded.</response>
+        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
+        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
+        ///Please, contact your administrator to get desired permissions.</response>
         [Authorize]
         [HttpGet("OffDays")]
         public async Task<OffDaysDTO> GetOffDays()

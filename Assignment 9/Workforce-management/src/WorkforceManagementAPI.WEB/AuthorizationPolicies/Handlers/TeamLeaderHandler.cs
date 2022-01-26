@@ -49,11 +49,18 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
                 var timeOffId = httpContextAccessor.HttpContext.GetRouteValue("timeOffId").ToString();
                 Guid actualId = new Guid(timeOffId);
                 var timeOff = await timeOffService.GetTimeOffAsync(actualId);
-                var timeOffCreator = await userService.GetUserByIdAsync(timeOff.CreatorId);
 
-                var isLoggedUserValidTeamLeader = timeOffCreator.Teams.Any(t => t.TeamLeaderId == loggedUser.Id);
+                if (timeOff != null)
+                {
+                    var timeOffCreator = await userService.GetUserByIdAsync(timeOff.CreatorId);
+                    var isLoggedUserValidTeamLeader = timeOffCreator.Teams.Any(t => t.TeamLeaderId == loggedUser.Id);
 
-                return isLoggedUserValidTeamLeader;
+                    return isLoggedUserValidTeamLeader;
+                }
+                else
+                {
+                    return false;
+                }
             }
             return false;
         }

@@ -108,6 +108,7 @@ namespace WorkforceManagementAPI.WEB
             services.AddTransient<IAuthorizationHandler, TeamMemberHandler>();
             services.AddTransient<IAuthorizationHandler, TimeOffCreatorHandler>();
             services.AddTransient<IAuthorizationHandler, AdminRoleHandler>();
+            services.AddTransient<IAuthorizationHandler, AdminCantDeleteHimselfHandler>();
 
             //EF Identity
             services.AddIdentityCore<User>(options =>
@@ -154,6 +155,9 @@ namespace WorkforceManagementAPI.WEB
 
                 options.AddPolicy("TeamLeader", policy =>
                 policy.Requirements.Add(new TeamLeaderRequirement()));
+
+                options.AddPolicy("AdminCantDeleteHimself", policy =>
+                policy.Requirements.Add(new AdminCantDeleteHimselfRequirement()));
 
             })
             

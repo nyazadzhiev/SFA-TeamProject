@@ -51,6 +51,7 @@ namespace WebApi.Middleware
                     case NotEnoughDaysForTimeOffException notEnoughDaysException:
                     case RequestAlreadyCompletedException requestCompleted:
                     case ArgumentException argumentException:
+                    case UserHasExistingRequestsException userHasExistingRequests: 
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     default:

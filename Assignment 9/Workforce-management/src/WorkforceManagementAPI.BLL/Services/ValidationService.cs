@@ -72,7 +72,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public void EnsureTeamNameIsUniquee(string title)
+        public void EnsureTeamNameIsUnique(string title)
         {
             if (_context.Teams.Any(p => p.Title == title))
             {
@@ -88,7 +88,7 @@ namespace WorkforceManagementAPI.BLL.Services
             }
         }
 
-        public async Task EnsureUpdateEmailIsUniqueAsync(string email,User user)
+        public async Task EnsureUpdateEmailIsUniqueAsync(string email, User user)
         {
             if (await _userManager.VerifyEmail(email) == false && user.Email != email)
             {
@@ -98,7 +98,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public void EnsureInputFitsBoundaries(int input, int minValue = 0, int maxValue = 1)
         {
-            if(input < minValue || input > maxValue)
+            if (input < minValue || input > maxValue)
             {
                 throw new InputOutOfBoundsException(String.Format(Constants.InputOutOfBounds, nameof(Int32)));
 
@@ -222,7 +222,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public void CheckTimeOffStatus(TimeOff timeOff)
         {
-            if(timeOff.Status != Status.Approved)
+            if (timeOff.Status != Status.Approved)
             {
                 throw new RequestAlreadyCompletedException(Constants.EditRestrictionMessage);
             }
@@ -230,12 +230,19 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public void EnsureTimeOffRequestIsNotCompleted(TimeOff timeOff)
         {
-            if(timeOff.Status == Status.Approved || timeOff.Status== Status.Rejected)
+            if (timeOff.Status == Status.Approved || timeOff.Status == Status.Rejected)
             {
                 throw new TimeOffCompletedException("Time off request is already completed");
             }
         }
 
+        public void EnsureUserDoesntHaveRequests(User user)
+        {
+            if (user.Requests.Count() > 0)
+            {
+                throw new UserHasExistingRequestsException("The user has existing timeoff requests");
+            }
+        }
 
     }
 }

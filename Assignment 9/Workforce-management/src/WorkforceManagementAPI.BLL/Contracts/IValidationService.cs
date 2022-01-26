@@ -17,7 +17,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
 
         void EnsureTeamExist(Team team);
 
-        void EnsureTeamNameIsUniquee(string title);
+        void EnsureTeamNameIsUnique(string title);
 
         void EnsureTimeOffExist(TimeOff timeOff);
 
@@ -54,6 +54,8 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void EnsureUserIsNotInTeam(User user);
 
         void EnsureUnassignUserHasAccessToTeam(Team team, User user);
+
+        void EnsureUserDoesntHaveRequests(User user);
 
         void EnsureTodayIsWorkingDay(DateTime currrentDay);
 
