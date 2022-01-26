@@ -51,7 +51,8 @@ namespace WorkforceManagementAPI.Test
                 Email = "test@abv.bg",
                 FirstName = "test",
                 LastName = "tester",
-                Id = "7cd150cd-413d-43d1-bdff-73cc5d4f04e3"
+                Id = "7cd150cd-413d-43d1-bdff-73cc5d4f04e3",
+                Requests = new List<TimeOff>()
             };
 
             this.regularTeam = new Team()
@@ -217,7 +218,6 @@ namespace WorkforceManagementAPI.Test
 
         protected TimeOffService SetupMockedTimeOffService()
         {
-
             var mockedTimeOffMapper = SetupMockedTimeOff();
             var validationServiceMock = new Mock<IValidationService>();
             var userServiceMock = SetupMockedDefaultUserServiceForTimeOffs();
@@ -227,6 +227,7 @@ namespace WorkforceManagementAPI.Test
             timeOffRepositoryMock.Setup(to => to.GetAllAsync()).ReturnsAsync(TestTimeOffList);
             timeOffRepositoryMock.Setup(tr => tr.GetTimeOffAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(testTimeOff);
+            timeOffRepositoryMock.Setup(t => t.GetApprovedTimeOffs(It.IsAny<User>())).Returns(new List<TimeOff>());
 
             var timeOffService = new TimeOffService(validationServiceMock.Object, userServiceMock
                 , notificationServiceMock.Object, mockedTimeOffMapper, timeOffRepositoryMock.Object);
@@ -268,7 +269,7 @@ namespace WorkforceManagementAPI.Test
 
             return mockTeamService;
         }
-        protected TeamService SetupMockedDefaultTeamServiceEmpthyTeam()
+        protected TeamService SetupMockedDefaultTeamServiceEmptyTeam()
         {
             var mockValidationService = new Mock<IValidationService>();
             var mockTeamRepository = new Mock<ITeamRepository>();
@@ -289,7 +290,6 @@ namespace WorkforceManagementAPI.Test
 
         protected TimeOffService SetupMockedTimeOffService_For_NonPaid()
         {
-
             var mockedTimeOffMapper = SetupMockedTimeOff();
             var validationServiceMock = new Mock<IValidationService>();
             var userServiceMock = SetupMockedDefaultUserServiceForTimeOffs();
@@ -308,7 +308,6 @@ namespace WorkforceManagementAPI.Test
 
         protected TimeOffService SetupMockedTimeOffService_For_Paid()
         {
-
             var mockedTimeOffMapper = SetupMockedTimeOff();
             var validationServiceMock = new Mock<IValidationService>();
             var userServiceMock = SetupMockedDefaultUserServiceForTimeOffs();
@@ -324,6 +323,5 @@ namespace WorkforceManagementAPI.Test
 
             return timeOffService;
         }
-
     }
 }

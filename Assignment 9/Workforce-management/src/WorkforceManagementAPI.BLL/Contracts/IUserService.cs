@@ -8,18 +8,18 @@ namespace WorkforceManagementAPI.BLL.Services
 {
     public interface IUserService
     {
-        Task<bool> CreateUser(CreateUserRequestDTO userRequest);
+        Task<bool> CreateUserAsync(CreateUserRequestDTO userRequest);
 
-        Task<bool> DeleteUser(string id);
+        Task<bool> DeleteUserAsync(string id);
 
-        Task<List<User>> GetAll();
+        Task<List<User>> GetAllUsersAsync();
 
         Task<User> GetCurrentUser(ClaimsPrincipal principal);
 
-        Task<User> GetUserById(string id);
+        Task<User> GetUserByIdAsync(string id);
 
-        Task<bool> UpdateUser(string userId,EditUserRequest editUserReaqest);
+        Task<bool> UpdateUserAsync(string userId,EditUserRequest editUserReaqest);
 
-        Task SetAdministrator(string userId);
+        Task SetAdministratorAsync(string userId);
     }
 }
