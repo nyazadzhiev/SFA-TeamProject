@@ -23,7 +23,7 @@ namespace WorkforceManagementAPI.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> CreateUser(CreateUserRequestDTO userRequest)
+        public async Task<bool> CreateUserAsync(CreateUserRequestDTO userRequest)
         {
             _validationService.EnsureLenghtIsValid(userRequest.Password, 7, nameof(userRequest.Password));
             _validationService.EnsureLenghtIsValid(userRequest.FirstName, 2, nameof(userRequest.FirstName));
@@ -39,7 +39,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> DeleteUser(string id)
+        public async Task<bool> DeleteUserAsync(string id)
         {
             var checkUser = await _userManager.FindByIdAsync(id);
             _validationService.EnsureUserExist(checkUser);
@@ -49,7 +49,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> UpdateUser(string userId, EditUserRequest editUserReaqest)
+        public async Task<bool> UpdateUserAsync(string userId, EditUserRequest editUserReaqest)
         {
             _validationService.EnsureLenghtIsValid(editUserReaqest.NewPassword, 7, nameof(editUserReaqest.NewPassword));
             _validationService.EnsureLenghtIsValid(editUserReaqest.NewFirstName, 2, nameof(editUserReaqest.NewFirstName));
@@ -72,12 +72,12 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<List<User>> GetAll()
+        public async Task<List<User>> GetAllUsersAsync()
         {
             return await _userManager.GetAllAsync();
         }
 
-        public async Task<User> GetUserById(string id)
+        public async Task<User> GetUserByIdAsync(string id)
         {
             var checkUser = await _userManager.FindByIdAsync(id);
             _validationService.EnsureUserExist(checkUser);
@@ -90,7 +90,7 @@ namespace WorkforceManagementAPI.BLL.Services
             return await _userManager.GetUserAsync(principal);
         }
 
-        public async Task SetAdministrator(string userId)
+        public async Task SetAdministratorAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             _validationService.EnsureUserExist(user);
