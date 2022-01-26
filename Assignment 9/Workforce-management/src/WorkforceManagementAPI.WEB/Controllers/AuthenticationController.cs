@@ -19,7 +19,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <returns></returns>
         /// <response code="200">OK - Request succeeded.</response>
         /// <response code="400">BadRequest - Request could not be understood by the server.</response>
-            [HttpPost, Route("Login")]
+        [HttpPost, Route("Login")]
         public async Task<ActionResult<OAuthTokenResponseDTO>> Login(AuthenticationLoginRequestDTO loginModel)
         {
             var client = new HttpClient();
@@ -33,7 +33,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
             identityServerParameters.Add(new KeyValuePair<string, string>("client_id", "WorkforceManagementAPI"));
             identityServerParameters.Add(new KeyValuePair<string, string>("client_secret", "seasharp_BareM1n1mum"));
             identityServerParameters.Add(new KeyValuePair<string, string>("scope", "users offline_access WorkforceManagementAPI"));
-            
+
             using (client)
             {
                 HttpResponseMessage response = await client.PostAsync(url, new FormUrlEncodedContent(identityServerParameters));
@@ -43,7 +43,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
                 return StatusCode((int)response.StatusCode, json);
             }
         }
-        
+
         private string GetFormattedJson(string content)
         {
             var jsonObject = JsonConvert.DeserializeObject<object>(content);
