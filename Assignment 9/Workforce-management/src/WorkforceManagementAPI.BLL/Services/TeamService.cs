@@ -45,7 +45,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public async Task<bool> CreateTeamAsync(TeamRequestDTO teamRequest, string creatorId)
         {
-            _validationService.EnsureTeamNameIsUniquee(teamRequest.Title);
+            _validationService.EnsureTeamNameIsUnique(teamRequest.Title);
 
             var now = DateTime.Now;
             var team = _mapper.Map<Team>(teamRequest);

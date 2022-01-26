@@ -17,7 +17,7 @@ namespace WorkforceManagementAPI.BLL.Contracts
 
         void EnsureTeamExist(Team team);
 
-        void EnsureTeamNameIsUniquee(string title);
+        void EnsureTeamNameIsUnique(string title);
 
         void EnsureTimeOffExist(TimeOff timeOff);
 
