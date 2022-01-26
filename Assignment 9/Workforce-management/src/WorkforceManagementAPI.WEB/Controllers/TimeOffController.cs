@@ -125,7 +125,7 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         /// <summary>
-        /// Edit a timeoff request by timeoff Id [Request types - NonPaid(0), Paid(1), SickLeave(2)].
+        /// Edit a timeoff request by timeoff Id.
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <param name="model"></param>
