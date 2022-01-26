@@ -36,16 +36,27 @@ namespace WorkforceManagementAPI.BLL.Contracts
         void EnsureUserIsNotAlreadyATeamLeader(Team team, User user);
 
         void EnsureUserIsNotAlreadyPartOfTheTeam(Team team, User user);
+
         void EnsureNoReviewersLeft(TimeOff timeOff);
+
         void EnsureUserIsReviewer(TimeOff timeOff, User user);
+
         void EnsureResponseIsValid(Status status);
+
         void CheckTimeOffStatus(TimeOff timeOff);
+
         Task EnsureUserIsAdminAsync(User user);
+
         void EnsureUserHasEnoughDays(int daysTaken, int daysRequested);
+
         void EnsureTimeOffRequestsDoNotOverlap(User user, TimeOff timeOff);
+
         void EnsureUserIsNotInTeam(User user);
+
         void EnsureUnassignUserHasAccessToTeam(Team team, User user);
+
         void EnsureTodayIsWorkingDay(DateTime currrentDay);
+
         void EnsureTimeOffRequestIsNotCompleted(TimeOff timeOff);
     }
 }
