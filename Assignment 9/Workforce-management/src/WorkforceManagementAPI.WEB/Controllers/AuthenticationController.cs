@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using WorkforceManagementAPI.DTO.Models.Requests;
+using WorkforceManagementAPI.DTO.Models.Responses;
 
 namespace WorkforceManagementAPI.WEB.Controllers
 {
@@ -13,31 +16,31 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// Create a TOKEN for AUTHENTICATION, using existing username and password.
         /// </summary>
         /// <param name="loginModel"></param>
-        /// 
         /// <returns></returns>
         /// <response code="200">OK - Request succeeded.</response>
-        /// <response code="401">Unauthorized - Please check the provided credentials.</response>
-        /// <response code="403">Forbidden - Your credentials don't meet the required authorization level to access the resource. 
-        ///Please, contact your administrator to get desired permissions.</response>
-        [HttpPost, Route("Login")]
-        public string Login(AuthenticationLoginRequestDTO loginModel)
+        /// <response code="400">BadRequest - Request could not be understood by the server.</response>
+            [HttpPost, Route("Login")]
+        public async Task<ActionResult<OAuthTokenResponseDTO>> Login(AuthenticationLoginRequestDTO loginModel)
         {
             var client = new HttpClient();
 
             var url = "https://localhost:5001/connect/token";
 
-            var IdentityServerParameters = new List<KeyValuePair<string, string>>();
-            IdentityServerParameters.Add(new KeyValuePair<string, string>("grant_type", "password"));
-            IdentityServerParameters.Add(new KeyValuePair<string, string>("username", loginModel.Username));
-            IdentityServerParameters.Add(new KeyValuePair<string, string>("password", loginModel.Password));
-            IdentityServerParameters.Add(new KeyValuePair<string, string>("client_id", "WorkforceManagementAPI"));
-            IdentityServerParameters.Add(new KeyValuePair<string, string>("client_secret", "seasharp_BareM1n1mum"));
-            IdentityServerParameters.Add(new KeyValuePair<string, string>("scope", "users offline_access WorkforceManagementAPI"));
+            var identityServerParameters = new List<KeyValuePair<string, string>>();
+            identityServerParameters.Add(new KeyValuePair<string, string>("grant_type", "password"));
+            identityServerParameters.Add(new KeyValuePair<string, string>("username", loginModel.Username));
+            identityServerParameters.Add(new KeyValuePair<string, string>("password", loginModel.Password));
+            identityServerParameters.Add(new KeyValuePair<string, string>("client_id", "WorkforceManagementAPI"));
+            identityServerParameters.Add(new KeyValuePair<string, string>("client_secret", "seasharp_BareM1n1mum"));
+            identityServerParameters.Add(new KeyValuePair<string, string>("scope", "users offline_access WorkforceManagementAPI"));
             
             using (client)
             {
-                HttpResponseMessage response = client.PostAsync(url, new FormUrlEncodedContent(IdentityServerParameters)).Result;
-                return response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = await client.PostAsync(url, new FormUrlEncodedContent(identityServerParameters));
+                var content = await response.Content.ReadAsStringAsync();
+                var jsonObject = JsonConvert.DeserializeObject<object>(content);
+
+                return StatusCode((int)response.StatusCode, JsonConvert.SerializeObject(jsonObject, Formatting.Indented));
             }
         }
     }
