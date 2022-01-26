@@ -151,7 +151,7 @@ namespace WorkforceManagementAPI.WEB.Controllers
         /// <response code="409">Conflict - The submitted entity ran into a conflict with an existing one.</response>
         /// <response code="500">InternalServerError - Generic error occured in the server.</response>
         [HttpPost("SetAdmin/{userId}")]
-        public async Task<IActionResult> SetAdministrator(Guid userId)
+        public async Task<IActionResult> SetAdministratorAsync(Guid userId)
         {
             await _userService.SetAdministratorAsync(userId.ToString());
             return Ok($"User: {userId} is set as Admin");
