@@ -198,7 +198,7 @@ namespace WorkforceManagementAPI.BLL.Services
 
         public void EnsureTimeOffRequestsDoNotOverlap(User user, TimeOff timeOff)
         {
-            if (user.Requests.Any(r => r.Status != Status.Rejected && (r.StartDate.Date <= timeOff.EndDate.Date && timeOff.StartDate.Date <= r.EndDate.Date)))
+            if (user.Requests.Any(r => r.Id != timeOff.Id && r.Status != Status.Rejected && (r.StartDate.Date <= timeOff.EndDate.Date && timeOff.StartDate.Date <= r.EndDate.Date)))
             {
                 throw new TimeOffOverlapException("You can't have TimeOff requests with overlaping start or end dates.");
             }

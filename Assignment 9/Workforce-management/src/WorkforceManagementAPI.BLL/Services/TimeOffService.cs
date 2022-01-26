@@ -119,7 +119,7 @@ namespace WorkforceManagementAPI.BLL.Services
         public async Task<bool> DeleteTimeOffAsync(Guid id)
         {
             TimeOff timeOff = await GetTimeOffAsync(id);
-                    
+
             _validationService.EnsureTimeOffExist(timeOff);
             _validationService.EnsureTimeOffRequestIsNotCompleted(timeOff);
 
@@ -129,16 +129,20 @@ namespace WorkforceManagementAPI.BLL.Services
             return true;
         }
 
-        public async Task<bool> EditTimeOffAsync(Guid id, EditTimeOffRequestDTO timeoffRequest ,User modifier)
+        public async Task<bool> EditTimeOffAsync(Guid id, EditTimeOffRequestDTO timeoffRequest, User modifier)
         {
-            
+
             _validationService.EnsureDateRangeIsValid(timeoffRequest.StartDate, timeoffRequest.EndDate);
 
             var timeOff = await GetTimeOffAsync(id);
             _validationService.EnsureTimeOffExist(timeOff);
-            var checkForDublicate = _mapper.Map<TimeOff>(timeoffRequest);
+            var dbTimeOff = await _timeOffRepository.GetTimeOffAsync(id);
+
+            dbTimeOff.StartDate = timeoffRequest.StartDate;
+            dbTimeOff.EndDate = timeoffRequest.EndDate; 
+
             _validationService.EnsureInputFitsBoundaries(((int)timeOff.Type), 0, Enum.GetNames(typeof(RequestType)).Length - 1);
-            _validationService.EnsureTimeOffRequestsDoNotOverlap(modifier, checkForDublicate);
+            _validationService.EnsureTimeOffRequestsDoNotOverlap(modifier, dbTimeOff);
             _validationService.EnsureTimeOffRequestIsNotCompleted(timeOff);
 
             timeOff.Reason = timeoffRequest.Reason;
@@ -149,7 +153,7 @@ namespace WorkforceManagementAPI.BLL.Services
             timeOff.ModifierId = modifier.Id;
             timeOff.Modifier = modifier;
 
-           
+
             await _timeOffRepository.SaveChangesAsync();
 
             string message = string.Format(Constants.RequestMessage, modifier.FirstName, modifier.LastName, timeOff.StartDate.Date, timeOff.EndDate.Date, timeOff.Type, timeOff.Reason, timeOff.Id);
