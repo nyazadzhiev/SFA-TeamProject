@@ -50,7 +50,7 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
                 Guid actualId = new Guid(timeOffId);
                 var timeOff = await timeOffService.GetTimeOffAsync(actualId);
 
-                if (timeOff != null && timeOffId != null)
+                if (timeOff != null)
                 {
                     var timeOffCreator = await userService.GetUserById(timeOff.CreatorId);
                     var isLoggedUserValidTeamLeader = timeOffCreator.Teams.Any(t => t.TeamLeaderId == loggedUser.Id);

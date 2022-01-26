@@ -24,7 +24,7 @@ namespace WorkforceManagementAPI.WEB.AuthorizationPolicies.Handlers
             var foundUser = await ValidateInputUserId();
             var loggedUser = await ValidateLoggedUserCredentials(context);
 
-            if (foundUser != null && loggedUser != null && foundUser.Id != loggedUser.Id )
+            if (foundUser != null && loggedUser != null && foundUser.Id != loggedUser.Id)
             {
                 context.Succeed(requirement);
                 await Task.CompletedTask;
