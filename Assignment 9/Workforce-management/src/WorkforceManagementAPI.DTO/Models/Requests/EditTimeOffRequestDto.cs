@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using WorkforceManagementAPI.DAL.Entities.Enums;
 
 namespace WorkforceManagementAPI.DTO.Models.Requests
 {

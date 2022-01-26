@@ -1,14 +1,10 @@
 ﻿using System;
-using AutoMapper;
-using Moq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using WorkforceManagementAPI.DAL.Entities.Enums;
-using WorkforceManagementAPI.BLL.Contracts;
-using WorkforceManagementAPI.BLL.Services;
 using WorkforceManagementAPI.DAL.Entities;
+using WorkforceManagementAPI.DAL.Entities.Enums;
 using WorkforceManagementAPI.DTO.Models.Requests;
 using Xunit;
-using System.Collections.Generic;
 
 namespace WorkforceManagementAPI.Test
 {
