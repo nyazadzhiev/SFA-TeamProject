@@ -716,5 +716,24 @@ namespace WorkforceManagementAPI.Test
 
             Assert.Null(ex);
         }
+
+        [Fact]
+        public void EnsureUserDoesntHaveRequests_Throws_Exception()
+        {
+            var validation = SetupMockedDefaultValidationService();
+            defaultUser.Requests.Add(new TimeOff());
+            Assert.Throws<UserHasExistingRequestsException>(() => validation.EnsureUserDoesntHaveRequests(defaultUser));
+        }
+
+        [Fact]
+        public void EnsureUserDoesntHaveRequests_Is_Valid()
+        {
+            var validation = SetupMockedDefaultValidationService();
+
+            var ex = Record.Exception(() => validation.EnsureUserDoesntHaveRequests(defaultUser));
+
+            Assert.Null(ex);
+        }
+
     }
 }
