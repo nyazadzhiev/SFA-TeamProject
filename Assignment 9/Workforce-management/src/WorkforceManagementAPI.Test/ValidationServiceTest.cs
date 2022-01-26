@@ -641,6 +641,7 @@ namespace WorkforceManagementAPI.Test
                 EndDate = new DateTime(2022, 01, 10)
             });
 
+            testTimeOff.Id = Guid.NewGuid();
             testTimeOff.Status = Status.Created;
             testTimeOff.StartDate = new DateTime(2022, 01, 02);
             testTimeOff.EndDate = new DateTime(2022, 01, 11);
