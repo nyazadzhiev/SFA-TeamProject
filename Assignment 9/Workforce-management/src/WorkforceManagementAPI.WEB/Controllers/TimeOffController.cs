@@ -125,7 +125,7 @@ namespace ProjectManagementApp.WEB.Controllers
         }
 
         /// <summary>
-        /// Edit a timeoff request by timeoff Id (you have to edit all the data of the request).
+        /// Edit a timeoff request by timeoff Id.
         /// </summary>
         /// <param name="timeOffId"></param>
         /// <param name="model"></param>
